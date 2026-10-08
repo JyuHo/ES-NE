@@ -1,0 +1,7 @@
+snes:
+  name: Super Nintendo
+  extensions: [.sfc, .smc, .zip, .7z]
+  emulators:
+    libretro:
+      snes9x: { priority: 1 }
+      bsnes: {}

@@ -1,0 +1,3 @@
+libretro:
+  binary: [retroarch, "flatpak run org.libretro.RetroArch"]
+  core_dirs: [/usr/lib/libretro, "~/.config/retroarch/cores"]
