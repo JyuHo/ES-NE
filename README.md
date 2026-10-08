@@ -27,4 +27,4 @@ pip install -e '.[dev]' && pytest
 ```
 
 ## Licence
-À définir (voir section Licence de `docs/ROADMAP.md`).
+GPL-3.0-or-later. Voir `LICENSE` et `docs/LICENSING.md`.
