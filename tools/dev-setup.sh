@@ -1,7 +1,7 @@
 #!/bin/sh
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Prépare un environnement de test minimal pour ES-NE (développement, pas une installation):
-#  - ~/.config/esne/es_systems.cfg avec un seul système "snes" (la commande se contente d'afficher ses arguments)
+#  - ~/.config/esne/es_systems.cfg avec un seul système "snes" lancé par es-launcher (prérequis: retroarch et le core snes9x, et es-launcher dans le PATH)
 #  - une ROM factice dans ~/.local/share/esne/roms/snes
 #  - le thème "carbon" (RetroPie/es-theme-carbon) dans ~/.local/share/esne/themes
 # Usage: sh tools/dev-setup.sh [--force]    (--force: réécrit es_systems.cfg)
@@ -26,7 +26,7 @@ if [ "${1:-}" = "--force" ] || ! grep -q "<systemList" "$CFG" 2>/dev/null; then
     <hardware>console</hardware>
     <path>$DATA/roms/snes</path>
     <extension>.sfc .smc .zip</extension>
-    <command>echo %ROM% %SYSTEM% %EMULATOR%</command>
+    <command>es-launcher %CONTROLLERSCONFIG% -system %SYSTEM% -rom %ROM% -gameinfoxml %GAMEINFOXML% -systemname %SYSTEMNAME%</command>
     <platform>snes</platform>
     <theme>snes</theme>
   </system>

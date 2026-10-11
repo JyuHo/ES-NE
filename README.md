@@ -15,7 +15,7 @@ pour Arch Linux / CachyOS, avec les options de RetroBat, **sans aucune dépendan
 | Composant | État |
 |---|---|
 | Frontend ES (fork `emulationstation-esne`, branche `esne`) | 🚧 6 patchs: option `-DESNE=ON`, chemins XDG, `LinuxApiSystem`, appels audio. **Pas encore compilé en entier ni lancé** |
-| `es-launcher` | 🚧 squelette: config en couches, CLI, générateur RetroArch minimal |
+| `es-launcher` | 🚧 CLI compatible ES, catalogue de systèmes, RetroArch (config complémentaire); testé avec un faux RetroArch, pas encore avec un vrai jeu |
 | `esctl` | 🚧 `has`, `version`, `resolution`, `audio`, `config lsoutputs` écrits et testés (45 tests); **pas encore essayé sur une vraie machine**. Reste: `timezone`, `systems`, `padsinfo`, `thebezelproject`, `info`, `swissknife`. Contrat dans `docs/ESCTL_CONTRACT.md` |
 | Paquets (`PKGBUILD`), session | ❌ |
 

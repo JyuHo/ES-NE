@@ -9,12 +9,18 @@ Légende: ✅ fait · 🚧 en cours · ❌ à faire. Un ✅ côté ES = code en 
 - ✅ `esctl` minimal: `has`, `version`, `resolution`, `audio`, `config lsoutputs` (testés sur sorties simulées; ❌ pas encore sur machine réelle)
 - ❌ `esctl` suite: `timezone`, `systems`, `padsinfo`, `thebezelproject`, `info`, `swissknife`
 - ✅ appels audio d'ES routés par la traduction `batocera-*` → `esctl` (sinon le menu audio échouait)
-- ❌ 1 système de bout en bout (ES → `es-launcher` → RetroArch)
+- 🚧 1 système de bout en bout (ES → `es-launcher` → RetroArch): lanceur écrit et testé avec un faux RetroArch; ❌ pas encore essayé avec un vrai jeu
 
-## M1 — `es-launcher` + générateur RetroArch complet 🚧
-- ✅ CLI compatible avec l'appel d'ES, générateur RetroArch minimal (lance `retroarch -L core rom`)
-- ❌ écriture de `retroarch.cfg`, ratio, shaders, rewind
-- ❌ contrat de lancement avec ES (`FileData.cpp`, `/tmp/game.xml`, code retour): pas encore lu
+## M1 — `es-launcher` + générateur RetroArch 🚧
+- ✅ contrat de lancement lu (`FileData.cpp`): ES construit la ligne depuis la balise `<command>` d'`es_systems.cfg`, puis lit le code de sortie (200-205: messages fixes; 250/299: message dans `/tmp/launch_error.log`)
+- ✅ CLI compatible avec la ligne d'ES (`-system -rom -emulator -core -gameinfoxml -systemname -p<N>index/guid/path/name/nbbuttons/nbhats/nbaxes`), options d'ES non interprétées conservées
+- ✅ choix émulateur/core: arguments d'ES > `esne.conf` (en couches) > catalogue `systems.yml` (16 systèmes, surchargeable dans `~/.config/esne/systems.yml`)
+- ✅ RetroArch: configuration complémentaire `--appendconfig` (le `retroarch.cfg` de l'utilisateur n'est jamais modifié): plein écran, dossiers de sauvegarde/BIOS, `smooth`, `ratio`, `rewind`, `autosave`, `integerscale`, `shaderset` (fichier de preset par nom)
+- ✅ codes de sortie 200-205 et 299 vers ES, journal `<state>/logs/es-launcher.log`
+- ❌ non validé avec un vrai RetroArch: table des ratios (`aspect_ratio_index`), noms des options
+- ❌ manettes: transmises mais pas utilisées (l'autoconfiguration de RetroArch s'applique); pas de raccourci pour quitter un jeu à la manette
+- ❌ netplay, états de sauvegarde (`-state_slot`), bezels, jeux compressés (zip/7z), `-monitor`
+- ❌ pas de patch ES nécessaire pour lancer les jeux: il reste à générer `es_systems.cfg` (M2)
 
 ## M2 — config en couches + `features.yml` + génération `es_systems.cfg` / `es_features.cfg` 🚧
 - ✅ résolution en couches (`<système>["rom"].clé` > `<système>.clé` > `global.clé`)
@@ -29,7 +35,7 @@ Légende: ✅ fait · 🚧 en cours · ❌ à faire. Un ✅ côté ES = code en 
 - ❌ patch 6: appels `batocera-*` directs restants dans `GuiMenu.cpp` (stockage, overscan, LED...)
 - ❌ patch 7: arrêt / redémarrage directs (`Platform.cpp`, `emulationstation.sh`), un seul mécanisme de fichiers drapeaux
 - ❌ patch 8: `batocera-keyboard` via le `PATH`
-- ❌ patch 9: lancement des jeux adapté à `es-launcher`
+- ✅ patch 9 sans objet: ES lance déjà la commande de `es_systems.cfg`; le travail est côté `es-launcher` et dans la génération de `es_systems.cfg` (M2)
 - ❌ patch 10: fonctions optionnelles (scraper, ports, LED...)
 
 ## Licence

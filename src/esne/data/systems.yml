@@ -1,3 +1,12 @@
+# Systèmes connus d'ES-NE. Chaque système liste ses émulateurs et leurs cores; le plus petit
+# `priority` est le choix par défaut (100 si absent). Complété par ~/.config/esne/systems.yml.
+nes:
+  name: Nintendo Entertainment System
+  extensions: [.nes, .unf, .unif, .zip, .7z]
+  emulators:
+    libretro:
+      fceumm: { priority: 1 }
+      nestopia: {}
 snes:
   name: Super Nintendo
   extensions: [.sfc, .smc, .zip, .7z]
@@ -5,3 +14,83 @@ snes:
     libretro:
       snes9x: { priority: 1 }
       bsnes: {}
+gb:
+  name: Game Boy
+  extensions: [.gb, .zip, .7z]
+  emulators:
+    libretro:
+      gambatte: { priority: 1 }
+      mgba: {}
+gbc:
+  name: Game Boy Color
+  extensions: [.gbc, .zip, .7z]
+  emulators:
+    libretro:
+      gambatte: { priority: 1 }
+      mgba: {}
+gba:
+  name: Game Boy Advance
+  extensions: [.gba, .zip, .7z]
+  emulators:
+    libretro:
+      mgba: { priority: 1 }
+      gpsp: {}
+mastersystem:
+  name: Sega Master System
+  extensions: [.sms, .zip, .7z]
+  emulators:
+    libretro:
+      genesis_plus_gx: { priority: 1 }
+megadrive:
+  name: Sega Mega Drive
+  extensions: [.md, .gen, .smd, .bin, .zip, .7z]
+  emulators:
+    libretro:
+      genesis_plus_gx: { priority: 1 }
+      picodrive: {}
+gamegear:
+  name: Sega Game Gear
+  extensions: [.gg, .zip, .7z]
+  emulators:
+    libretro:
+      genesis_plus_gx: { priority: 1 }
+n64:
+  name: Nintendo 64
+  extensions: [.n64, .v64, .z64, .zip, .7z]
+  emulators:
+    libretro:
+      mupen64plus_next: { priority: 1 }
+      parallel_n64: {}
+psx:
+  name: Sony PlayStation
+  extensions: [.cue, .chd, .pbp, .m3u, .iso, .bin]
+  emulators:
+    libretro:
+      pcsx_rearmed: { priority: 1 }
+      swanstation: {}
+pcengine:
+  name: NEC PC Engine
+  extensions: [.pce, .chd, .cue, .zip, .7z]
+  emulators:
+    libretro:
+      mednafen_pce_fast: { priority: 1 }
+atari2600:
+  name: Atari 2600
+  extensions: [.a26, .bin, .zip, .7z]
+  emulators:
+    libretro:
+      stella: { priority: 1 }
+arcade:
+  name: Arcade
+  extensions: [.zip, .7z]
+  emulators:
+    libretro:
+      fbneo: { priority: 1 }
+      mame: {}
+nds:
+  name: Nintendo DS
+  extensions: [.nds, .zip, .7z]
+  emulators:
+    libretro:
+      melonds: { priority: 1 }
+      desmume: {}

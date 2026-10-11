@@ -4,7 +4,7 @@ Légende: ❌ non fait · 🚧 en cours · ✅ fait · ⛔ masqué volontairemen
 ## 1. Systèmes et émulateurs (lanceur `es-launcher`)
 | Système | Émulateur | Lancement | Shaders | Ratio | Rewind | Bezels | Manettes |
 |---|---|---|---|---|---|---|---|
-| snes | libretro/snes9x | 🚧 | ❌ | ❌ | ❌ | ❌ | ❌ |
+| snes | libretro/snes9x | 🚧 code + tests (faux RetroArch) | 🚧 | 🚧 | 🚧 | ❌ | ❌ |
 
 ## 2. Menus du frontend ES
 Un ✅ = branché dans `LinuxApiSystem` et vérifié à la compilation; **aucun menu n'a été testé dans ES lancé**.
