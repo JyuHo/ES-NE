@@ -11,14 +11,17 @@ ES-NE embarque un fork d'EmulationStation comme sous-module git.
 | Licence | MIT (garder `LICENSE` et les mentions d'origine) |
 
 ## Base épinglée
-À remplir lors de la création de la branche `esne` :
-
 | Champ | Valeur |
 |---|---|
-| Branche upstream | `TODO` (ex: `master`) |
-| Tag / commit de base | `TODO` |
-| Date | `TODO` |
-| Sous-modules d'ES | initialisés avec `--recursive` |
+| Branche upstream | `master` |
+| Commit de base | `5b1764c9a` (« Merge pull request #2239 from batocera-linux/fixfribidimultilines ») |
+| Date d'épinglage | 2026-10-12 |
+| Branche du fork | `esne` (5 commits au-dessus de la base) |
+| Sous-modules d'ES | `external/pugixml` (initialisé avec `--recursive`) |
+
+Le sous-module d'ES-NE doit pointer vers un commit **présent sur GitHub**. Après chaque `git am` / rebase local dans
+`third_party/emulationstation`, pousser `esne` **avant** de commiter le nouveau pointeur dans ES-NE, sinon un
+`git clone --recurse-submodules` échoue sur le sous-module.
 
 ## Remotes du fork (dans `third_party/emulationstation`)
 ```bash
@@ -53,7 +56,22 @@ git clone --recurse-submodules https://github.com/JyuHo/ES-NE.git
 git submodule update --init --recursive
 ```
 
+## Variante de build `ESNE`
+`-DESNE=ON` définit `ESNE` et `ESNE_SHARE_DIR` (défaut `/usr/share/esne`). Elle est exclusive avec `BATOCERA`, `RETROBAT`
+et `WIN32` : `ESNE` n'active pas le code propre à l'OS Batocera. Détails dans `docs/AUDIT_ANALYSIS.md`.
+
 ## Journal des patchs
+Hashes de la branche `esne` du fork.
+
 | Commit | Catégorie | Description |
 |---|---|---|
-| | | |
+| `99b711a` | build | option CMake `-DESNE=ON`, `ESNE_SHARE_DIR`, exclusive avec BATOCERA/RETROBAT/WIN32 |
+| `e142310` | paths | disposition XDG dans `Paths.cpp` (`ESNE_{CONFIG,DATA,STATE,SHARE}_DIR`) |
+| `e28606c` | paths | ne plus lire `batocera.arch` ni réécrire `/recalbox` sous ESNE |
+| `67167a7` | build | définir `X86`/`X86_64` depuis `CMAKE_SYSTEM_PROCESSOR` |
+| `b935f4c` | syscalls | `LinuxApiSystem`: traduction `batocera-*` → `esctl`, menus conditionnés, mises à jour désactivées, Kodi et suspend directs |
+
+## Vérifications faites sur ces patchs
+- Vérification de syntaxe (`g++ -fsyntax-only`) de `Paths.cpp`, `Platform.cpp`, `ThemeData.cpp`, `ApiSystem.cpp` et `LinuxApiSystem.cpp` en variantes `ESNE`, `BATOCERA` et par défaut.
+- Test d'exécution des chemins (`Paths`) et de la logique de `LinuxApiSystem` (traduction, recherche dans le `PATH`, affichage conditionnel des menus avec un faux `esctl`).
+- **Non fait**: build complet d'ES, lancement, test des menus dans l'interface.

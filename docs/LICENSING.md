@@ -11,5 +11,15 @@ ES-NE est distribué sous **GPL-3.0-or-later**.
    Les données (BIOS, thèmes, shaders) ont chacune leur licence: à vérifier séparément.
 5. EmulationStation (fork) est sous MIT: compatible, à garder avec sa mention.
 
+## Fichiers ajoutés dans le fork d'EmulationStation
+Le fork (`third_party/emulationstation`) est sous licence MIT. Les fichiers qu'on y ajoute (par exemple
+`LinuxApiSystem.h` et `LinuxApiSystem.cpp`) portent `SPDX-License-Identifier: MIT`, pour rester cohérents avec le dépôt qui
+les contient et permettre de proposer des changements à upstream. La MIT est compatible avec la GPL: la distribution d'ES-NE
+dans son ensemble reste sous GPL-3.0-or-later.
+
 ## En-tête conseillé pour les nouveaux fichiers
+Dans ce dépôt (Python, scripts, docs):
+
     # SPDX-License-Identifier: GPL-3.0-or-later
+
+Dans le fork d'ES (C++): `// SPDX-License-Identifier: MIT`.
