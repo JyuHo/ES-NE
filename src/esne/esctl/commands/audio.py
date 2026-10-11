@@ -29,6 +29,22 @@ def _clean(text: str) -> str:
     return " ".join(str(text).split())
 
 
+_BAD_LABELS = {"", "(null)", "null", "none"}
+_LABEL_PROPS = ("device.description", "alsa.card_name", "node.nick", "node.description", "device.product.name")
+
+
+def _label(sink: dict) -> str:
+    """Libellé lisible: certains pilotes (HDMI NVIDIA) donnent la description '(null)'."""
+    candidates = [sink.get("description")]
+    props = sink.get("properties")
+    if isinstance(props, dict):
+        candidates += [props.get(key) for key in _LABEL_PROPS]
+    for candidate in candidates:
+        if candidate and str(candidate).strip().lower() not in _BAD_LABELS:
+            return _clean(candidate)
+    return _clean(sink.get("name") or "")
+
+
 def _list(kind: str) -> list[dict] | None:
     result = runner.run(["pactl", "--format=json", "list", kind])
     if not result.ok:
@@ -92,7 +108,7 @@ def cmd_list() -> int:
     for sink in sinks:
         name = sink.get("name")
         if name:
-            print(f"{name}\t{_clean(sink.get('description') or name)}")
+            print(f"{name}\t{_label(sink)}")
     return 0
 
 

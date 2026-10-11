@@ -110,3 +110,12 @@ def test_usage_errors(pulse):
     assert main(["audio", "set"]) == 2
     assert main(["audio", "get", "extra"]) == 2
     assert main(["audio", "volume"]) == 2
+
+
+def test_label_ignore_description_null():
+    from esne.esctl.commands import audio
+
+    sink = {"name": "x", "description": "(null)", "properties": {"alsa.card_name": "HDA NVidia"}}
+    assert audio._label(sink) == "HDA NVidia"
+    assert audio._label({"name": "x", "description": "(null)"}) == "x"
+    assert audio._label({"name": "x", "description": "Carte"}) == "Carte"
