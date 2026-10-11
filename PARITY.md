@@ -12,13 +12,13 @@ Les menus liés à `esctl` apparaissent seulement si `esctl has <commande>` réu
 
 | Fonction ES | Batocera (script) | ES-NE | État |
 |---|---|---|---|
-| Résolution | `batocera-resolution` | `esctl resolution` | 🚧 côté ES prêt, `esctl` ❌ |
-| Sortie audio | `batocera-audio` | `esctl audio` | 🚧 côté ES prêt, `esctl` ❌ |
+| Résolution | `batocera-resolution` | `esctl resolution` (xrandr, wlr-randr) | ✅ code + tests; ❌ KDE/GNOME Wayland; non essayé sur machine |
+| Sortie audio | `batocera-audio` | `esctl audio` (pactl) | ✅ code + tests; non essayé sur machine |
 | Fuseau horaire | `batocera-timezone` | `esctl timezone` | 🚧 côté ES prêt, `esctl` ❌ |
 | BIOS / systèmes | `batocera-systems` | `esctl systems` | 🚧 côté ES prêt, `esctl` ❌ |
 | Infos manettes | `batocera-padsinfo` | `esctl padsinfo` | 🚧 côté ES prêt, `esctl` ❌ |
 | The Bezel Project | `batocera-es-thebezelproject` | `esctl thebezelproject` | 🚧 côté ES prêt, `esctl` ❌ |
-| Version affichée | `batocera-version` | `esctl version`, sinon `share/esne.version` | 🚧 |
+| Version affichée | `batocera-version` | `esctl version` (`share/esne.version`, sinon version du package) | ✅ |
 | Décorations / shaders | (dossiers) | menu visible si les dossiers existent | ✅ code; ❌ données à fournir |
 | Netplay | `7zr` | `7zz`, `7z`, `7za` ou `7zr` dans le `PATH` | ✅ |
 | Kodi | `batocera-kodi` | `kodi --standalone` direct | ✅ code, non testé |

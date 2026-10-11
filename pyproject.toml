@@ -16,9 +16,14 @@ dev = ["pytest"]
 
 [project.scripts]
 es-launcher = "esne.cli:main"
+esctl = "esne.esctl.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
 esne = ["data/*.yml"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

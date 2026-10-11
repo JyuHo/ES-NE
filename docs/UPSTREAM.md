@@ -16,7 +16,7 @@ ES-NE embarque un fork d'EmulationStation comme sous-module git.
 | Branche upstream | `master` |
 | Commit de base | `5b1764c9a` (« Merge pull request #2239 from batocera-linux/fixfribidimultilines ») |
 | Date d'épinglage | 2026-10-12 |
-| Branche du fork | `esne` (5 commits au-dessus de la base) |
+| Branche du fork | `esne` (6 commits au-dessus de la base) |
 | Sous-modules d'ES | `external/pugixml` (initialisé avec `--recursive`) |
 
 Le sous-module d'ES-NE doit pointer vers un commit **présent sur GitHub**. Après chaque `git am` / rebase local dans
@@ -70,6 +70,7 @@ Hashes de la branche `esne` du fork.
 | `e28606c` | paths | ne plus lire `batocera.arch` ni réécrire `/recalbox` sous ESNE |
 | `67167a7` | build | définir `X86`/`X86_64` depuis `CMAKE_SYSTEM_PROCESSOR` |
 | `b935f4c` | syscalls | `LinuxApiSystem`: traduction `batocera-*` → `esctl`, menus conditionnés, mises à jour désactivées, Kodi et suspend directs |
+| `3bdea9b` | syscalls | les 4 fonctions audio (`get`/`set` périphérique et profil) passent par `executeScript` / `executeEnumerationScript` au lieu de `popen`/`system` |
 
 ## Vérifications faites sur ces patchs
 - Vérification de syntaxe (`g++ -fsyntax-only`) de `Paths.cpp`, `Platform.cpp`, `ThemeData.cpp`, `ApiSystem.cpp` et `LinuxApiSystem.cpp` en variantes `ESNE`, `BATOCERA` et par défaut.

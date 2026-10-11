@@ -6,7 +6,9 @@ Légende: ✅ fait · 🚧 en cours · ❌ à faire. Un ✅ côté ES = code en 
 - ✅ chemins XDG (`Paths.cpp`)
 - ✅ `LinuxApiSystem`: traduction `batocera-*` → `esctl`, menus conditionnés, mises à jour désactivées
 - ❌ build complet d'ES sur Arch/CachyOS et premier lancement
-- ❌ `esctl` minimal: `has`, `version`, `resolution`, `audio`
+- ✅ `esctl` minimal: `has`, `version`, `resolution`, `audio`, `config lsoutputs` (testés sur sorties simulées; ❌ pas encore sur machine réelle)
+- ❌ `esctl` suite: `timezone`, `systems`, `padsinfo`, `thebezelproject`, `info`, `swissknife`
+- ✅ appels audio d'ES routés par la traduction `batocera-*` → `esctl` (sinon le menu audio échouait)
 - ❌ 1 système de bout en bout (ES → `es-launcher` → RetroArch)
 
 ## M1 — `es-launcher` + générateur RetroArch complet 🚧

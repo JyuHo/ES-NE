@@ -15,6 +15,16 @@ def data_dir() -> Path:
     return Path(os.environ.get("ESNE_DATA_DIR") or _xdg("XDG_DATA_HOME", ".local/share") / "esne")
 
 
+def share_dir() -> Path:
+    """Données en lecture seule installées par le paquet (même défaut que le frontend ES)."""
+    return Path(os.environ.get("ESNE_SHARE_DIR") or "/usr/share/esne")
+
+
+def state_dir() -> Path:
+    """Journaux et état (même disposition que le frontend ES: <state>/logs)."""
+    return Path(os.environ.get("ESNE_STATE_DIR") or _xdg("XDG_STATE_HOME", ".local/state") / "esne")
+
+
 def cache_dir() -> Path:
     return Path(os.environ.get("ESNE_CACHE_DIR") or _xdg("XDG_CACHE_HOME", ".cache") / "esne")
 
