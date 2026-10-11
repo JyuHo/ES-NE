@@ -45,10 +45,10 @@ def test_has(fake):
 
 def test_commands_lists_only_usable(fake, capsys):
     assert main(["commands"]) == 0
-    assert capsys.readouterr().out.splitlines() == ["version"]
+    assert capsys.readouterr().out.splitlines() == ["info", "version"]
     fake.tools.update({"pactl", "xrandr"})
     assert main(["commands"]) == 0
-    assert capsys.readouterr().out.splitlines() == ["audio", "config", "resolution", "version"]
+    assert capsys.readouterr().out.splitlines() == ["audio", "config", "info", "resolution", "version"]
 
 
 def test_unknown_command_and_help(capsys):

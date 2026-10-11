@@ -6,6 +6,6 @@ Chaque module expose:
   available()  True si la commande est utilisable sur cette machine (répond à ``esctl has <NAME>``)
   run(args)    exécute la commande, renvoie le code de sortie
 """
-from . import audio, config, resolution, version
+from . import audio, config, info, resolution, version
 
-COMMANDS = {module.NAME: module for module in (audio, config, resolution, version)}
+COMMANDS = {module.NAME: module for module in (audio, config, info, resolution, version)}
