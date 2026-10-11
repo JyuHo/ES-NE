@@ -33,6 +33,19 @@ HDMI-A-1 "Unknown TV (HDMI-A-1)"
     1920x1080 px, 60.000000 Hz (preferred)
 """
 
+KSCREEN = """{
+ "outputs": [
+  {"name": "DP-1", "connected": true, "enabled": true, "priority": 1, "currentModeId": "1", "preferredModes": ["1"],
+   "modes": [
+    {"id": "1", "name": "1920x1200@60", "refreshRate": 59.95000076293945, "size": {"width": 1920, "height": 1200}},
+    {"id": "2", "name": "1920x1080@60", "refreshRate": 60, "size": {"width": 1920, "height": 1080}},
+    {"id": "3", "name": "1920x1080@60", "refreshRate": 60, "size": {"width": 1920, "height": 1080}},
+    {"id": "4", "name": "1920x1080@50", "refreshRate": 50, "size": {"width": 1920, "height": 1080}}]},
+  {"name": "HDMI-A-1", "connected": true, "enabled": false, "priority": 2, "currentModeId": "9",
+   "modes": [{"id": "9", "name": "1280x720@60", "refreshRate": 60, "size": {"width": 1280, "height": 720}}]}
+ ]
+}"""
+
 SINKS = """[
  {"index": 52, "state": "RUNNING", "name": "alsa_output.pci-0000_00_1f.3.analog-stereo",
   "description": "Built-in Audio Analog Stereo", "properties": {"alsa.card": "0", "device.id": "49"}},

@@ -5,13 +5,17 @@ Format de ``listModes`` attendu par le frontend: une ligne par mode, ``ID:LIBELL
 L'ID est stocké dans la configuration (``global.videomode``) puis relu par le lanceur; il ne
 contient donc jamais ``:``. Forme: ``LARGEURxHAUTEUR[i].FRÉQUENCE`` (``1920x1080.60.00``).
 
-Outils pris en charge: ``xrandr`` (X11, et XWayland en dernier recours) et ``wlr-randr``
-(Wayland wlroots: sway, Hyprland...). KDE Plasma et GNOME sous Wayland ne sont pas encore pris
-en charge nativement.
+Outils pris en charge:
+- ``xrandr``: sessions X11 uniquement. Sous Wayland il parle à XWayland, qui n'affiche que des modes
+  émulés (320x240, 928x580...) et ne change pas la vraie résolution: il n'est donc pas utilisé.
+- ``wlr-randr``: Wayland wlroots (sway, Hyprland...).
+- ``kscreen-doctor``: KDE Plasma (Wayland et X11).
+GNOME sous Wayland n'est pas pris en charge: le menu est alors masqué.
 """
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 import sys
@@ -21,7 +25,7 @@ from .. import runner
 
 NAME = "resolution"
 
-BACKENDS = ("xrandr", "wlr-randr")
+BACKENDS = ("xrandr", "wlr-randr", "kscreen-doctor")
 
 
 @dataclass(frozen=True)
@@ -32,6 +36,7 @@ class Mode:
     interlaced: bool = False
     current: bool = False
     preferred: bool = False
+    native_id: str = ""  # identifiant propre à l'outil (kscreen-doctor)
 
     @property
     def id(self) -> str:
@@ -153,7 +158,47 @@ def parse_wlr_randr(text: str) -> list[Output]:
     return outputs
 
 
-_PARSERS = {"xrandr": parse_xrandr, "wlr-randr": parse_wlr_randr}
+def parse_kscreen(text: str) -> list[Output]:
+    """Sortie de ``kscreen-doctor -j`` (JSON)."""
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError:
+        return []
+    if not isinstance(data, dict):
+        return []
+
+    outputs: list[Output] = []
+    for raw in data.get("outputs") or []:
+        if not isinstance(raw, dict) or not raw.get("name"):
+            continue
+        output = Output(
+            name=str(raw["name"]),
+            connected=bool(raw.get("connected")) and bool(raw.get("enabled", True)),
+            primary=raw.get("priority") == 1,
+        )
+        current_id = str(raw.get("currentModeId", ""))
+        preferred = {str(i) for i in raw.get("preferredModes") or []}
+        for mode in raw.get("modes") or []:
+            try:
+                size = mode["size"]
+                output.modes.append(
+                    Mode(
+                        width=int(size["width"]),
+                        height=int(size["height"]),
+                        rate=round(float(mode["refreshRate"]), 2),
+                        current=str(mode["id"]) == current_id,
+                        preferred=str(mode["id"]) in preferred,
+                        native_id=str(mode["id"]),
+                    )
+                )
+            except (KeyError, TypeError, ValueError):
+                continue
+        outputs.append(output)
+    return outputs
+
+
+_PARSERS = {"xrandr": parse_xrandr, "wlr-randr": parse_wlr_randr, "kscreen-doctor": parse_kscreen}
+_READ_COMMANDS = {"xrandr": ["xrandr"], "wlr-randr": ["wlr-randr"], "kscreen-doctor": ["kscreen-doctor", "-j"]}
 
 
 # ---------------------------------------------------------------------------------------------
@@ -161,8 +206,12 @@ _PARSERS = {"xrandr": parse_xrandr, "wlr-randr": parse_wlr_randr}
 # ---------------------------------------------------------------------------------------------
 
 def backend_order(environ=os.environ) -> list[str]:
-    """Wayland: wlr-randr d'abord. X11 (ou inconnu): xrandr d'abord. Seuls les outils installés."""
-    names = ["wlr-randr", "xrandr"] if environ.get("WAYLAND_DISPLAY") else ["xrandr", "wlr-randr"]
+    """Wayland: wlr-randr puis kscreen-doctor (jamais xrandr: XWayland). X11: xrandr d'abord.
+    Seuls les outils installés."""
+    if environ.get("WAYLAND_DISPLAY"):
+        names = ["wlr-randr", "kscreen-doctor"]
+    else:
+        names = ["xrandr", "wlr-randr", "kscreen-doctor"]
     return [name for name in names if runner.which(name)]
 
 
@@ -173,7 +222,7 @@ def available() -> bool:
 def read_outputs() -> tuple[str | None, list[Output]]:
     """Premier outil qui renvoie au moins une sortie connectée avec des modes."""
     for backend in backend_order():
-        result = runner.run([backend])
+        result = runner.run(_READ_COMMANDS[backend])
         if not result.ok:
             continue
         outputs = [o for o in _PARSERS[backend](result.stdout) if o.connected and o.modes]
@@ -200,6 +249,8 @@ def sorted_modes(modes: list[Mode]) -> list[Mode]:
 
 def set_mode_command(backend: str, output: Output, mode: Mode) -> list[str]:
     size = f"{mode.width}x{mode.height}{'i' if mode.interlaced else ''}"
+    if backend == "kscreen-doctor":
+        return ["kscreen-doctor", f"output.{output.name}.mode.{mode.native_id}"]
     if backend == "xrandr":
         return ["xrandr", "--output", output.name, "--mode", size, "--rate", f"{mode.rate:.2f}"]
     return ["wlr-randr", "--output", output.name, "--mode", f"{mode.width}x{mode.height}@{mode.rate:.3f}Hz"]
@@ -225,7 +276,7 @@ def run(args: list[str]) -> int:
 
     backend, outputs = read_outputs()
     if backend is None:
-        print("esctl resolution: aucune sortie vidéo détectée (xrandr ou wlr-randr requis)", file=sys.stderr)
+        print("esctl resolution: aucune sortie vidéo détectée (xrandr, wlr-randr ou kscreen-doctor requis)", file=sys.stderr)
         return 1
 
     output = pick_output(outputs, opts.screen)

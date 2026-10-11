@@ -22,7 +22,7 @@ pas traduites: voir `docs/AUDIT_ANALYSIS.md` §1 pour la liste de celles qui res
 
 ## 2. Un menu `esctl` n'apparaît que si esctl le déclare utilisable
 `esctl has <commande>` répond par le **code de sortie 0** si la commande existe **et** est utilisable sur cette machine
-(par exemple `resolution` demande `xrandr` ou `wlr-randr`; `audio` demande `pactl`), autre chose sinon.
+(par exemple `resolution` demande `xrandr`, `wlr-randr` ou `kscreen-doctor`; `audio` demande `pactl`), autre chose sinon.
 Si `esctl` est absent du `PATH`, tous ces menus sont masqués. Le frontend met le résultat en cache pour la durée du processus.
 `esctl commands` liste les commandes utilisables (utile pour diagnostiquer).
 
@@ -51,7 +51,7 @@ Appelés sans passer par `has` (donc à fournir dès qu'`esctl` est installé): 
 - `setMode ID`: applique le mode (échoue si l'ID n'existe pas sur la sortie).
 - ID: `LARGEURxHAUTEUR[i].FRÉQUENCE`, fréquence à 2 décimales (`1920x1080.60.00`, `1920x1080i.59.94`). Il est stocké
   dans `global.videomode` puis relu par le lanceur.
-- Outils: `xrandr` (X11, ou XWayland en dernier recours) et `wlr-randr` (Wayland wlroots). Sous Wayland, `wlr-randr` est essayé en premier.
+- Outils: `xrandr` (X11 uniquement), `wlr-randr` (Wayland wlroots) et `kscreen-doctor -j` (KDE Plasma). Sous Wayland, `xrandr` n'est jamais utilisé (XWayland n'expose que des modes émulés, constaté sur KDE/CachyOS); GNOME Wayland: menu masqué.
 - **Limite**: KDE Plasma et GNOME sous Wayland ne sont pas pris en charge nativement (il faudrait `kscreen-doctor` et l'API de GNOME).
   `xrandr` via XWayland donne une liste de modes incomplète.
 
@@ -67,7 +67,7 @@ Format des listes: **`ID<TAB>LIBELLÉ`**, une seule tabulation par ligne (le fro
 - Les flux déjà en lecture ne sont pas déplacés vers la nouvelle sortie.
 
 ## Vérification
-- 45 tests Python (`pytest`) sur des sorties d'exemple de `xrandr`, `wlr-randr` et `pactl`, plus des sous-processus réels avec un faux `pactl`.
+- 49 tests Python (`pytest`) sur des sorties d'exemple de `xrandr`, `wlr-randr` et `pactl`, plus des sous-processus réels avec un faux `pactl`.
 - Test C++ → `esctl` réel: le code de `LinuxApiSystem` affiche les menus résolution, audio et version, et masque les autres.
 - **Non validé sur machine réelle**: les formats de `wlr-randr` et du JSON de `pactl` sont reconstitués de mémoire, pas capturés
   sur un système. À confirmer au premier essai sur CachyOS.

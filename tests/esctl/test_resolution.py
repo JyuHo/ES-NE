@@ -3,7 +3,7 @@ import pytest
 from esne.esctl.cli import main
 from esne.esctl.commands import resolution as res
 from esne.esctl.commands import config as cfg
-from .conftest import WLR_RANDR, XRANDR
+from .conftest import KSCREEN, WLR_RANDR, XRANDR
 
 
 def test_mode_id_and_label():
@@ -103,17 +103,48 @@ def test_backend_order(fake, monkeypatch):
     fake.tools.update({"xrandr", "wlr-randr"})
     assert res.backend_order() == ["xrandr", "wlr-randr"]
     monkeypatch.setenv("WAYLAND_DISPLAY", "wayland-1")
-    assert res.backend_order() == ["wlr-randr", "xrandr"]
+    # Sous Wayland, xrandr (XWayland) n'est jamais utilisé
+    assert res.backend_order() == ["wlr-randr"]
+    fake.tools.add("kscreen-doctor")
+    assert res.backend_order() == ["wlr-randr", "kscreen-doctor"]
 
 
 def test_fallback_to_next_backend(fake, monkeypatch):
-    # Wayland non-wlroots: wlr-randr échoue, xrandr (XWayland) prend le relais
+    # KDE Wayland: wlr-randr échoue, kscreen-doctor prend le relais
     monkeypatch.setenv("WAYLAND_DISPLAY", "wayland-1")
-    fake.tools.update({"xrandr", "wlr-randr"})
+    fake.tools.update({"xrandr", "wlr-randr", "kscreen-doctor"})
     fake.answer(["wlr-randr"], "", returncode=1, stderr="compositor doesn't support wlr-output-management\n")
-    fake.answer(["xrandr"], XRANDR)
+    fake.answer(["kscreen-doctor", "-j"], KSCREEN)
     backend, outputs = res.read_outputs()
-    assert backend == "xrandr" and len(outputs) == 2
+    assert backend == "kscreen-doctor" and [o.name for o in outputs] == ["DP-1"]
+
+
+def test_xwayland_is_never_used(fake, monkeypatch):
+    monkeypatch.setenv("WAYLAND_DISPLAY", "wayland-1")
+    fake.tools.add("xrandr")
+    fake.answer(["xrandr"], XRANDR)
+    assert not res.available()
+    assert main(["resolution", "listModes"]) == 1
+
+
+def test_parse_kscreen():
+    outputs = res.parse_kscreen(KSCREEN)
+    dp, hdmi = outputs
+    assert dp.primary and dp.connected and not hdmi.connected
+    assert dp.current_mode().id == "1920x1200.59.95"
+    assert dp.current_mode().native_id == "1"
+    assert res.parse_kscreen("pas du json") == []
+
+
+def test_kscreen_list_and_set(fake):
+    fake.tools.add("kscreen-doctor")
+    fake.answer(["kscreen-doctor", "-j"], KSCREEN)
+    fake.answer(["kscreen-doctor", "output.DP-1.mode.4"])
+    assert main(["resolution", "setMode", "1920x1080.50.00"]) == 0
+    assert fake.calls[-1] == ["kscreen-doctor", "output.DP-1.mode.4"]
+    # modes dupliqués (ids 2 et 3): une seule entrée dans la liste
+    ids = [m.id for m in res.sorted_modes(res.parse_kscreen(KSCREEN)[0].modes)]
+    assert ids == ["1920x1200.59.95", "1920x1080.60.00", "1920x1080.50.00"]
 
 
 def test_no_backend(fake, capsys):

@@ -12,7 +12,7 @@ Les menus liés à `esctl` apparaissent seulement si `esctl has <commande>` réu
 
 | Fonction ES | Batocera (script) | ES-NE | État |
 |---|---|---|---|
-| Résolution | `batocera-resolution` | `esctl resolution` (xrandr, wlr-randr) | ✅ code + tests; ❌ KDE/GNOME Wayland; non essayé sur machine |
+| Résolution | `batocera-resolution` | `esctl resolution` (xrandr, wlr-randr, kscreen-doctor) | ✅ code + tests; format kscreen-doctor -j capturé sur KDE réel; ❌ GNOME Wayland; setMode non essayé sur machine |
 | Sortie audio | `batocera-audio` | `esctl audio` (pactl) | ✅ code + tests; non essayé sur machine |
 | Fuseau horaire | `batocera-timezone` | `esctl timezone` | 🚧 côté ES prêt, `esctl` ❌ |
 | BIOS / systèmes | `batocera-systems` | `esctl systems` | 🚧 côté ES prêt, `esctl` ❌ |
