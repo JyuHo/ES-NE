@@ -37,6 +37,19 @@ Détails: `docs/ROADMAP.md` (jalons), `PARITY.md` (parité avec RetroBat), `docs
 (`ESNE_CONFIG_DIR`, `ESNE_DATA_DIR`, `ESNE_CACHE_DIR`).
 `paths.py` connaît aussi `share` (`ESNE_SHARE_DIR`) et `state` (`ESNE_STATE_DIR`), comme le frontend.
 
+## Dépendances d'exécution (Arch / CachyOS)
+Pour les jeux libretro, `es-launcher` a besoin de:
+```bash
+sudo pacman -S --needed retroarch libretro-core-info libretro-snes9x \
+    retroarch-assets-ozone retroarch-assets-xmb retroarch-assets-glui \
+    libretro-shaders-slang libretro-overlays
+```
+Les `retroarch-assets-*` fournissent les icônes et polices du menu RetroArch (sans eux il s'affiche avec des ressources
+manquantes). Aucun paquet autoconfig n'est nécessaire: `es-launcher` utilise le pilote joypad `sdl2`.
+
+Raccourcis manette en jeu (réglables: `hotkey_enable`, `hotkey_exit`, `hotkey_menu`):
+**Select + Start** quitte le jeu et revient à ES, **Select + R3** ouvre le menu RetroArch.
+
 ## Compiler le frontend
 ```bash
 git clone --recurse-submodules https://github.com/JyuHo/ES-NE.git
