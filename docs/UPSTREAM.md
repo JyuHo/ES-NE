@@ -79,6 +79,7 @@ Hashes de la branche `esne` du fork.
 | `2c029de` | arrêt / redémarrage | `systemctl reboot` / `poweroff` à la place de `shutdown` et des fichiers `/tmp/*.please`; « redémarrer ES » se relance par `execv` (mêmes arguments) |
 | `cc3bbbc` | redémarrage requis | après un réglage qui demande un redémarrage (langue...), ES propose de se relancer tout de suite |
 | `afda9b3` | Zaparoo | pas de sondage de `127.0.0.1:7497` (ni d'erreur de connexion à chaque démarrage) sauf si `zaparoo.enabled=1` dans `esne.conf` |
+| `7a84842` | menu Quitter | retire « mettre en veille » et « extinction rapide » (l'extinction rapide ne fait qu'éviter la sauvegarde des métadonnées) |
 
 ## Ce qui reste de Batocera dans le frontend (état actuel)
 - `updates.batocera.org`: sert seulement à la liste des thèmes téléchargeables (`themes.json`); surchargeable par `global.updates.url`.
