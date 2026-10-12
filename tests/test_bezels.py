@@ -125,6 +125,17 @@ def test_install_downloads_only_the_system_image_and_remove_cleans(tmp_path):
     assert (base / "systems" / "snes.png").read_bytes() == PNG
     assert tbp.remove("snes", base=base) == 0
     assert not (base / "systems" / "snes.png").exists() and not (base / "games" / "snes").exists()
+    assert not base.exists()  # plus aucun bezel: le jeu de décorations disparaît du menu d'ES
+
+
+def test_install_removes_legacy_system_set(tmp_path):
+    base = tmp_path / "decorations" / "thebezelproject"
+    legacy = tmp_path / "decorations" / "thebezelproject-system" / "systems"
+    legacy.mkdir(parents=True)
+    (legacy / "snes.png").write_bytes(PNG)
+    assert tbp.install("snes", get=fake_get(["a.png"]), base=base) == 0
+    assert not (tmp_path / "decorations" / "thebezelproject-system").exists()
+    assert (base / "systems" / "snes.png").is_file()
 
 
 def test_pick_image_prefers_horizontal():

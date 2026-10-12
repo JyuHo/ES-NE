@@ -37,6 +37,20 @@ def target(system: str, base: Path | None = None) -> Path:
     return (base or root()) / "systems" / f"{system}.png"
 
 
+def cleanup(base: Path, system: str | None = None) -> None:
+    """Supprime les restes des versions précédentes (bezels par jeu, jeu « thebezelproject-system ») et les dossiers vides:
+    ES liste chaque dossier de ``decorations/`` comme un jeu de décorations."""
+    if system:
+        shutil.rmtree(base / "games" / system, ignore_errors=True)
+    shutil.rmtree(base.parent / "thebezelproject-system", ignore_errors=True)
+    shutil.rmtree(base / "games", ignore_errors=True)
+    for folder in (base / "systems", base):
+        try:
+            folder.rmdir()  # seulement s'il est vide
+        except OSError:
+            pass
+
+
 def installed(system: str) -> bool:
     return target(system).is_file()
 
@@ -82,6 +96,7 @@ def install(system: str, get=fetch, base: Path | None = None) -> int:
     temporary = destination.with_suffix(".tmp")
     temporary.write_bytes(data)
     temporary.replace(destination)
+    cleanup(base or root())
     print(f"{system} bezel installed")
     return 0
 
@@ -92,9 +107,7 @@ def remove(system: str, base: Path | None = None) -> int:
         return 1
     base = base or root()
     target(system, base).unlink(missing_ok=True)
-    # restes des versions précédentes (bezels par jeu, jeu « générique » séparé)
-    shutil.rmtree(base / "games" / system, ignore_errors=True)
-    (base.parent / "thebezelproject-system" / "systems" / f"{system}.png").unlink(missing_ok=True)
+    cleanup(base, system)
     return 0
 
 
