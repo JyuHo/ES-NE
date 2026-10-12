@@ -76,6 +76,37 @@ def _shader_dirs() -> list[Path]:
     ]
 
 
+# Indices des boutons côté SDL (ordre SDL_GameControllerButton, identique à celui d'ES et du pilote sdl2).
+PAD_BUTTONS = {
+    "south": 0, "east": 1, "west": 2, "north": 3,
+    "select": 4, "guide": 5, "start": 6, "l3": 7, "r3": 8, "l1": 9, "r1": 10,
+}
+
+# réglage ES-NE -> (clé RetroArch, valeur par défaut)
+HOTKEYS = {
+    "hotkey_enable": ("input_enable_hotkey_btn", "select"),  # touche à maintenir
+    "hotkey_exit": ("input_exit_emulator_btn", "start"),     # Select + Start: retour à ES
+    "hotkey_menu": ("input_menu_toggle_btn", "r3"),          # Select + R3: menu RetroArch (cores, options)
+}
+
+
+def hotkey_settings(ctx: Context) -> dict[str, str]:
+    result: dict[str, str] = {}
+    for name, (key, default) in HOTKEYS.items():
+        button = str(ctx.setting(name, default)).lower()
+        if button in ("none", "off", ""):
+            continue
+        if button not in PAD_BUTTONS:
+            log.warning("bouton inconnu pour %s ignoré: %s", name, button)
+            continue
+        result[key] = str(PAD_BUTTONS[button])
+    # sans touche à maintenir, un bouton seul quitterait le jeu à chaque pression
+    if "input_enable_hotkey_btn" not in result:
+        result.pop("input_exit_emulator_btn", None)
+        result.pop("input_menu_toggle_btn", None)
+    return result
+
+
 def build_settings(ctx: Context) -> dict[str, str]:
     """Réglages RetroArch déduits de la configuration d'ES-NE et du contexte."""
     saves = paths.data_dir() / "saves" / ctx.system
@@ -95,6 +126,8 @@ def build_settings(ctx: Context) -> dict[str, str]:
     joypad = ctx.setting("joypad_driver", "sdl2")
     if joypad and joypad != "auto":
         settings["input_joypad_driver"] = str(joypad)
+
+    settings.update(hotkey_settings(ctx))
 
     smooth = ctx.setting("smooth")
     if smooth is not None:

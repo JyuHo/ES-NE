@@ -37,6 +37,21 @@ def test_joypad_driver_defaults_to_sdl2(esne_env):
     assert ra.build_settings(ctx_for())["input_joypad_driver"] == "sdl2"
 
 
+def test_default_hotkeys(esne_env):
+    s = ra.build_settings(ctx_for())
+    assert s["input_enable_hotkey_btn"] == "4"
+    assert s["input_exit_emulator_btn"] == "6"
+    assert s["input_menu_toggle_btn"] == "8"
+
+
+def test_hotkeys_need_enable_button(esne_env):
+    from esne.generators.base import Context
+    ctx = ctx_for()
+    ctx.config.get = lambda key, default=None: "none" if key == "hotkey_enable" else default
+    s = ra.build_settings(ctx)
+    assert "input_exit_emulator_btn" not in s and "input_menu_toggle_btn" not in s
+
+
 def test_user_settings(esne_env):
     s = ra.build_settings(ctx_for({"snes.smooth": "0", "snes.ratio": "16/9", "global.rewind": "1", "snes.integerscale": "1"}))
     assert s["video_smooth"] == "false"
