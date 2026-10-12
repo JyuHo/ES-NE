@@ -14,7 +14,9 @@ CFG="$CONFIG/es_systems.cfg"
 mkdir -p "$CONFIG" "$DATA/roms/snes" "$DATA/themes"
 [ -e "$DATA/roms/snes/test.sfc" ] || : > "$DATA/roms/snes/test.sfc"
 
-if [ "${1:-}" = "--force" ] || ! grep -q "<systemList" "$CFG" 2>/dev/null; then
+if command -v es-genconfig >/dev/null 2>&1 && { [ "${1:-}" = "--force" ] || ! grep -q "<systemList" "$CFG" 2>/dev/null; }; then
+    es-genconfig            # tous les systèmes du catalogue (+ dossiers de roms)
+elif [ "${1:-}" = "--force" ] || ! grep -q "<systemList" "$CFG" 2>/dev/null; then
     cat > "$CFG" <<XML
 <?xml version="1.0"?>
 <systemList>

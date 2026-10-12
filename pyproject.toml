@@ -17,6 +17,7 @@ dev = ["pytest"]
 [project.scripts]
 es-launcher = "esne.cli:main"
 esctl = "esne.esctl.cli:main"
+es-genconfig = "esne.systemscfg:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -1,7 +1,10 @@
-# Systèmes connus d'ES-NE. Chaque système liste ses émulateurs et leurs cores; le plus petit
+# Systèmes connus d'ES-NE (manufacturer/release/hardware/theme/platform alimentent es_systems.cfg; theme et platform valent la clé par défaut). Chaque système liste ses émulateurs et leurs cores; le plus petit
 # `priority` est le choix par défaut (100 si absent). Complété par ~/.config/esne/systems.yml.
 nes:
   name: Nintendo Entertainment System
+  manufacturer: Nintendo
+  release: 1983
+  hardware: console
   extensions: [.nes, .unf, .unif, .zip, .7z]
   emulators:
     libretro:
@@ -9,6 +12,9 @@ nes:
       nestopia: {}
 snes:
   name: Super Nintendo
+  manufacturer: Nintendo
+  release: 1990
+  hardware: console
   extensions: [.sfc, .smc, .zip, .7z]
   emulators:
     libretro:
@@ -16,6 +22,9 @@ snes:
       bsnes: {}
 gb:
   name: Game Boy
+  manufacturer: Nintendo
+  release: 1989
+  hardware: handheld
   extensions: [.gb, .zip, .7z]
   emulators:
     libretro:
@@ -23,6 +32,9 @@ gb:
       mgba: {}
 gbc:
   name: Game Boy Color
+  manufacturer: Nintendo
+  release: 1998
+  hardware: handheld
   extensions: [.gbc, .zip, .7z]
   emulators:
     libretro:
@@ -30,6 +42,9 @@ gbc:
       mgba: {}
 gba:
   name: Game Boy Advance
+  manufacturer: Nintendo
+  release: 2001
+  hardware: handheld
   extensions: [.gba, .zip, .7z]
   emulators:
     libretro:
@@ -37,12 +52,18 @@ gba:
       gpsp: {}
 mastersystem:
   name: Sega Master System
+  manufacturer: Sega
+  release: 1985
+  hardware: console
   extensions: [.sms, .zip, .7z]
   emulators:
     libretro:
       genesis_plus_gx: { priority: 1 }
 megadrive:
   name: Sega Mega Drive
+  manufacturer: Sega
+  release: 1988
+  hardware: console
   extensions: [.md, .gen, .smd, .bin, .zip, .7z]
   emulators:
     libretro:
@@ -50,12 +71,18 @@ megadrive:
       picodrive: {}
 gamegear:
   name: Sega Game Gear
+  manufacturer: Sega
+  release: 1990
+  hardware: handheld
   extensions: [.gg, .zip, .7z]
   emulators:
     libretro:
       genesis_plus_gx: { priority: 1 }
 n64:
   name: Nintendo 64
+  manufacturer: Nintendo
+  release: 1996
+  hardware: console
   extensions: [.n64, .v64, .z64, .zip, .7z]
   emulators:
     libretro:
@@ -63,6 +90,9 @@ n64:
       parallel_n64: {}
 psx:
   name: Sony PlayStation
+  manufacturer: Sony
+  release: 1994
+  hardware: console
   extensions: [.cue, .chd, .pbp, .m3u, .iso, .bin]
   emulators:
     libretro:
@@ -70,18 +100,27 @@ psx:
       swanstation: {}
 pcengine:
   name: NEC PC Engine
+  manufacturer: NEC
+  release: 1987
+  hardware: console
   extensions: [.pce, .chd, .cue, .zip, .7z]
   emulators:
     libretro:
       mednafen_pce_fast: { priority: 1 }
 atari2600:
   name: Atari 2600
+  manufacturer: Atari
+  release: 1977
+  hardware: console
   extensions: [.a26, .bin, .zip, .7z]
   emulators:
     libretro:
       stella: { priority: 1 }
 arcade:
   name: Arcade
+  manufacturer: Various
+  release: 1978
+  hardware: arcade
   extensions: [.zip, .7z]
   emulators:
     libretro:
@@ -89,6 +128,9 @@ arcade:
       mame: {}
 nds:
   name: Nintendo DS
+  manufacturer: Nintendo
+  release: 2004
+  hardware: handheld
   extensions: [.nds, .zip, .7z]
   emulators:
     libretro:
