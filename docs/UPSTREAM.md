@@ -16,7 +16,7 @@ ES-NE embarque un fork d'EmulationStation comme sous-module git.
 | Branche upstream | `master` |
 | Commit de base | `5b1764c9a` (« Merge pull request #2239 from batocera-linux/fixfribidimultilines ») |
 | Date d'épinglage | 2026-10-12 |
-| Branche du fork | `esne` (9 commits au-dessus de la base) |
+| Branche du fork | `esne` (10 commits au-dessus de la base) |
 | Sous-modules d'ES | `external/pugixml` (initialisé avec `--recursive`) |
 
 Le sous-module d'ES-NE doit pointer vers un commit **présent sur GitHub**. Après chaque `git am` / rebase local dans
@@ -74,6 +74,7 @@ Hashes de la branche `esne` du fork.
 | `3dfc4be` | menus | crée `esne.conf` au premier lancement (sinon aucun réglage ne s'enregistre), entrée « QUIT EMULATIONSTATION » dans le menu Quitter, menu disposition clavier masqué (`batocera-keyboard`) |
 | `f074529` | i18n | applique `system.language` au démarrage (Batocera l'exporte via ses scripts d'init) et cherche les `.mo` à côté de l'exécutable, quel que soit le dossier courant |
 | `c11bacd` | scrapers | les clés développeur (ScreenScraper, TheGamesDB...) viennent d'un `esne-keys.cmake` non versionné (modèle: `esne-keys.cmake.example`) |
+| `a8dae80` | scrapers | modèle de clés entièrement commenté (les valeurs factices étaient compilées et faisaient apparaître ScreenScraper sans identifiants valides) |
 
 ## Vérifications faites sur ces patchs
 - Vérification de syntaxe (`g++ -fsyntax-only`) de `Paths.cpp`, `Platform.cpp`, `ThemeData.cpp`, `ApiSystem.cpp` et `LinuxApiSystem.cpp` en variantes `ESNE`, `BATOCERA` et par défaut.
