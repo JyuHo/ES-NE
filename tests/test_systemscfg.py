@@ -83,3 +83,15 @@ def test_ports_system_runs_script_with_shell(tmp_path):
     from esne import catalog
     assert catalog.systems()["ports"]["extensions"] == [".sh"]
     assert catalog.emulators()["shell"]["args"] == ["{rom}"]
+
+
+def test_seed_keys_creates_private_template_once(tmp_path):
+    from esne import systemscfg
+    config = tmp_path / "cfg"
+    assert systemscfg.seed_keys(config) is True
+    target = config / "keys.conf"
+    assert target.stat().st_mode & 0o777 == 0o600
+    assert "SCREENSCRAPER_DEV_LOGIN" in target.read_text()
+    target.write_text("GAMESDB_APIKEY=secret\n")
+    assert systemscfg.seed_keys(config) is False
+    assert target.read_text() == "GAMESDB_APIKEY=secret\n"

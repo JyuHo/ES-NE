@@ -1,8 +1,8 @@
 # Maintainer: JyuHo <JyuHo57@gmail.com>
 # Paquet de développement: construit ES-NE (frontend + launcher) depuis la branche main.
 #   cd packaging/arch && makepkg -si
-# Clés de scraping (TheGamesDB...): copie ton fichier privé `esne-keys.cmake` à côté de ce PKGBUILD, il est utilisé s'il existe
-# (jamais commité, voir esne-keys.cmake.example dans le fork).
+# Clés de scraping (ScreenScraper, TheGamesDB...): aucune n'est compilée ni empaquetée; ES les lit dans ~/.config/esne/keys.conf
+# (modèle créé par es-genconfig).
 pkgname=es-ne-git
 pkgver=0.0.1
 pkgrel=1
@@ -33,9 +33,6 @@ pkgver() {
 prepare() {
   cd "$pkgname"
   git -c protocol.file.allow=always submodule update --init --recursive
-  if [ -f "$startdir/esne-keys.cmake" ]; then
-    cp "$startdir/esne-keys.cmake" third_party/emulationstation/esne-keys.cmake
-  fi
 }
 
 build() {

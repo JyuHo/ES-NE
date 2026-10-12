@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -81,6 +82,36 @@ def render(systems: dict, roms: Path, installed_only: bool = False, is_installed
     return "\n".join(lines) + "\n"
 
 
+KEYS_TEMPLATE = """# Clés de développeur d'ES-NE (lues au démarrage d'ES, jamais commitées ni empaquetées). Une ligne NOM=valeur, # = commentaire.
+# Garde ce fichier privé (chmod 600). Redémarre ES après modification.
+
+# ScreenScraper (https://screenscraper.fr, compte développeur)
+# SCREENSCRAPER_SOFTNAME=ES-NE
+# SCREENSCRAPER_DEV_LOGIN=devid=TON_DEVID&devpassword=TON_MOT_DE_PASSE
+
+# TheGamesDB (https://thegamesdb.net)
+# GAMESDB_APIKEY=TA_CLE
+
+# RetroAchievements (menu des succès d'ES)
+# CHEEVOS_DEV_LOGIN=z=TON_UTILISATEUR&y=TA_CLE_API
+
+# HFS (facultatif)
+# HFS_DEV_LOGIN=utilisateur:mot_de_passe
+"""
+
+
+def seed_keys(config: Path) -> bool:
+    """Crée le modèle ``keys.conf`` (mode 600) s'il n'existe pas. True si créé."""
+    target = config / "keys.conf"
+    if target.exists():
+        return False
+    config.mkdir(parents=True, exist_ok=True)
+    fd = os.open(target, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as handle:
+        handle.write(KEYS_TEMPLATE)
+    return True
+
+
 def seed_ports(roms: Path, ports: dict | None = None, which=None) -> list[str]:
     """Crée les scripts des jeux libres installés dans ``<roms>/ports`` (un fichier existant n'est jamais écrasé)."""
     which = which or shutil.which
@@ -127,6 +158,9 @@ def main(argv: list[str] | None = None) -> int:
     if not args.no_mkdir:
         for name in seed_ports(roms):
             print(f"port ajouté: {name}")
+
+    if seed_keys(target.parent):
+        print(f"modèle créé: {target.parent / 'keys.conf'} (clés de scraping, mode 600)")
 
     features = target.parent / "es_features.cfg"
     features.write_text(featurescfg.render(), encoding="utf-8")

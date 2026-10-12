@@ -57,6 +57,9 @@ Un seul bezel par système, celui de The Bezel Project. Menu ES **Mises à jour 
 En jeu, `es-launcher` pose l'image en overlay RetroArch et cadre le jeu dans la zone transparente (le réglage de ratio d'ES est alors ignoré, comme en « auto »). Option **Decoration set** (global, système ou jeu): Auto (= The Bezel Project s'il est installé pour le système), Aucun, ou un jeu de décorations; le réglage du système prime sur le global.
 La zone de jeu est détectée dans l'image (décodeur PNG intégré, résultat mis en cache; `python-pillow` est utilisé s'il est installé, ou un fichier `.png.info` si présent). L'image est toujours affichée en plein écran; si l'écran n'a pas son ratio (16:9 sur un écran 16:10), elle est étirée et le jeu garde les proportions de sa fenêtre. Au-delà de 25 % d'écart (21:9...), le bezel est ignoré sauf option STRETCH BEZELS sur Oui.
 
+## Clés de scraping
+Rien n'est compilé ni empaqueté. `es-genconfig` crée `~/.config/esne/keys.conf` (mode 600) avec un modèle commenté: décommente et remplis `SCREENSCRAPER_DEV_LOGIN`, `GAMESDB_APIKEY`, `CHEEVOS_DEV_LOGIN`..., puis redémarre ES. Un scraper dont la clé manque n'apparaît pas dans le menu. Ce fichier ne doit jamais être commité. Tes identifiants personnels (compte ScreenScraper, RetroAchievements) se saisissent dans les menus d'ES.
+
 ## Thème et jeu libre
 Le paquet livre le thème **Carbon** (RetroPie) dans `/usr/share/esne/themes`: ES le choisit seul tant qu'aucun autre thème n'est sélectionné (menu Interface utilisateur → Thème). Tes propres thèmes vont dans `~/esne/themes`.
 Le système **Ports** lance des scripts `.sh` (`~/esne/roms/ports/`). `es-genconfig` y crée `SuperTux.sh` si SuperTux est installé (dépendance du paquet) et n'écrase jamais un fichier existant; la liste est dans `src/esne/data/ports.yml` (complétable par `~/.config/esne/ports.yml`).
