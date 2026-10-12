@@ -65,6 +65,15 @@ def find_shader(name: str, directories=None) -> Path | None:
             candidate = Path(directory) / f"{name}{extension}"
             if candidate.is_file():
                 return candidate
+    # les presets libretro sont rangés par thème (crt/, scanlines/...): on cherche par nom dans l'arborescence
+    for directory in directories if directories is not None else _shader_dirs():
+        root = Path(directory)
+        if not root.is_dir():
+            continue
+        for extension in SHADER_EXTENSIONS:
+            for candidate in sorted(root.rglob(f"{name}{extension}")):
+                if candidate.is_file():
+                    return candidate
     return None
 
 
@@ -74,6 +83,10 @@ def _shader_dirs() -> list[Path]:
         paths.share_dir() / "shaders",
         Path("/usr/share/libretro/shaders"),
     ]
+
+
+def shader_dirs() -> list[Path]:
+    return _shader_dirs()
 
 
 # Indices des boutons côté SDL (ordre SDL_GameControllerButton, identique à celui d'ES et du pilote sdl2).

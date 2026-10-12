@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 from xml.sax.saxutils import escape, quoteattr
 
-from . import catalog, paths
+from . import catalog, featurescfg, paths
 from .generators import standalone
 from .generators.retroarch import find_binary, find_core
 
@@ -104,6 +104,13 @@ def main(argv: list[str] | None = None) -> int:
             if isinstance(entry, dict) and f"<name>{name}</name>" in xml:
                 (roms / name).mkdir(parents=True, exist_ok=True)
     print(f"écrit: {target} ({xml.count('<system>')} systèmes)")
+
+    features = target.parent / "es_features.cfg"
+    features.write_text(featurescfg.render(), encoding="utf-8")
+    print(f"écrit: {features}")
+    shader_sets = featurescfg.installed_shader_sets()
+    featurescfg.write_shader_sets(featurescfg.shaders_root(), shader_sets)
+    print(f"jeux de shaders: {', '.join(shader_sets) if shader_sets else 'aucun (installez libretro-shaders-slang)'}")
     return 0
 
 

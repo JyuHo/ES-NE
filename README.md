@@ -54,9 +54,11 @@ Raccourcis manette en jeu (réglables: `hotkey_enable`, `hotkey_exit`, `hotkey_m
 ```bash
 es-genconfig                    # écrit ~/.config/esne/es_systems.cfg (tous les systèmes du catalogue) + dossiers de roms
 es-genconfig --installed-only   # seulement les systèmes dont un core libretro est installé
-es-genconfig --stdout           # affiche le fichier
+es-genconfig --stdout           # affiche es_systems.cfg sans rien écrire
 ```
-Les systèmes viennent de `src/esne/data/systems.yml` (complété par `~/.config/esne/systems.yml`). Mets tes roms dans
+`es-genconfig` écrit aussi `es_features.cfg` (options par système/jeu: ratio, lissage, rewind, sauvegarde auto, pixel perfect,
+shaders) et crée les jeux de shaders dans `~/.local/share/esne/shaders/configs/` pour les presets libretro installés
+(`libretro-shaders-slang`). Les systèmes viennent de `src/esne/data/systems.yml` (complété par `~/.config/esne/systems.yml`). Mets tes roms dans
 `~/.local/share/esne/roms/<système>/`; ES masque les systèmes vides.
 
 ## Systèmes et émulateurs
