@@ -41,13 +41,13 @@ build() {
   cmake -S third_party/emulationstation -B build-es -DESNE=ON -DGL=ON \
         -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DESNE_SHARE_DIR=/usr/share/esne
   cmake --build build-es
-  python -m build --wheel --no-isolation
+  /usr/bin/python -m build --wheel --no-isolation
 }
 
 package() {
   cd "$pkgname"
   DESTDIR="$pkgdir" cmake --install build-es
-  python -m installer --destdir="$pkgdir" dist/*.whl
+  /usr/bin/python -m installer --destdir="$pkgdir" dist/*.whl
 
   install -d "$pkgdir/usr/share/esne"
   cp -r third_party/emulationstation/resources "$pkgdir/usr/share/esne/resources"
