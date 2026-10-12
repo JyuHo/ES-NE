@@ -38,7 +38,7 @@ Codes de sortie: `0` succès · `1` échec ou indisponible · `2` mauvais usage.
 | BIOS | `systems` | ❌ | `systems [--filter <système>]`: lignes `> <système>` puis `<statut> <md5> <chemin>` (à relire dans `getBiosInformations`) |
 | Manettes | `padsinfo` | ✅ | XML `<pads><pad device id name path battery status/></pads>` (batterie omise si absente) |
 | Fuseau horaire | `timezone` | ✅ | `get`, `detect`, `set "<tz>"` via `timedatectl` (`set` peut exiger polkit) |
-| Bezels | `thebezelproject` | ✅ | `list` (`[I]`/`[A]` système URL), `install <x>`, `remove <x>`; x = nom de système ES-NE; images dans `<data>/decorations/thebezelproject/` |
+| Bezels | `thebezelproject` | ✅ | `list` (`[I]`/`[A]` système URL), `install <x>`, `remove <x>`; x = nom de système ES-NE; une image par système dans `<data>/decorations/thebezelproject/systems/<x>.png` (API GitHub + raw, pas d'archive) |
 | Hook gamelists | `preupdate-gamelists-hook` | ❌ | appelé avant la mise à jour des gamelists |
 
 Appelés sans passer par `has` (donc à fournir dès qu'`esctl` est installé): `esctl info --full` ✅ (infos système) et

@@ -53,7 +53,9 @@ Raccourcis manette en jeu (réglables: `hotkey_enable`, `hotkey_exit`, `hotkey_m
 Options par système/jeu dans ES (ratio, shaders, lissage, rewind, pilote vidéo Vulkan/OpenGL...): voir `PARITY.md`.
 
 ## Bezels (décorations)
-Menu ES « The Bezel Project » (Mises à jour) : télécharge les bezels d'un système depuis GitHub (`esctl thebezelproject install snes`). En jeu, `es-launcher` pose l'image en overlay RetroArch et cadre le jeu dans la zone transparente. Option « DECORATION SET »: **BEZEL SYSTEM** (`thebezelproject-system`, l'image générique du système; seul choix du menu global) et **BEZEL BY GAME** (`thebezelproject`, un bezel par jeu; menu d'un système), ou, dans le menu d'un jeu, une variante de son titre (`thebezelproject:<nom>`: Beta, Rev, autre région). AUTO = The Bezel Project s'il est installé. Pour supprimer un système: ouvrir son entrée dans le menu The Bezel Project, puis REMOVE. Il faut `python-pillow` pour détecter la zone de jeu (sinon fichier `.png.info`), et un écran au même ratio que l'image (16:9).
+Un seul bezel par système, celui de The Bezel Project. Menu ES **Mises à jour → The Bezel Project**: ouvrir un système puis INSTALL (ou UPDATE / REMOVE). `esctl thebezelproject install snes` télécharge seulement l'image du système (`~/.local/share/esne/decorations/thebezelproject/systems/snes.png`).
+En jeu, `es-launcher` pose l'image en overlay RetroArch et cadre le jeu dans la zone transparente. Option **Decoration set** (global, système ou jeu): Auto (= The Bezel Project s'il est installé pour le système), Aucun, ou un jeu de décorations; le réglage du système prime sur le global.
+Il faut `python-pillow` pour détecter la zone de jeu (sinon fichier `.png.info`), et un écran au même ratio que l'image (16:9), sauf option STRETCH BEZELS.
 
 ## Générer `es_systems.cfg`
 ```bash

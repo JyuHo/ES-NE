@@ -12,7 +12,7 @@ Légende: ❌ non fait · 🚧 en cours · ✅ fait · ⛔ masqué volontairemen
 | steam, windows | Steam, Wine/umu | 🚧 non testé; Steam rend la main tout de suite (le raccourci ne ferme pas le jeu) | ⛔ | ⛔ | ⛔ | ❌ | ✅ |
 | xbox 360 | — | ⛔ aucun émulateur Linux utilisable | | | | | |
 
-Bezels: choix par système (par jeu / générique) et, par jeu, parmi les variantes de son titre. AUTO utilise The Bezel Project s'il est installé pour le système; « NONE » désactive; ratio de l'image différent de l'écran → ignoré sauf option STRETCH BEZELS. Tatouages/overlays de manettes non gérés. Zone de jeu détectée avec Pillow (`python-pillow`) ou fichier `.png.info`.
+Bezels: un bezel par système (pas de bezel par jeu); le réglage du système prime sur le global. AUTO utilise The Bezel Project s'il est installé pour le système; « NONE » désactive; ratio de l'image différent de l'écran → ignoré sauf option STRETCH BEZELS. Tatouages/overlays de manettes non gérés. Zone de jeu détectée avec Pillow (`python-pillow`) ou fichier `.png.info`.
 
 Limites: table `aspect_ratio_index` en partie non validée; ratio ES « 8/3 » ignoré; netplay, RetroAchievements et bezels non gérés; les réglages internes des émulateurs autonomes (plein écran, résolution) ne sont pas gérés.
 
@@ -27,7 +27,7 @@ Les menus liés à `esctl` apparaissent seulement si `esctl has <commande>` réu
 | Fuseau horaire | `batocera-timezone` | `esctl timezone` (`timedatectl`) | ✅ code + tests; `set` demande peut-être une règle polkit |
 | BIOS / systèmes | `batocera-systems` | `esctl systems` | 🚧 côté ES prêt, `esctl` ❌ |
 | Infos manettes | `batocera-padsinfo` | `esctl padsinfo` (evdev + batterie sysfs) | ✅ sortie réelle vérifiée (PS4) |
-| The Bezel Project | `batocera-es-thebezelproject` | `esctl thebezelproject` (téléchargement GitHub, images seules) | ✅ code + tests (archive simulée); téléchargement réel à essayer |
+| The Bezel Project | `batocera-es-thebezelproject` | `esctl thebezelproject` (téléchargement GitHub, images seules) | ✅ installation, suppression et aperçu validés dans ES |
 | Décorations (bezels) en jeu | `bezels.py` Batocera | `bezels.py` + overlay RetroArch, zone de jeu en `custom_viewport` | ✅ code + tests; à valider en jeu |
 | Version affichée | `batocera-version` | `esctl version` (`share/esne.version`, sinon version du package) | ✅ |
 | Décorations / shaders | (dossiers) | menu visible si les dossiers existent (`es-genconfig` crée `decorations/`) | ✅ |
