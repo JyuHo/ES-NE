@@ -44,22 +44,32 @@ def emulators(user_dir: Path | None = None) -> dict:
     return _load("emulators.yml", user_dir)
 
 
+def choices(entry: dict) -> list[tuple[str, str | None, int]]:
+    """[(émulateur, core, priorité)] d'un système, dans l'ordre du fichier.
+
+    Émulateur à cores (libretro): ``libretro: {snes9x: {priority: 1}, bsnes: {}}``.
+    Émulateur autonome (sans core): ``dolphin: {}`` ou ``eden: {_priority: 1}``.
+    """
+    found = []
+    for emulator, cores in (entry.get("emulators") or {}).items():
+        if not cores or "_priority" in cores:
+            found.append((emulator, None, int((cores or {}).get("_priority", DEFAULT_PRIORITY))))
+            continue
+        for core, opts in cores.items():
+            found.append((emulator, core, int((opts or {}).get("priority", DEFAULT_PRIORITY))))
+    return found
+
+
 def default_choice(system: str, user_dir: Path | None = None) -> tuple[str | None, str | None]:
     """(émulateur, core) par défaut d'un système: la plus petite priorité, puis l'ordre du fichier."""
     entry = systems(user_dir).get(system)
     if not isinstance(entry, dict):
         return None, None
 
-    best: tuple[int, str, str | None] | None = None
-    for emulator, cores in (entry.get("emulators") or {}).items():
-        if not cores:
-            candidates = [(DEFAULT_PRIORITY, None)]
-        else:
-            candidates = [(int((opts or {}).get("priority", DEFAULT_PRIORITY)), core) for core, opts in cores.items()]
-        for priority, core in candidates:
-            if best is None or priority < best[0]:
-                best = (priority, emulator, core)
-
+    best = None
+    for emulator, core, priority in choices(entry):
+        if best is None or priority < best[0]:
+            best = (priority, emulator, core)
     return (best[1], best[2]) if best else (None, None)
 
 

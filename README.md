@@ -59,6 +59,14 @@ es-genconfig --stdout           # affiche le fichier
 Les systèmes viennent de `src/esne/data/systems.yml` (complété par `~/.config/esne/systems.yml`). Mets tes roms dans
 `~/.local/share/esne/roms/<système>/`; ES masque les systèmes vides.
 
+## Systèmes et émulateurs
+24 systèmes: consoles 8/16 bits à la GameCube, PSP, PS2/PS3, Wii/Wii U, Switch, Xbox, plus `steam` et `windows`.
+- **libretro** (NES à PS1, N64, PSP, arcade...): cores choisis dans `systems.yml`.
+- **Autonomes** (décrits dans `emulators.yml`, lancés par `generators/standalone.py`): Dolphin (GameCube, Wii), PCSX2 (PS2),
+  RPCS3 (PS3), Cemu (Wii U), Eden ou Ryujinx (Switch), xemu (Xbox), Steam (fichiers `.steam` contenant l'appid),
+  Wine ou umu-run (`windows`). Ils se lancent en plein écran sans interface; leurs réglages se font encore dans leur propre configuration.
+Un émulateur absent donne l'erreur 204 avec le nom du paquet à installer. Xbox 360 n'est pas inclus (aucun émulateur Linux utilisable).
+
 ## Compiler le frontend
 ```bash
 git clone --recurse-submodules https://github.com/JyuHo/ES-NE.git

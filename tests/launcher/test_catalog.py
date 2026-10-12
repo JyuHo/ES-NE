@@ -37,4 +37,4 @@ def test_invalid_user_file(tmp_path):
 def test_builtin_emulator_info():
     info = catalog.emulator_info("libretro")
     assert "retroarch" in info["binary"] and info["core_dirs"]
-    assert catalog.emulator_info("dolphin") is None
+    assert catalog.emulator_info("inexistant") is None

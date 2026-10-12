@@ -55,7 +55,7 @@ def test_unknown_system_is_203(emulation):
 
 
 def test_unknown_emulator_is_203(emulation):
-    assert main(line("/r/a.sfc", "-emulator", "dolphin")) == errors.UNKNOWN_EMULATOR
+    assert main(line("/r/a.sfc", "-emulator", "inexistant")) == errors.UNKNOWN_EMULATOR
 
 
 def test_missing_retroarch_is_204(emulation):

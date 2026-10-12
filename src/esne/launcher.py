@@ -70,6 +70,8 @@ def launch(ctx: Context) -> int:
     try:
         resolve_choice(ctx)
         module = GENERATORS.get(ctx.emulator)
+        if module is None and (catalog.emulator_info(ctx.emulator) or {}).get("args"):
+            module = "standalone"  # émulateur autonome décrit dans emulators.yml
         if module is None:
             raise LaunchError(UNKNOWN_EMULATOR, f"émulateur inconnu: '{ctx.emulator}'")
 

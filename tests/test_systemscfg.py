@@ -25,7 +25,8 @@ def test_default_core_is_flagged_once(esne_env):
     root = parse(systemscfg.render(catalog.systems(), Path("/roms")))
     for system in root.findall("system"):
         defaults = [c for c in system.iter("core") if c.get("default") == "true"]
-        assert len(defaults) == 1, system.findtext("name")
+        has_cores = any(True for _ in system.iter("core"))
+        assert len(defaults) == (1 if has_cores else 0), system.findtext("name")
     snes = next(s for s in root.findall("system") if s.findtext("name") == "snes")
     assert [c.text for c in snes.iter("core")] == ["snes9x", "bsnes"]
 
@@ -52,3 +53,13 @@ def test_main_writes_file_and_roms_dirs(esne_env):
     assert systemscfg.main([]) == 0
     assert (paths.config_dir() / "es_systems.cfg").exists()
     assert (paths.roms_dir() / "snes").is_dir()
+
+
+def test_standalone_systems_have_emulator_without_cores(esne_env):
+    root = parse(systemscfg.render(catalog.systems(), Path("/roms")))
+    wii = next(s for s in root.findall("system") if s.findtext("name") == "wii")
+    emulators = list(wii.find("emulators"))
+    assert [e.get("name") for e in emulators] == ["dolphin"] and not list(emulators[0])
+    assert catalog.default_choice("wii") == ("dolphin", None)
+    assert catalog.default_choice("switch") == ("eden", None)
+    assert catalog.default_choice("windows") == ("wine", None)

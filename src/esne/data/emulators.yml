@@ -1,3 +1,49 @@
 libretro:
   binary: [retroarch, "flatpak run org.libretro.RetroArch"]
   core_dirs: [/usr/lib/libretro, "~/.config/retroarch/cores"]
+
+# Émulateurs autonomes (generators/standalone.py). Les arguments sont ceux du mode "plein écran, sans interface".
+# Réglages propres à chaque émulateur (résolution, contrôles...): voir sa propre configuration pour l'instant.
+dolphin:
+  binary: [dolphin-emu, "flatpak run org.DolphinEmu.dolphin-emu"]
+  args: [-b, -e, "{rom}"]
+  package: dolphin-emu
+pcsx2:
+  binary: [pcsx2-qt, pcsx2, "flatpak run net.pcsx2.PCSX2"]
+  args: [-batch, -fullscreen, --, "{rom}"]
+  package: pcsx2
+rpcs3:
+  binary: [rpcs3, "flatpak run net.rpcs3.RPCS3"]
+  args: [--no-gui, "{rom}"]
+  package: rpcs3
+cemu:
+  binary: [cemu, Cemu, "flatpak run info.cemu.Cemu"]
+  args: [-f, -g, "{rom}"]
+  package: cemu
+xemu:
+  binary: [xemu, "flatpak run app.xemu.xemu"]
+  args: [-full-screen, -dvd_path, "{rom}"]
+  package: xemu
+eden:
+  binary: [eden, "flatpak run dev.eden_emu.eden"]
+  args: [-f, -g, "{rom}"]
+  package: eden
+ryujinx:
+  binary: [ryujinx, Ryujinx, "flatpak run io.github.ryubing.Ryujinx"]
+  args: ["{rom}"]
+  package: ryujinx
+steam:
+  binary: [steam, "flatpak run com.valvesoftware.Steam"]
+  args: ["steam://rungameid/{rom_text}"]   # le fichier .steam contient l'identifiant (appid) du jeu
+  package: steam
+wine:
+  binary: [wine]
+  args: ["{rom}"]
+  cwd: rom_dir
+  package: wine
+umu:
+  binary: [umu-run]
+  args: ["{rom}"]
+  env: {GAMEID: umu-0, PROTONPATH: GE-Proton}
+  cwd: rom_dir
+  package: umu-launcher

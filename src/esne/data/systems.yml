@@ -145,3 +145,80 @@ psp:
   emulators:
     libretro:
       ppsspp: { priority: 1 }
+
+ps2:
+  name: Sony PlayStation 2
+  manufacturer: Sony
+  release: 2000
+  hardware: console
+  extensions: [.iso, .chd, .bin, .cue, .cso, .gz, .mdf, .elf]
+  emulators:
+    pcsx2: {}
+ps3:
+  name: Sony PlayStation 3
+  manufacturer: Sony
+  release: 2006
+  hardware: console
+  extensions: [.iso, .ps3, .pkg]
+  emulators:
+    rpcs3: {}
+gc:
+  name: Nintendo GameCube
+  manufacturer: Nintendo
+  release: 2001
+  hardware: console
+  extensions: [.iso, .gcm, .gcz, .rvz, .ciso, .dol, .elf, .m3u]
+  emulators:
+    dolphin: {}
+wii:
+  name: Nintendo Wii
+  manufacturer: Nintendo
+  release: 2006
+  hardware: console
+  extensions: [.iso, .wbfs, .rvz, .gcz, .ciso, .wad, .dol, .elf, .m3u]
+  emulators:
+    dolphin: {}
+wiiu:
+  name: Nintendo Wii U
+  manufacturer: Nintendo
+  release: 2012
+  hardware: console
+  extensions: [.wua, .wud, .wux, .rpx]
+  emulators:
+    cemu: {}
+switch:
+  name: Nintendo Switch
+  manufacturer: Nintendo
+  release: 2017
+  hardware: console
+  extensions: [.nsp, .xci, .nro, .nca]
+  emulators:
+    eden: { _priority: 1 }
+    ryujinx: {}
+xbox:
+  name: Microsoft Xbox
+  manufacturer: Microsoft
+  release: 2001
+  hardware: console
+  extensions: [.iso, .xiso]
+  emulators:
+    xemu: {}
+steam:
+  name: Steam
+  manufacturer: Valve
+  release: 2003
+  hardware: computer
+  platform: pc
+  extensions: [.steam]
+  emulators:
+    steam: {}
+windows:
+  name: Windows
+  manufacturer: Microsoft
+  release: 1985
+  hardware: computer
+  platform: pc
+  extensions: [.exe, .bat, .lnk, .msi]
+  emulators:
+    wine: { _priority: 1 }
+    umu: {}

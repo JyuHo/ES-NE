@@ -8,6 +8,7 @@ from pathlib import Path
 from xml.sax.saxutils import escape, quoteattr
 
 from . import catalog, paths
+from .generators import standalone
 from .generators.retroarch import find_binary, find_core
 
 LAUNCH_COMMAND = (
@@ -17,20 +18,14 @@ LAUNCH_COMMAND = (
 
 
 def _cores(entry: dict) -> list[tuple[str, str, int]]:
-    """[(émulateur, core, priorité)] triés: le plus prioritaire d'abord, l'ordre du fichier départage."""
-    found = []
-    for emulator, cores in (entry.get("emulators") or {}).items():
-        if not cores:
-            found.append((emulator, "", catalog.DEFAULT_PRIORITY))
-            continue
-        for core, opts in cores.items():
-            found.append((emulator, core, int((opts or {}).get("priority", catalog.DEFAULT_PRIORITY))))
-    return sorted(found, key=lambda item: item[2])
+    """[(émulateur, core, priorité)] triés: le plus prioritaire d'abord, l'ordre du fichier départage.
+    Un émulateur autonome a le core ''."""
+    return sorted(((e, c or "", p) for e, c, p in catalog.choices(entry)), key=lambda item: item[2])
 
 
 def core_installed(emulator: str, core: str) -> bool:
     if emulator != "libretro":
-        return False
+        return standalone.is_installed(emulator)
     try:
         info = catalog.emulator_info("libretro") or {}
         find_binary(info.get("binary"))
@@ -46,7 +41,7 @@ def render(systems: dict, roms: Path, installed_only: bool = False, is_installed
         if not isinstance(entry, dict):
             continue
         cores = _cores(entry)
-        if installed_only and not any(is_installed(e, c) for e, c, _ in cores if c):
+        if installed_only and not any(is_installed(e, c) for e, c, _ in cores):
             continue
 
         extensions = " ".join(entry.get("extensions") or [])
@@ -69,11 +64,13 @@ def render(systems: dict, roms: Path, installed_only: bool = False, is_installed
             by_emulator.setdefault(emulator, []).append((core, priority))
         default_emulator, default_core = catalog.default_choice(name)
         for emulator, emulator_cores in by_emulator.items():
+            named = [core for core, _ in emulator_cores if core]
+            if not named:
+                lines.append(f"      <emulator name={quoteattr(emulator)} />")
+                continue
             lines.append(f"      <emulator name={quoteattr(emulator)}>")
             lines.append("        <cores>")
-            for core, _ in emulator_cores:
-                if not core:
-                    continue
+            for core in named:
                 default = ' default="true"' if (emulator, core) == (default_emulator, default_core) else ""
                 lines.append(f"          <core{default}>{escape(core)}</core>")
             lines.append("        </cores>")
