@@ -43,7 +43,11 @@ def test_has(fake):
     assert main(["has", "a", "b"]) == 2
 
 
-def test_commands_lists_only_usable(fake, capsys):
+def test_commands_lists_only_usable(fake, capsys, monkeypatch):
+    from esne.esctl.commands import padsinfo, timezone
+    # ces commandes dépendent de la machine (sysfs, timedatectl): on les neutralise pour ce test
+    monkeypatch.setattr(padsinfo, "available", lambda: False)
+    monkeypatch.setattr(timezone, "available", lambda: False)
     assert main(["commands"]) == 0
     assert capsys.readouterr().out.splitlines() == ["info", "version"]
     fake.tools.update({"pactl", "xrandr"})
