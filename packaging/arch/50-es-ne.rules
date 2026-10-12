@@ -1,0 +1,18 @@
+// ES-NE: depuis la session locale active, le menu d'ES peut changer le fuseau horaire, redémarrer et éteindre sans mot de passe
+// (esctl timezone set, systemctl reboot / poweroff).
+polkit.addRule(function(action, subject) {
+    if (!subject.local || !subject.active) {
+        return polkit.Result.NOT_HANDLED;
+    }
+    var allowed = [
+        "org.freedesktop.timedate1.set-timezone",
+        "org.freedesktop.login1.reboot",
+        "org.freedesktop.login1.reboot-multiple-sessions",
+        "org.freedesktop.login1.power-off",
+        "org.freedesktop.login1.power-off-multiple-sessions"
+    ];
+    if (allowed.indexOf(action.id) >= 0) {
+        return polkit.Result.YES;
+    }
+    return polkit.Result.NOT_HANDLED;
+});

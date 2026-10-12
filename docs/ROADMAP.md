@@ -33,7 +33,8 @@ Pad 1 via `sdl2` et raccourcis OK; multi-joueurs et configuration par jeu non fa
 Dolphin validé; PCSX2, RPCS3, Cemu, Eden/Ryujinx, xemu, Steam, Wine/umu décrits dans `emulators.yml` mais non essayés. Réglages internes des émulateurs non gérés.
 ## M5 — bezels, shaders, scraper, RetroAchievements, netplay 🚧
 Shaders ✅. Bezels: installation et affichage RetroArch codés (à valider en jeu). Reste: tatouages, scraper, RetroAchievements, netplay.
-## M6 — PKGBUILD, session (Gamescope, Wayland/X11) ❌
+## M6 — PKGBUILD, session (Gamescope, Wayland/X11) 🚧
+Écrits dans `packaging/arch/` (PKGBUILD `es-ne-git`, `es-ne-session`, `es-ne.desktop`, règle polkit `50-es-ne.rules`), pas encore testés: `makepkg` et la session de connexion restent à valider sur CachyOS.
 
 ## Chantiers ES hors jalons (voir `docs/AUDIT_ANALYSIS.md` §5)
 - 🚧 patch 6: appels `batocera-*` restants dans `GuiMenu.cpp` (stockage, overscan, LED...): voir « Ce qui reste de Batocera » dans `docs/UPSTREAM.md`

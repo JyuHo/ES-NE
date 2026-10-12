@@ -1,0 +1,5 @@
+post_install() {
+  echo ">> ES-NE: lance « es-genconfig » en tant qu'utilisateur pour créer ~/.config/esne/es_systems.cfg et les dossiers de roms,"
+  echo ">> puis installe un thème dans ~/.local/share/esne/themes (ex.: es-theme-carbon)."
+  echo ">> Session de connexion: choisis « ES-NE » dans ton gestionnaire de connexion."
+}

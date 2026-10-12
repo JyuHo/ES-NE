@@ -18,7 +18,7 @@ pour Arch Linux / CachyOS, avec les options de RetroBat, **sans aucune dépendan
 | `es-launcher` | ✅ lancement validé sur une vraie machine (SNES, N64, GameCube, Wii): RetroArch (manette `sdl2`, raccourcis, ratio, shaders, rewind...) et émulateurs autonomes; 134 tests |
 | `es-genconfig` | ✅ génère `es_systems.cfg`, `es_features.cfg` et les jeux de shaders depuis le catalogue (24 systèmes) |
 | `esctl` | ✅ `has`, `version`, `resolution`, `audio`, `config`, `info`, `timezone`, `padsinfo`, `thebezelproject`, `systems` (état des BIOS), `swissknife --emukill`, `preupdate-gamelists-hook`. Contrat dans `docs/ESCTL_CONTRACT.md` |
-| Paquets (`PKGBUILD`), session, règle polkit | ❌ |
+| Paquet Arch (`packaging/arch/PKGBUILD`), session `ES-NE`, règle polkit | 🚧 écrits, non testés (`cd packaging/arch && makepkg -si`) |
 
 Détails: `docs/ROADMAP.md` (jalons), `PARITY.md` (parité avec RetroBat), `docs/UPSTREAM.md` (patchs d'ES).
 

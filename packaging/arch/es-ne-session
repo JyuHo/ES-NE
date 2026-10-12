@@ -1,0 +1,10 @@
+#!/bin/sh
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Session ES-NE. Depuis un bureau déjà ouvert (WAYLAND_DISPLAY ou DISPLAY définis), ES se lance directement dans une fenêtre
+# plein écran. Depuis un gestionnaire de connexion (SDDM...), la session démarre gamescope comme compositeur (s'il est installé).
+# ES se relance lui-même (menu « redémarrer ES »): aucune boucle ici.
+mkdir -p "${XDG_STATE_HOME:-$HOME/.local/state}/esne"
+if [ -z "$WAYLAND_DISPLAY$DISPLAY" ] && [ -z "$ESNE_NO_GAMESCOPE" ] && command -v gamescope >/dev/null 2>&1; then
+    exec gamescope -e -f -- emulationstation "$@"
+fi
+exec emulationstation "$@"

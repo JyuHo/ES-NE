@@ -1,0 +1,62 @@
+# Maintainer: JyuHo <JyuHo57@gmail.com>
+# Paquet de développement: construit ES-NE (frontend + launcher) depuis la branche main.
+#   cd packaging/arch && makepkg -si
+# Clés de scraping (TheGamesDB...): copie ton fichier privé `esne-keys.cmake` à côté de ce PKGBUILD, il est utilisé s'il existe
+# (jamais commité, voir esne-keys.cmake.example dans le fork).
+pkgname=es-ne-git
+pkgver=0.0.1
+pkgrel=1
+install=es-ne.install
+pkgdesc='EmulationStation front-end and RetroArch launcher for Linux, with no Batocera dependency (ES-NE)'
+arch=(x86_64 aarch64)
+url='https://github.com/JyuHo/ES-NE'
+license=(GPL-3.0-or-later MIT)
+depends=(python python-yaml python-evdev retroarch libretro-core-info libretro-shaders-slang
+         sdl2 sdl2_mixer freeimage freetype2 curl vlc alsa-lib)
+makedepends=(git cmake gettext rapidjson python-build python-installer python-setuptools python-wheel)
+optdepends=('gamescope: session de connexion dédiée (es-ne-session)'
+            'libretro-snes9x: Super Nintendo' 'libretro-mupen64plus-next: Nintendo 64'
+            'retroarch-assets-ozone: icônes du menu RetroArch' 'libretro-overlays: surimpressions'
+            'python-pillow: détection plus rapide des bezels')
+provides=(es-ne)
+conflicts=(es-ne)
+source=("$pkgname::git+https://github.com/JyuHo/ES-NE.git")
+sha256sums=(SKIP)
+
+pkgver() {
+  cd "$pkgname"
+  printf '0.0.1.r%s.g%s' "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$pkgname"
+  git -c protocol.file.allow=always submodule update --init --recursive
+  if [ -f "$startdir/esne-keys.cmake" ]; then
+    cp "$startdir/esne-keys.cmake" third_party/emulationstation/esne-keys.cmake
+  fi
+}
+
+build() {
+  cd "$pkgname"
+  cmake -S third_party/emulationstation -B build-es -DESNE=ON -DGL=ON \
+        -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DESNE_SHARE_DIR=/usr/share/esne
+  cmake --build build-es
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "$pkgname"
+  DESTDIR="$pkgdir" cmake --install build-es
+  python -m installer --destdir="$pkgdir" dist/*.whl
+
+  install -d "$pkgdir/usr/share/esne"
+  cp -r third_party/emulationstation/resources "$pkgdir/usr/share/esne/resources"
+  printf '%s\n' "$pkgver" > "$pkgdir/usr/share/esne/esne.version"
+
+  install -Dm755 packaging/arch/es-ne-session "$pkgdir/usr/bin/es-ne-session"
+  install -Dm644 packaging/arch/es-ne.desktop "$pkgdir/usr/share/wayland-sessions/es-ne.desktop"
+  install -Dm644 packaging/arch/50-es-ne.rules "$pkgdir/usr/share/polkit-1/rules.d/50-es-ne.rules"
+
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 third_party/emulationstation/LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE-emulationstation.md"
+}
