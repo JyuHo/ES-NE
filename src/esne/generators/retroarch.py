@@ -222,10 +222,9 @@ def bezel_settings(ctx: Context) -> dict[str, str]:
         if not bezels.tbp_installed(ctx.system):
             return {}
         choice = bezels.TBP_SET
-    stem = Path(ctx.rom).stem
-    image = bezels.find_image(choice, ctx.system, stem)
+    image = bezels.find_image(choice, ctx.system)
     if image is None:
-        log.info("aucun bezel '%s' pour %s", choice, stem)
+        log.info("aucun bezel '%s' pour le système %s", choice, ctx.system)
         return {}
 
     settings = {"input_overlay_enable": "true", "input_overlay_opacity": "1.000000"}

@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-import io
+
 import json
-import zipfile
+
 
 import pytest
 
@@ -48,30 +48,14 @@ def test_viewport_scales_and_refuses_other_ratio():
     assert bezels.viewport(area, (1920, 1200), stretch=True) == (240, 111, 1440, 978)
 
 
-def test_find_image_order_and_fuzzy_name(tmp_path):
-    games = tmp_path / "tbp" / "games" / "snes"
-    games.mkdir(parents=True)
-    (games / "Zelda (USA).png").write_bytes(b"")
-    (tmp_path / "tbp" / "systems").mkdir()
+def test_find_image_system_then_default(tmp_path):
+    (tmp_path / "tbp" / "systems").mkdir(parents=True)
     (tmp_path / "tbp" / "systems" / "snes.png").write_bytes(b"")
+    (tmp_path / "tbp" / "default.png").write_bytes(b"")
     dirs = [tmp_path]
-    assert bezels.find_image("tbp", "snes", "Zelda (USA)", dirs).name == "Zelda (USA).png"
-    assert bezels.find_image("tbp", "snes", "Zelda (Europe)", dirs).name == "Zelda (USA).png"
-    assert bezels.find_image("tbp", "snes", "Other", dirs).name == "snes.png"
-    assert bezels.find_image("missing", "snes", "Other", dirs) is None
-
-
-def test_find_image_variant_and_generic_set(tmp_path):
-    games = tmp_path / "thebezelproject" / "games" / "snes"
-    games.mkdir(parents=True)
-    (games / "Zelda (USA).png").write_bytes(b"")
-    (games / "Zelda (USA) (Beta).png").write_bytes(b"")
-    (tmp_path / "thebezelproject-system" / "systems").mkdir(parents=True)
-    (tmp_path / "thebezelproject-system" / "systems" / "snes.png").write_bytes(b"")
-    dirs = [tmp_path]
-    assert bezels.find_image("thebezelproject:Zelda (USA) (Beta)", "snes", "Zelda (USA)", dirs).name == "Zelda (USA) (Beta).png"
-    assert bezels.find_image("thebezelproject:Gone", "snes", "Zelda (USA)", dirs).name == "Zelda (USA).png"
-    assert bezels.find_image("thebezelproject-system", "snes", "Zelda (USA)", dirs).name == "snes.png"
+    assert bezels.find_image("tbp", "snes", dirs).name == "snes.png"
+    assert bezels.find_image("tbp", "nes", dirs).name == "default.png"
+    assert bezels.find_image("missing", "snes", dirs) is None
 
 
 class Cfg:
@@ -89,7 +73,7 @@ def env(tmp_path, monkeypatch):
     monkeypatch.setenv("ESNE_SHARE_DIR", str(tmp_path / "share"))
     monkeypatch.setenv("ESNE_CACHE_DIR", str(tmp_path / "cache"))
     monkeypatch.setattr(retroarch, "screen_size", lambda: (1920, 1080))
-    make_bezel(tmp_path / "data" / "decorations" / "thebezelproject" / "games" / "snes" / "Zelda (USA).png")
+    make_bezel(tmp_path / "data" / "decorations" / "thebezelproject" / "systems" / "snes.png")
     return tmp_path
 
 
@@ -98,7 +82,7 @@ def test_bezel_settings_with_set_chosen(env):
     assert s["input_overlay_enable"] == "true"
     assert s["aspect_ratio_index"] == str(retroarch.RATIOS.index("custom"))
     assert (s["custom_viewport_x"], s["custom_viewport_width"]) == ("240", "1440")
-    assert "Zelda" in open(s["input_overlay"]).read()
+    assert "snes.png" in open(s["input_overlay"]).read()
 
 
 def test_bezel_auto_uses_installed_tbp_and_none_disables(env):
@@ -123,61 +107,44 @@ def test_build_settings_includes_bezel(env):
 
 # ---- esctl thebezelproject ----------------------------------------------------
 
-def fake_zip():
-    buffer = io.BytesIO()
-    with zipfile.ZipFile(buffer, "w") as z:
-        z.writestr("bezelproject-SNES-master/retroarch/overlay/GameBezels/SNES/Zelda (USA).png", b"png1")
-        z.writestr("bezelproject-SNES-master/retroarch/overlay/GameBezels/SNES/Zelda (USA).cfg", b"cfg")
-        z.writestr("bezelproject-SNES-master/retroarch/overlay/Super-Nintendo-Entertainment-System.png", b"sys")
-        z.writestr("bezelproject-SNES-master/retroarch/overlay/GameBezels/SNES/../../../evil.png", b"x")
-        z.writestr("bezelproject-SNES-master/README.md", b"x")
-    return buffer.getvalue()
+PNG = b"\x89PNG\r\n\x1a\nrest"
 
 
-def test_install_and_remove(tmp_path, capsys):
+def fake_get(files):
+    def get(url):
+        if url == tbp.API.format(repo="bezelproject-SNES"):
+            return json.dumps([{"name": n, "type": "file"} for n in files] + [{"name": "GameBezels", "type": "dir"}]).encode()
+        return PNG
+    return get
+
+
+def test_install_downloads_only_the_system_image_and_remove_cleans(tmp_path):
     base = tmp_path / "decorations" / "thebezelproject"
-    generic = tmp_path / "decorations" / "thebezelproject-system" / "systems" / "snes.png"
-    assert tbp.install("snes", fetch=lambda url: fake_zip(), base=base) == 0
-    assert generic.read_bytes() == b"sys"
-    tmp_path = base
-    assert (tmp_path / "games" / "snes" / "Zelda (USA).png").read_bytes() == b"png1"
-    assert (tmp_path / "systems" / "snes.png").read_bytes() == b"sys"
-    assert not (tmp_path / "games" / "snes" / "Zelda (USA).cfg").exists()
+    (base / "games" / "snes").mkdir(parents=True)  # reste d'une ancienne version
+    assert tbp.install("snes", get=fake_get(["Super-Nintendo.cfg", "Super-Nintendo.png"]), base=base) == 0
+    assert (base / "systems" / "snes.png").read_bytes() == PNG
     assert tbp.remove("snes", base=base) == 0
-    assert not (tmp_path / "games" / "snes").exists() and not (tmp_path / "systems" / "snes.png").exists()
-    assert not generic.exists()
+    assert not (base / "systems" / "snes.png").exists() and not (base / "games" / "snes").exists()
 
 
-def test_install_rejects_unknown_system_and_empty_zip(tmp_path):
-    assert tbp.install("unknown", fetch=lambda u: b"", base=tmp_path) == 1
-    empty = io.BytesIO()
-    zipfile.ZipFile(empty, "w").close()
-    assert tbp.install("snes", fetch=lambda u: empty.getvalue(), base=tmp_path) == 1
+def test_pick_image_prefers_horizontal():
+    assert tbp.pick_image(["MAME-Vertical.png", "MAME-Horizontal.png", "x.cfg"]) == "MAME-Horizontal.png"
+    assert tbp.pick_image(["a.cfg"]) is None
+
+
+def test_install_rejects_unknown_system_non_png_and_empty_listing(tmp_path):
+    assert tbp.install("unknown", get=fake_get([]), base=tmp_path) == 1
+    assert tbp.install("snes", get=fake_get([]), base=tmp_path) == 1
+    bad = lambda url: json.dumps([{"name": "a.png", "type": "file"}]).encode() if "api." in url else b"<html>"
+    assert tbp.install("snes", get=bad, base=tmp_path) == 1
+    assert not (tmp_path / "systems").exists()
 
 
 def test_list_marks_installed(tmp_path, monkeypatch, capsys):
     monkeypatch.setenv("ESNE_DATA_DIR", str(tmp_path))
-    (tmp_path / "decorations" / "thebezelproject" / "games" / "snes").mkdir(parents=True)
+    (tmp_path / "decorations" / "thebezelproject" / "systems").mkdir(parents=True)
+    (tmp_path / "decorations" / "thebezelproject" / "systems" / "snes.png").write_bytes(PNG)
     lines = tbp.list_lines()
     assert any(l.startswith("[I] snes https://github.com/thebezelproject/bezelproject-SNES") for l in lines)
     assert any(l.startswith("[A] nes ") for l in lines)
     assert tbp.run(["list"]) == 0 and "[I] snes" in capsys.readouterr().out
-
-
-def test_system_bezel_overrides_global_and_none_wins(env):
-    from esne.config import Config
-
-    def ctx(values):
-        cfg = Config(values)
-        return Context(system="snes", rom="/roms/snes/Zelda (USA).sfc", core="snes9x",
-                       config=type("S", (), {"get": lambda self, key, default=None: cfg.get(key, "snes", "Zelda (USA).sfc", default)})())
-
-    make_bezel(env / "data" / "decorations" / "thebezelproject-system" / "systems" / "snes.png", hole=(40, 20, 150, 90))
-    # global = bezel système, système = bezel par jeu -> le choix du système prime (zone de jeu du bezel par jeu)
-    by_game = retroarch.bezel_settings(ctx({"global.bezel": "thebezelproject-system", "snes.bezel": "thebezelproject"}))
-    assert by_game["custom_viewport_x"] == "240"
-    # système en AUTO -> le réglage global s'applique (zone du bezel système)
-    generic = retroarch.bezel_settings(ctx({"global.bezel": "thebezelproject-system", "snes.bezel": "auto"}))
-    assert generic["custom_viewport_x"] == "400"
-    # « none » sur le système désactive même si le global est réglé
-    assert retroarch.bezel_settings(ctx({"global.bezel": "thebezelproject-system", "snes.bezel": "none"})) == {}

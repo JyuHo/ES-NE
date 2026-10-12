@@ -3,7 +3,6 @@
 
 Disposition d'un jeu de décorations (identique à ES/Batocera), dans ``<data>/decorations`` puis ``<share>/decorations``::
 
-    <jeu>/games/<système>/<rom>.png      bezel d'un jeu précis
     <jeu>/systems/<système>.png          bezel du système
     <jeu>/default.png                    bezel par défaut
 
@@ -14,7 +13,6 @@ from __future__ import annotations
 
 import json
 import logging
-import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -23,7 +21,6 @@ from . import paths
 log = logging.getLogger("es-launcher")
 
 TBP_SET = "thebezelproject"
-TBP_SYSTEM_SET = "thebezelproject-system"  # seulement l'image générique du système
 ALPHA_LIMIT = 32  # un pixel est « transparent » en dessous de cette opacité (0-255)
 
 # système ES-NE -> dépôt GitHub de The Bezel Project (https://github.com/thebezelproject/<dépôt>)
@@ -50,37 +47,16 @@ def decoration_dirs() -> list[Path]:
 
 
 def tbp_installed(system: str, directories=None) -> bool:
-    return any((Path(d) / TBP_SET / "games" / system).is_dir() for d in directories or decoration_dirs())
+    return any((Path(d) / TBP_SET / "systems" / f"{system}.png").is_file() for d in directories or decoration_dirs())
 
 
-def _tags_removed(name: str) -> str:
-    return re.sub(r"\s*[\(\[][^\)\]]*[\)\]]", "", name).strip().lower()
-
-
-def find_image(set_name: str, system: str, rom_stem: str, directories=None) -> Path | None:
-    """``set_name`` peut être ``<jeu>:<nom du bezel>`` (variante choisie dans le menu d'un jeu: Beta, Rev...)."""
-    if ":" in set_name:
-        set_name, chosen = set_name.split(":", 1)
-        for directory in directories or decoration_dirs():
-            exact = Path(directory) / set_name / "games" / system / f"{chosen}.png"
-            if exact.is_file():
-                return exact
+def find_image(set_name: str, system: str, directories=None) -> Path | None:
+    """Bezel du système dans le jeu de décorations (``systems/<système>.png``), sinon ``default.png``."""
     for directory in directories or decoration_dirs():
         base = Path(directory) / set_name
-        games = base / "games" / system
-        exact = games / f"{rom_stem}.png"
-        if exact.is_file():
-            return exact
-        if games.is_dir():
-            # même titre sans les étiquettes de région/révision: « Zelda (Europe) » -> « Zelda (USA) »
-            wanted = _tags_removed(rom_stem)
-            if wanted:
-                for candidate in sorted(games.glob("*.png")):
-                    if _tags_removed(candidate.stem) == wanted:
-                        return candidate
-        for fallback in (base / "systems" / f"{system}.png", base / "default.png"):
-            if fallback.is_file():
-                return fallback
+        for candidate in (base / "systems" / f"{system}.png", base / "default.png"):
+            if candidate.is_file():
+                return candidate
     return None
 
 
