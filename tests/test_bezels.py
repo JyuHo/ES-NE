@@ -162,3 +162,22 @@ def test_list_marks_installed(tmp_path, monkeypatch, capsys):
     assert any(l.startswith("[I] snes https://github.com/thebezelproject/bezelproject-SNES") for l in lines)
     assert any(l.startswith("[A] nes ") for l in lines)
     assert tbp.run(["list"]) == 0 and "[I] snes" in capsys.readouterr().out
+
+
+def test_system_bezel_overrides_global_and_none_wins(env):
+    from esne.config import Config
+
+    def ctx(values):
+        cfg = Config(values)
+        return Context(system="snes", rom="/roms/snes/Zelda (USA).sfc", core="snes9x",
+                       config=type("S", (), {"get": lambda self, key, default=None: cfg.get(key, "snes", "Zelda (USA).sfc", default)})())
+
+    make_bezel(env / "data" / "decorations" / "thebezelproject-system" / "systems" / "snes.png", hole=(40, 20, 150, 90))
+    # global = bezel système, système = bezel par jeu -> le choix du système prime (zone de jeu du bezel par jeu)
+    by_game = retroarch.bezel_settings(ctx({"global.bezel": "thebezelproject-system", "snes.bezel": "thebezelproject"}))
+    assert by_game["custom_viewport_x"] == "240"
+    # système en AUTO -> le réglage global s'applique (zone du bezel système)
+    generic = retroarch.bezel_settings(ctx({"global.bezel": "thebezelproject-system", "snes.bezel": "auto"}))
+    assert generic["custom_viewport_x"] == "400"
+    # « none » sur le système désactive même si le global est réglé
+    assert retroarch.bezel_settings(ctx({"global.bezel": "thebezelproject-system", "snes.bezel": "none"})) == {}
