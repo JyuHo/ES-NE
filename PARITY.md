@@ -12,9 +12,9 @@ Légende: ❌ non fait · 🚧 en cours · ✅ fait · ⛔ masqué volontairemen
 | steam, windows | Steam, Wine/umu | 🚧 non testé; Steam rend la main tout de suite (le raccourci ne ferme pas le jeu) | ⛔ | ⛔ | ⛔ | ❌ | ✅ |
 | xbox 360 | — | ⛔ aucun émulateur Linux utilisable | | | | | |
 
-Bezels: un bezel par système (pas de bezel par jeu); le réglage du système prime sur le global. AUTO utilise The Bezel Project s'il est installé pour le système; « NONE » désactive; ratio de l'image différent de l'écran → ignoré sauf option STRETCH BEZELS. Tatouages/overlays de manettes non gérés. Zone de jeu détectée avec Pillow (`python-pillow`) ou fichier `.png.info`.
+Bezels: un bezel par système (pas de bezel par jeu); le réglage du système prime sur le global; quand un bezel est actif, le ratio d'ES est ignoré (équivalent de « auto »): le jeu est cadré dans la zone transparente du bezel. AUTO utilise The Bezel Project s'il est installé pour le système; « NONE » désactive; ratio de l'image différent de l'écran → ignoré sauf option STRETCH BEZELS. Tatouages/overlays de manettes non gérés. Zone de jeu détectée avec Pillow (`python-pillow`) ou fichier `.png.info`.
 
-Limites: table `aspect_ratio_index` en partie non validée; ratio ES « 8/3 » ignoré; netplay, RetroAchievements et bezels non gérés; les réglages internes des émulateurs autonomes (plein écran, résolution) ne sont pas gérés.
+Limites: table `aspect_ratio_index` reprise de la source de RetroArch (4/3, 16/9 et custom confirmés; les autres à valider); ES « full » non géré; netplay, RetroAchievements et bezels non gérés; les réglages internes des émulateurs autonomes (plein écran, résolution) ne sont pas gérés.
 
 ## 2. Menus du frontend ES
 Un ✅ = branché dans `LinuxApiSystem` et vérifié à la compilation; les menus validés dans ES lancé sont indiqués ci-dessous.

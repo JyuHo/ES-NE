@@ -20,11 +20,11 @@ log = logging.getLogger("es-launcher")
 DEFAULT_BINARIES = ["retroarch", "flatpak run org.libretro.RetroArch"]
 DEFAULT_CORE_DIRS = ["/usr/lib/libretro", "~/.config/retroarch/cores"]
 
-# Ordre de l'énumération ASPECT_RATIO_* de RetroArch (valeur de aspect_ratio_index).
-# Non validé sur une installation réelle: l'ordre peut changer d'une version de RetroArch à l'autre.
+# Ordre de l'énumération ASPECT_RATIO_* de RetroArch (valeur de aspect_ratio_index): « custom » vaut 23, comme dans Batocera.
+# Les indices sont repris de la source de RetroArch; ils ont déjà été confirmés pour 4/3, 16/9 et custom (bezels).
 RATIOS = [
     "4/3", "16/9", "16/10", "16/15", "21/9", "1/1", "2/1", "3/2", "3/4", "4/1", "9/16", "5/4",
-    "6/5", "7/9", "8/7", "19/12", "19/14", "30/17", "32/9", "config", "squarepixel", "core", "custom", "full",
+    "6/5", "7/9", "8/3", "8/7", "19/12", "19/14", "30/17", "32/9", "config", "squarepixel", "core", "custom",
 ]
 
 SHADER_EXTENSIONS = (".slangp", ".glslp", ".cgp")

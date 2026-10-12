@@ -19,7 +19,7 @@ def test_truthy_and_quote():
 
 def test_ratio_table_matches_retroarch_enum():
     assert ra.RATIOS.index("4/3") == 0 and ra.RATIOS.index("16/9") == 1
-    assert ra.RATIOS.index("core") == 21 and ra.RATIOS.index("full") == 23
+    assert ra.RATIOS.index("core") == 22 and ra.RATIOS.index("custom") == 23 and ra.RATIOS.index("8/3") == 14
     assert len(ra.RATIOS) == len(set(ra.RATIOS))
 
 
