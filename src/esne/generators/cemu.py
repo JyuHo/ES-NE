@@ -35,7 +35,7 @@ K_AXIS_XN, K_AXIS_YN, K_ROT_XN, K_ROT_YN = 44, 45, 46, 47
 SDL_PRO_MAPPING = [
     (A, 1), (B, 0), (X, 3), (Y, 2),
     (L, 9), (R, 10), (ZL, K_TRIG_XP), (ZR, K_TRIG_YP),
-    (PLUS, 6), (MINUS, 4), (HOME, 5),
+    (PLUS, 6), (MINUS, 4),
     (UP, 11), (DOWN, 12), (LEFT, 13), (RIGHT, 14),
     (STICK_L, 7), (STICK_R, 8),
     (LSTICK_UP, K_AXIS_YN), (LSTICK_DOWN, K_AXIS_YP), (LSTICK_LEFT, K_AXIS_XN), (LSTICK_RIGHT, K_AXIS_XP),
