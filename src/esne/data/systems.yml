@@ -136,3 +136,12 @@ nds:
     libretro:
       melonds: { priority: 1 }
       desmume: {}
+psp:
+  name: Sony PlayStation Portable
+  manufacturer: Sony
+  release: 2004
+  hardware: handheld
+  extensions: [.iso, .cso, .pbp, .chd, .elf]
+  emulators:
+    libretro:
+      ppsspp: { priority: 1 }
