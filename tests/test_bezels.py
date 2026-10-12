@@ -61,6 +61,19 @@ def test_find_image_order_and_fuzzy_name(tmp_path):
     assert bezels.find_image("missing", "snes", "Other", dirs) is None
 
 
+def test_find_image_variant_and_generic_set(tmp_path):
+    games = tmp_path / "thebezelproject" / "games" / "snes"
+    games.mkdir(parents=True)
+    (games / "Zelda (USA).png").write_bytes(b"")
+    (games / "Zelda (USA) (Beta).png").write_bytes(b"")
+    (tmp_path / "thebezelproject-system" / "systems").mkdir(parents=True)
+    (tmp_path / "thebezelproject-system" / "systems" / "snes.png").write_bytes(b"")
+    dirs = [tmp_path]
+    assert bezels.find_image("thebezelproject:Zelda (USA) (Beta)", "snes", "Zelda (USA)", dirs).name == "Zelda (USA) (Beta).png"
+    assert bezels.find_image("thebezelproject:Gone", "snes", "Zelda (USA)", dirs).name == "Zelda (USA).png"
+    assert bezels.find_image("thebezelproject-system", "snes", "Zelda (USA)", dirs).name == "snes.png"
+
+
 class Cfg:
     def __init__(self, values): self.values = values
     def get(self, key, default=None): return self.values.get(key, default)
@@ -122,12 +135,17 @@ def fake_zip():
 
 
 def test_install_and_remove(tmp_path, capsys):
-    assert tbp.install("snes", fetch=lambda url: fake_zip(), base=tmp_path) == 0
+    base = tmp_path / "decorations" / "thebezelproject"
+    generic = tmp_path / "decorations" / "thebezelproject-system" / "systems" / "snes.png"
+    assert tbp.install("snes", fetch=lambda url: fake_zip(), base=base) == 0
+    assert generic.read_bytes() == b"sys"
+    tmp_path = base
     assert (tmp_path / "games" / "snes" / "Zelda (USA).png").read_bytes() == b"png1"
     assert (tmp_path / "systems" / "snes.png").read_bytes() == b"sys"
     assert not (tmp_path / "games" / "snes" / "Zelda (USA).cfg").exists()
-    assert tbp.remove("snes", base=tmp_path) == 0
+    assert tbp.remove("snes", base=base) == 0
     assert not (tmp_path / "games" / "snes").exists() and not (tmp_path / "systems" / "snes.png").exists()
+    assert not generic.exists()
 
 
 def test_install_rejects_unknown_system_and_empty_zip(tmp_path):

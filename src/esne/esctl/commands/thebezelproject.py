@@ -109,6 +109,9 @@ def install(system: str, fetch=download, base: Path | None = None) -> int:
             return 1
         _replace(staging / "games" / system, base / "games" / system)
         if (staging / "systems" / f"{system}.png").is_file():
+            generic = base.parent / bezels.TBP_SYSTEM_SET / "systems" / f"{system}.png"
+            generic.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(staging / "systems" / f"{system}.png", generic)
             (base / "systems").mkdir(parents=True, exist_ok=True)
             shutil.move(str(staging / "systems" / f"{system}.png"), base / "systems" / f"{system}.png")
     print(f"{count} bezels installed")
@@ -129,6 +132,7 @@ def remove(system: str, base: Path | None = None) -> int:
     base = base or root()
     shutil.rmtree(base / "games" / system, ignore_errors=True)
     (base / "systems" / f"{system}.png").unlink(missing_ok=True)
+    (base.parent / bezels.TBP_SYSTEM_SET / "systems" / f"{system}.png").unlink(missing_ok=True)
     return 0
 
 

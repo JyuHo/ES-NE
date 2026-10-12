@@ -12,7 +12,7 @@ Légende: ❌ non fait · 🚧 en cours · ✅ fait · ⛔ masqué volontairemen
 | steam, windows | Steam, Wine/umu | 🚧 non testé; Steam rend la main tout de suite (le raccourci ne ferme pas le jeu) | ⛔ | ⛔ | ⛔ | ❌ | ✅ |
 | xbox 360 | — | ⛔ aucun émulateur Linux utilisable | | | | | |
 
-Bezels: AUTO utilise The Bezel Project s'il est installé pour le système; « NONE » désactive; ratio de l'image différent de l'écran → ignoré sauf option STRETCH BEZELS. Tatouages/overlays de manettes non gérés. Zone de jeu détectée avec Pillow (`python-pillow`) ou fichier `.png.info`.
+Bezels: choix par système (par jeu / générique) et, par jeu, parmi les variantes de son titre. AUTO utilise The Bezel Project s'il est installé pour le système; « NONE » désactive; ratio de l'image différent de l'écran → ignoré sauf option STRETCH BEZELS. Tatouages/overlays de manettes non gérés. Zone de jeu détectée avec Pillow (`python-pillow`) ou fichier `.png.info`.
 
 Limites: table `aspect_ratio_index` en partie non validée; ratio ES « 8/3 » ignoré; netplay, RetroAchievements et bezels non gérés; les réglages internes des émulateurs autonomes (plein écran, résolution) ne sont pas gérés.
 

@@ -23,6 +23,7 @@ from . import paths
 log = logging.getLogger("es-launcher")
 
 TBP_SET = "thebezelproject"
+TBP_SYSTEM_SET = "thebezelproject-system"  # seulement l'image générique du système
 ALPHA_LIMIT = 32  # un pixel est « transparent » en dessous de cette opacité (0-255)
 
 # système ES-NE -> dépôt GitHub de The Bezel Project (https://github.com/thebezelproject/<dépôt>)
@@ -57,6 +58,13 @@ def _tags_removed(name: str) -> str:
 
 
 def find_image(set_name: str, system: str, rom_stem: str, directories=None) -> Path | None:
+    """``set_name`` peut être ``<jeu>:<nom du bezel>`` (variante choisie dans le menu d'un jeu: Beta, Rev...)."""
+    if ":" in set_name:
+        set_name, chosen = set_name.split(":", 1)
+        for directory in directories or decoration_dirs():
+            exact = Path(directory) / set_name / "games" / system / f"{chosen}.png"
+            if exact.is_file():
+                return exact
     for directory in directories or decoration_dirs():
         base = Path(directory) / set_name
         games = base / "games" / system
