@@ -41,19 +41,18 @@ def test_info_file_overrides_detection(tmp_path):
     assert (area.x, area.y, area.width, area.height) == (6, 5, 178, 96)
 
 
-def test_layout_same_ratio_fills_screen():
+def test_layout_same_ratio_scales_the_window():
     area = bezels.Area(24, 10, 144, 88, 192, 108)
-    placed = bezels.layout(area, (1920, 1080))
-    assert placed.box == (240, 100, 1440, 880) and placed.rect is None
+    assert bezels.layout(area, (1920, 1080)) == (240, 100, 1440, 880)
 
 
-def test_layout_other_ratio_is_centered_with_bars():
+def test_layout_other_ratio_keeps_game_proportions_in_stretched_window():
     area = bezels.Area(24, 10, 144, 88, 192, 108)
-    placed = bezels.layout(area, (1920, 1200))  # 16:10: l'image 16:9 garde ses proportions
-    assert placed.box == (240, 160, 1440, 880)
-    assert placed.rect == pytest.approx((0.0, 60 / 1200, 1.0, 1080 / 1200))
-    stretched = bezels.layout(area, (1920, 1200), stretch=True)
-    assert stretched.box == (240, 111, 1440, 978) and stretched.rect is None
+    # 16:10: image étirée en hauteur (x1,11), le jeu garde 1440x880 et reste centré dans la fenêtre étirée
+    assert bezels.layout(area, (1920, 1200)) == (240, 160, 1440, 880)
+    assert bezels.layout(area, (1920, 1200), stretch="0") is None
+    assert bezels.layout(area, (3440, 1440), stretch="auto") is None   # 21:9: trop éloigné
+    assert bezels.layout(area, (3440, 1440), stretch="1") is not None
 
 
 def test_find_image_system_then_default(tmp_path):
@@ -103,13 +102,23 @@ def test_bezel_auto_without_install_is_empty(env):
     assert retroarch.bezel_settings(ctx) == {}
 
 
-def test_bezel_on_16_10_screen_is_centered(env, monkeypatch):
+def test_bezel_on_16_10_screen_and_vulkan_offset(env, monkeypatch):
     monkeypatch.setattr(retroarch, "screen_size", lambda: (1920, 1200))
+    monkeypatch.setattr(retroarch, "vulkan_available", lambda: True)
     s = retroarch.bezel_settings(context({"bezel": "thebezelproject"}))
-    assert (s["custom_viewport_x"], s["custom_viewport_y"]) == ("240", "160")
-    text = open(s["input_overlay"]).read()
-    assert "overlay0_full_screen = false" in text and 'overlay0_rect = "0.000000,0.050000,1.000000,0.900000"' in text
-    assert "overlay0_normalized = true" in text
+    # RetroArch/Vulkan double la position: on envoie la moitié
+    assert (s["custom_viewport_x"], s["custom_viewport_y"]) == ("120", "80")
+    assert (s["custom_viewport_width"], s["custom_viewport_height"]) == ("1440", "880")
+    assert s["video_driver"] == "vulkan"
+    assert "overlay0_full_screen = true" in open(s["input_overlay"]).read()
+
+
+def test_bezel_glcore_keeps_full_offset(env, monkeypatch):
+    monkeypatch.setattr(retroarch, "screen_size", lambda: (1920, 1080))
+    s = retroarch.bezel_settings(context({"bezel": "thebezelproject", "video_driver": "glcore"}))
+    assert (s["custom_viewport_x"], s["custom_viewport_y"]) == ("240", "100") and s["video_driver"] == "glcore"
+    f = retroarch.bezel_settings(context({"bezel": "thebezelproject", "video_driver": "glcore", "bezel_viewport_factor": "0.5"}))
+    assert f["custom_viewport_x"] == "120"
 
 
 def test_build_settings_includes_bezel(env):

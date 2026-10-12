@@ -227,26 +227,34 @@ def bezel_settings(ctx: Context) -> dict[str, str]:
         log.info("aucun bezel '%s' pour le système %s", choice, ctx.system)
         return {}
 
-    rect = None
     settings = {"input_overlay_enable": "true", "input_overlay_opacity": "1.000000"}
     area = bezels.game_area(image)
     screen = screen_size()
     if area is None or screen is None:
         log.warning("bezel %s: zone de jeu ou écran inconnus, le jeu reste plein écran sous l'image", image.name)
     else:
-        stretch = ctx.setting("bezel_stretch", "auto") in (1, "1", "true", "True")
-        placed = bezels.layout(area, screen, stretch)
-        box, rect = placed.box, placed.rect
+        stretch = str(ctx.setting("bezel_stretch", "auto")).lower()
+        stretch = {"true": "1", "false": "0"}.get(stretch, stretch)
+        box = bezels.layout(area, screen, stretch)
+        if box is None:
+            log.warning("bezel %s ignoré: son ratio est trop éloigné de l'écran %dx%d (option STRETCH BEZELS)", image.name, *screen)
+            return {}
+        # le pilote doit être connu: RetroArch/Vulkan applique la position de la zone personnalisée deux fois
+        driver = str(ctx.setting("video_driver", "auto") or "auto")
+        if driver == "auto":
+            driver = "vulkan" if vulkan_available() else "glcore"
+        settings["video_driver"] = driver
+        factor = float(ctx.setting("bezel_viewport_factor", 0.5 if driver == "vulkan" else 1.0))
         settings.update({
             "aspect_ratio_index": str(RATIOS.index("custom")),
             "video_aspect_ratio_auto": "false",
             "video_scale_integer": "false",
-            "custom_viewport_x": str(box[0]), "custom_viewport_y": str(box[1]),
+            "custom_viewport_x": str(round(box[0] * factor)), "custom_viewport_y": str(round(box[1] * factor)),
             "custom_viewport_width": str(box[2]), "custom_viewport_height": str(box[3]),
         })
-    overlay = bezels.write_overlay(image, paths.cache_dir() / "retroarch" / "overlays" / f"{ctx.system}.cfg", rect)
+    overlay = bezels.write_overlay(image, paths.cache_dir() / "retroarch" / "overlays" / f"{ctx.system}.cfg")
     settings["input_overlay"] = str(overlay)
-    log.info("bezel: %s (zone de jeu %s, image %s)", image, settings.get("custom_viewport_width", "?") + "x" + settings.get("custom_viewport_height", "?"), "plein écran" if rect is None else "centrée")
+    log.info("bezel: %s (zone de jeu %sx%s)", image, settings.get("custom_viewport_width", "?"), settings.get("custom_viewport_height", "?"))
     return settings
 
 

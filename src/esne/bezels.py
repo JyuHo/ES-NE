@@ -229,37 +229,32 @@ def game_area(image: Path) -> Area | None:
     return read_info(image) or detect_area(image)
 
 
-@dataclasses.dataclass(frozen=True)
-class Layout:
-    """Placement du bezel sur l'écran: zone de jeu en pixels (x, y, largeur, hauteur) et rectangle de l'image
-    (normalisé, 0-1) ou None quand l'image remplit tout l'écran."""
-    box: tuple[int, int, int, int]
-    rect: tuple[float, float, float, float] | None
+def layout(area: Area, screen: tuple[int, int], stretch: str = "auto", tolerance: float = 0.02, limit: float = 0.25):
+    """Zone de jeu (x, y, largeur, hauteur) en pixels d'écran, l'image du bezel étant affichée en plein écran.
 
-
-def layout(area: Area, screen: tuple[int, int], stretch: bool = False, tolerance: float = 0.02) -> Layout:
-    """Même ratio: l'image remplit l'écran. Ratio différent: l'image entière est centrée avec des bandes noires
-    (proportions conservées), ou étirée sur tout l'écran avec l'option « stretch »."""
+    Ratio de l'écran proche de celui de l'image: la zone est simplement mise à l'échelle. Ratio différent (16:9 sur un écran
+    16:10): l'image est étirée sur l'écran et le jeu garde les proportions de sa fenêtre, centré dans la fenêtre étirée.
+    ``stretch``: "1" étire toujours, "0" n'étire jamais, "auto" étire jusqu'à ``limit`` d'écart. None = bezel inutilisable."""
     screen_w, screen_h = screen
     scale_x, scale_y = screen_w / area.image_width, screen_h / area.image_height
-    if stretch or abs(scale_x - scale_y) / max(scale_x, scale_y) <= tolerance:
-        box = (round(area.x * scale_x), round(area.y * scale_y), round(area.width * scale_x), round(area.height * scale_y))
-        return Layout(box, None)
+    difference = abs(scale_x - scale_y) / max(scale_x, scale_y)
+    if difference <= tolerance:
+        return (round(area.x * scale_x), round(area.y * scale_y), round(area.width * scale_x), round(area.height * scale_y))
+    if stretch == "0" or (stretch != "1" and difference > limit):
+        return None
     scale = min(scale_x, scale_y)
-    draw_w, draw_h = area.image_width * scale, area.image_height * scale
-    offset_x, offset_y = (screen_w - draw_w) / 2, (screen_h - draw_h) / 2
-    box = (round(offset_x + area.x * scale), round(offset_y + area.y * scale), round(area.width * scale), round(area.height * scale))
-    return Layout(box, (offset_x / screen_w, offset_y / screen_h, draw_w / screen_w, draw_h / screen_h))
+    width, height = area.width * scale, area.height * scale
+    center_x, center_y = (area.x + area.width / 2) * scale_x, (area.y + area.height / 2) * scale_y
+    return (round(center_x - width / 2), round(center_y - height / 2), round(width), round(height))
 
 
-def write_overlay(image: Path, target: Path, rect: tuple[float, float, float, float] | None = None) -> Path:
+def write_overlay(image: Path, target: Path) -> Path:
     target.parent.mkdir(parents=True, exist_ok=True)
-    lines = ["overlays = 1", f'overlay0_overlay = "{image}"']
-    if rect is None:
-        lines.append("overlay0_full_screen = true")
-    else:
-        lines += ["overlay0_normalized = true", "overlay0_full_screen = false",
-                  'overlay0_rect = "' + ",".join(f"{value:.6f}" for value in rect) + '"']
-    lines.append("overlay0_descs = 0")
-    target.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    target.write_text(
+        "overlays = 1\n"
+        f'overlay0_overlay = "{image}"\n'
+        "overlay0_full_screen = true\n"
+        "overlay0_descs = 0\n",
+        encoding="utf-8",
+    )
     return target
