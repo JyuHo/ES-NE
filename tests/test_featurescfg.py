@@ -55,3 +55,15 @@ def test_genconfig_writes_features_and_shader_dirs(esne_env, monkeypatch, tmp_pa
     assert systemscfg.main([]) == 0
     assert (paths.config_dir() / "es_features.cfg").exists()
     assert (paths.data_dir() / "shaders" / "configs" / "crt-geom" / "rendering-defaults.yml").exists()
+
+
+def test_find_shader_prefers_plain_preset_over_bezel_variants(tmp_path):
+    for sub in ("bezel/uborder/base_presets/uborder-bezel-reflections/crt", "crt"):
+        (tmp_path / sub).mkdir(parents=True)
+        (tmp_path / sub / "crt-geom.slangp").write_text("")
+    assert retroarch.find_shader("crt-geom", [str(tmp_path)]) == tmp_path / "crt" / "crt-geom.slangp"
+    # s'il n'existe que la variante avec cadre, on la garde plutôt que rien
+    only = tmp_path / "other"
+    (only / "bezel" / "x").mkdir(parents=True)
+    (only / "bezel" / "x" / "crt-lottes.slangp").write_text("")
+    assert retroarch.find_shader("crt-lottes", [str(only)]) == only / "bezel" / "x" / "crt-lottes.slangp"

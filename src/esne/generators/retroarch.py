@@ -65,15 +65,20 @@ def find_shader(name: str, directories=None) -> Path | None:
             candidate = Path(directory) / f"{name}{extension}"
             if candidate.is_file():
                 return candidate
-    # les presets libretro sont rangés par thème (crt/, scanlines/...): on cherche par nom dans l'arborescence
+    # les presets libretro sont rangés par thème (crt/, scanlines/...): on cherche par nom dans l'arborescence.
+    # Plusieurs presets portent le même nom (variantes avec cadre sous bezel/...): on prend le moins profond,
+    # et on évite les variantes de cadre tant qu'une autre existe.
     for directory in directories if directories is not None else _shader_dirs():
         root = Path(directory)
         if not root.is_dir():
             continue
-        for extension in SHADER_EXTENSIONS:
-            for candidate in sorted(root.rglob(f"{name}{extension}")):
-                if candidate.is_file():
-                    return candidate
+        found = [c for ext in SHADER_EXTENSIONS for c in root.rglob(f"{name}{ext}") if c.is_file()]
+        if found:
+            def rank(candidate: Path):
+                parts = candidate.relative_to(root).parts[:-1]
+                framed = any(("bezel" in part.lower() or "border" in part.lower()) for part in parts)
+                return (framed, len(parts), str(candidate))
+            return min(found, key=rank)
     return None
 
 
