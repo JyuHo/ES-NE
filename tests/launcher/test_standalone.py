@@ -59,3 +59,13 @@ def test_unknown_emulator_is_203(esne_env):
 def test_is_installed(esne_env, fake_which):
     assert standalone.is_installed("dolphin") and not standalone.is_installed("rpcs3")
     assert not standalone.is_installed("libretro")  # pas d'"args": géré par RetroArch
+
+
+def test_glob_candidate_picks_latest_executable(tmp_path, monkeypatch):
+    for name in ("Cemu-2.5.AppImage", "Cemu-2.6.AppImage"):
+        file = tmp_path / name
+        file.write_text("")
+        file.chmod(0o755)
+    (tmp_path / "Cemu-2.7.AppImage").write_text("")  # non exécutable: ignoré
+    found = standalone.find_program([str(tmp_path / "Cemu*.AppImage")], which=lambda n: None)
+    assert found == [str(tmp_path / "Cemu-2.6.AppImage")]

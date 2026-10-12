@@ -17,7 +17,7 @@ rpcs3:
   args: [--no-gui, "{rom}"]
   package: rpcs3
 cemu:
-  binary: [cemu, Cemu, "flatpak run info.cemu.Cemu"]
+  binary: [cemu, Cemu, "~/.local/bin/Cemu*.AppImage", "~/Applications/Cemu*.AppImage", "flatpak run info.cemu.Cemu"]
   args: [-f, -g, "{rom}"]
   package: cemu
 xemu:

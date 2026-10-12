@@ -15,7 +15,9 @@ fichier, ex. l'identifiant d'un jeu Steam), ``{system}``.
 """
 from __future__ import annotations
 
+import glob
 import logging
+import os
 import shlex
 import shutil
 from pathlib import Path
@@ -31,7 +33,13 @@ def find_program(candidates, which=None) -> list[str] | None:
     which = which or shutil.which
     for candidate in candidates or []:
         parts = shlex.split(candidate)
-        if parts and which(parts[0]):
+        if not parts:
+            continue
+        if any(c in parts[0] for c in "*?["):  # motif de fichier (AppImage versionné): le plus récent
+            found = sorted(f for f in glob.glob(os.path.expanduser(parts[0])) if os.access(f, os.X_OK))
+            if found:
+                return [found[-1], *parts[1:]]
+        elif which(parts[0]):
             return [which(parts[0]), *parts[1:]]
     return None
 
