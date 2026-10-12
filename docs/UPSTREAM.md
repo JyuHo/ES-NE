@@ -76,6 +76,16 @@ Hashes de la branche `esne` du fork.
 | `c11bacd` | scrapers | les clés développeur (ScreenScraper, TheGamesDB...) viennent d'un `esne-keys.cmake` non versionné (modèle: `esne-keys.cmake.example`) |
 | `a8dae80` | scrapers | modèle de clés entièrement commenté (les valeurs factices étaient compilées et faisaient apparaître ScreenScraper sans identifiants valides) |
 | `9ecfacc` | lancement | crée `<state>/logs` au démarrage: ES redirige la sortie de l'émulateur dedans, et le shell abandonnait avec le code 1 sans lancer `es-launcher` si le dossier manquait |
+| `2c029de` | arrêt / redémarrage | `systemctl reboot` / `poweroff` à la place de `shutdown` et des fichiers `/tmp/*.please`; « redémarrer ES » se relance par `execv` (mêmes arguments) |
+| `cc3bbbc` | redémarrage requis | après un réglage qui demande un redémarrage (langue...), ES propose de se relancer tout de suite |
+| `afda9b3` | Zaparoo | pas de sondage de `127.0.0.1:7497` (ni d'erreur de connexion à chaque démarrage) sauf si `zaparoo.enabled=1` dans `esne.conf` |
+
+## Ce qui reste de Batocera dans le frontend (état actuel)
+- `updates.batocera.org`: sert seulement à la liste des thèmes téléchargeables (`themes.json`); surchargeable par `global.updates.url`.
+  Les mises à jour du système (`UPGRADE`) et leur script GitHub ne sont jamais atteints: `LinuxApiSystem` désactive ce menu.
+- Appels `batocera-*` directs de `GuiMenu.cpp`: seuls `batocera-keyboard` (bloc masqué en `ESNE`). Les écrans de rotation et de splash sont
+  dans la branche `BATOCERA`, jamais compilée en `ESNE`.
+- Les autres commandes passent par `LinuxApiSystem::translateCommand` (`batocera-x` -> `esctl x`); les menus dont la commande `esctl` n'existe pas sont cachés.
 
 ## Vérifications faites sur ces patchs
 - Vérification de syntaxe (`g++ -fsyntax-only`) de `Paths.cpp`, `Platform.cpp`, `ThemeData.cpp`, `ApiSystem.cpp` et `LinuxApiSystem.cpp` en variantes `ESNE`, `BATOCERA` et par défaut.
