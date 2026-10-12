@@ -36,12 +36,12 @@ Codes de sortie: `0` succès · `1` échec ou indisponible · `2` mauvais usage.
 | Sortie audio | `audio` | ✅ | voir ci-dessous |
 | (sorties vidéo) | — | ✅ | `esctl config lsoutputs`: noms des sorties connectées, une par ligne |
 | BIOS | `systems` | ❌ | `systems [--filter <système>]`: lignes `> <système>` puis `<statut> <md5> <chemin>` (à relire dans `getBiosInformations`) |
-| Manettes | `padsinfo` | ❌ | à relire dans `getPadsInfo` |
-| Fuseau horaire | `timezone` | ❌ | `get`, `detect`, `set "<tz>"` |
+| Manettes | `padsinfo` | ✅ | XML `<pads><pad device id name path battery status/></pads>` (batterie omise si absente) |
+| Fuseau horaire | `timezone` | ✅ | `get`, `detect`, `set "<tz>"` via `timedatectl` (`set` peut exiger polkit) |
 | Bezels | `thebezelproject` | ❌ | `list`, `install <x>`, `remove <x>` |
 | Hook gamelists | `preupdate-gamelists-hook` | ❌ | appelé avant la mise à jour des gamelists |
 
-Appelés sans passer par `has` (donc à fournir dès qu'`esctl` est installé): `esctl info --full` ❌ (infos système) et
+Appelés sans passer par `has` (donc à fournir dès qu'`esctl` est installé): `esctl info --full` ✅ (infos système) et
 `esctl swissknife --emukill` ❌ (tuer l'émulateur).
 
 ### `esctl resolution [--screen SORTIE] <verbe>`
@@ -67,7 +67,7 @@ Format des listes: **`ID<TAB>LIBELLÉ`**, une seule tabulation par ligne (le fro
 - Les flux déjà en lecture ne sont pas déplacés vers la nouvelle sortie.
 
 ## Vérification
-- 49 tests Python (`pytest`) sur des sorties d'exemple de `xrandr`, `wlr-randr` et `pactl`, plus des sous-processus réels avec un faux `pactl`.
+- Tests Python (134 pour tout le projet, dont `tests/esctl/`) (`pytest`) sur des sorties d'exemple de `xrandr`, `wlr-randr` et `pactl`, plus des sous-processus réels avec un faux `pactl`.
 - Test C++ → `esctl` réel: le code de `LinuxApiSystem` affiche les menus résolution, audio et version, et masque les autres.
 - **Non validé sur machine réelle**: les formats de `wlr-randr` et du JSON de `pactl` sont reconstitués de mémoire, pas capturés
   sur un système. À confirmer au premier essai sur CachyOS.

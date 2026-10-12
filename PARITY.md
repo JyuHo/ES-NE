@@ -4,29 +4,40 @@ Légende: ❌ non fait · 🚧 en cours · ✅ fait · ⛔ masqué volontairemen
 ## 1. Systèmes et émulateurs (lanceur `es-launcher`)
 | Système | Émulateur | Lancement | Shaders | Ratio | Rewind | Bezels | Manettes |
 |---|---|---|---|---|---|---|---|
-| snes | libretro/snes9x | 🚧 code + tests (faux RetroArch) | 🚧 | 🚧 | 🚧 | ❌ | ❌ |
+| nes, snes, gb, gbc, gba, mastersystem, megadrive, gamegear, pcengine, atari2600, psx, nds, arcade | libretro | ✅ code + tests; snes validé en jeu | ✅ (preset slang, crt-royale validé) | ✅ | ✅ | ❌ | ✅ pilote `sdl2` |
+| n64 | libretro | ✅ validé en jeu | ✅ | ✅ | ✅ | ❌ | ✅ |
+| psp | libretro | 🚧 non testé (pas de roms) | ✅ | ✅ | ✅ | ❌ | ✅ |
+| gc, wii | Dolphin | ✅ validé en jeu | ⛔ réglages de l'émulateur | ⛔ | ⛔ | ❌ | ✅ quitter: Select+Start |
+| ps2, ps3, wiiu, switch, xbox | PCSX2, RPCS3, Cemu, Eden/Ryujinx, xemu | 🚧 arguments écrits de mémoire, non testés | ⛔ | ⛔ | ⛔ | ❌ | ✅ |
+| steam, windows | Steam, Wine/umu | 🚧 non testé; Steam rend la main tout de suite (le raccourci ne ferme pas le jeu) | ⛔ | ⛔ | ⛔ | ❌ | ✅ |
+| xbox 360 | — | ⛔ aucun émulateur Linux utilisable | | | | | |
+
+Limites: table `aspect_ratio_index` en partie non validée; ratio ES « 8/3 » ignoré; netplay, RetroAchievements et bezels non gérés; les réglages internes des émulateurs autonomes (plein écran, résolution) ne sont pas gérés.
 
 ## 2. Menus du frontend ES
-Un ✅ = branché dans `LinuxApiSystem` et vérifié à la compilation; **aucun menu n'a été testé dans ES lancé**.
+Un ✅ = branché dans `LinuxApiSystem` et vérifié à la compilation; les menus validés dans ES lancé sont indiqués ci-dessous.
 Les menus liés à `esctl` apparaissent seulement si `esctl has <commande>` réussit (voir `docs/ESCTL_CONTRACT.md`).
 
 | Fonction ES | Batocera (script) | ES-NE | État |
 |---|---|---|---|
 | Résolution | `batocera-resolution` | `esctl resolution` (xrandr, wlr-randr, kscreen-doctor) | ✅ code + tests; format kscreen-doctor -j capturé sur KDE réel; ❌ GNOME Wayland; setMode non essayé sur machine |
 | Sortie audio | `batocera-audio` | `esctl audio` (pactl) | ✅ code + tests; non essayé sur machine |
-| Fuseau horaire | `batocera-timezone` | `esctl timezone` | 🚧 côté ES prêt, `esctl` ❌ |
+| Fuseau horaire | `batocera-timezone` | `esctl timezone` (`timedatectl`) | ✅ code + tests; `set` demande peut-être une règle polkit |
 | BIOS / systèmes | `batocera-systems` | `esctl systems` | 🚧 côté ES prêt, `esctl` ❌ |
-| Infos manettes | `batocera-padsinfo` | `esctl padsinfo` | 🚧 côté ES prêt, `esctl` ❌ |
+| Infos manettes | `batocera-padsinfo` | `esctl padsinfo` (evdev + batterie sysfs) | ✅ sortie réelle vérifiée (PS4) |
 | The Bezel Project | `batocera-es-thebezelproject` | `esctl thebezelproject` | 🚧 côté ES prêt, `esctl` ❌ |
 | Version affichée | `batocera-version` | `esctl version` (`share/esne.version`, sinon version du package) | ✅ |
 | Décorations / shaders | (dossiers) | menu visible si les dossiers existent | ✅ code; ❌ données à fournir |
 | Netplay | `7zr` | `7zz`, `7z`, `7za` ou `7zr` dans le `PATH` | ✅ |
 | Kodi | `batocera-kodi` | `kodi --standalone` direct | ✅ code, non testé |
-| Veille | `pm-suspend` | `systemctl suspend` | ✅ code, non testé |
+| Veille, arrêt rapide | `pm-suspend` | retirés du menu QUIT | ⛔ |
 | Manuel PDF | `pdftoppm`, `pdfinfo` | cherchés dans le `PATH` | ✅ |
 | Thèmes (téléchargement) | — | inchangé | ✅ code d'ES |
-| Raccourcis, clavier → manette | `batocera-hotkeys`, `batocera-keyboard`, `evmapy` | — | ❌ |
-| Arrêt / redémarrage | `batocera-shutdown`, drapeaux `/tmp` | — | ❌ patch 7 |
+| Raccourcis en jeu | `batocera-hotkeys` | `hotkey.py` + options RetroArch (Select+Start quitte, Select+R3 menu) | ✅ validé |
+| Clavier → manette | `batocera-keyboard`, `evmapy` | — | ❌ |
+| Arrêt / redémarrage système | `batocera-shutdown` | `systemctl poweroff/reboot` (fork) | ✅ code (à essayer sur machine) |
+| Redémarrage d'ES | drapeaux `/tmp` | `execv` + invite après changement de langue/thème | ✅ validé |
+| Options par système/jeu | `features.yml` | `es_features.cfg` généré (ratio, lissage, rewind, autosave, pixel perfect, shaders, pilote vidéo) | ✅ validé |
 | Wi-Fi, Bluetooth | `batocera-wifi`, `batocera-bluetooth` | NetworkManager, BlueZ | ⛔ |
 | Mises à jour, installation, formatage, overclock, sauvegarde | `batocera-upgrade`, `-install`, `-format`, `-overclock`, `-sync` | gestionnaire de paquets | ⛔ |
 | Store, services, mode avion, backglass, NFC | `batocera-store`, `-services`, `-planemode`, `-backglass`, `-nfc` | — | ⛔ |

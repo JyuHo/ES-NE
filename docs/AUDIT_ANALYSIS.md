@@ -20,7 +20,7 @@ Un ✅ côté ES signifie « code en place et vérifié à la compilation (synta
 | Les menus dépendent des exécutables présents | `ApiSystem::isScriptingSupported()` pousse `batocera-wifi`, `-bluetooth`, `-resolution`... dans une liste `executables`, **testée en chemin absolu `/usr/bin/<nom>`** (pas dans le `PATH`). ✅ lu. Les `ScriptId` absents du `switch` (GAMESETTINGS, DECORATIONS, SHADERS, VIDEOFILTERS...) renvoient `true` par défaut | `LinuxApiSystem` surcharge la fonction: menus `esctl` conditionnés à `esctl has <cmd>`, menus Batocera masqués (patch 5) |
 | Des appels contournent les méthodes virtuelles | 22 appels `popen`/`system` directs dans `ApiSystem.cpp` (dont `canUpdate`, torrent, `launchKodi`) | La traduction `batocera-*` → `esctl` ne les couvre pas. ✅ surchargés (patch 5): `canUpdate`, `launchKodi`... ✅ corrigés (`3bdea9b`): les 4 fonctions audio, sans quoi le menu audio s'affichait mais échouait. ❌ restent directs: `getCurrentStorage`, `getRootPassword`, scraper, `batocera-upgrade*`, `batocera-controlcenter` (menus masqués ou code sous `BATOCERA`), à confirmer dans `GuiMenu.cpp` |
 | Lancement des jeux | `FileData.cpp:578` écrit `/tmp/game.xml` (donné au lanceur via `-gameinfoxml`), `:675` lit `/tmp/launch_error.log` | Contrat avec `es-launcher`: à relire (voir §4) |
-| Redémarrage / arrêt | `Platform.cpp:262-273` crée `/tmp/restart.please`, `reboot.please`, `shutdown.please`; `emulationstation.sh` utilise `es-restart`, `es-sysrestart`, `es-shutdown` | Deux mécanismes: ES-NE doit n'en garder qu'un. ❌ patch 7 |
+| Redémarrage / arrêt | `Platform.cpp:262-273` crée `/tmp/restart.please`, `reboot.please`, `shutdown.please`; `emulationstation.sh` utilise `es-restart`, `es-sysrestart`, `es-shutdown` | Deux mécanismes: ES-NE doit n'en garder qu'un. ✅ patch 7 (systemctl + execv) |
 
 ## 2. Appels `batocera-*`: tri par décision
 
@@ -45,7 +45,7 @@ Côté ES: ✅ traduction `batocera-x` → `esctl x` et menus conditionnés à `
 | `batocera-preupdate-gamelists-hook` | 3 | hook avant maj des gamelists | no-op ou hook utilisateur |
 
 ### B. Optionnel / fonctionnalités avancées (reporter après M5)
-Côté ES: ⛔ masqués par `LinuxApiSystem` pour Wi-Fi, Bluetooth, store, services, plane mode, backglass, NFC. `kodi`: ✅ lancement direct de `kodi --standalone`. Les autres (scraper, ports, LED, gameforce...) ne sont pas encore traités: ❌ patch 6.
+Côté ES: ⛔ masqués par `LinuxApiSystem` pour Wi-Fi, Bluetooth, store, services, plane mode, backglass, NFC. `kodi`: ✅ lancement direct de `kodi --standalone`. Les autres (scraper, ports, LED, gameforce...) ne sont pas encore traités: 🚧 patch 6 (voir `docs/UPSTREAM.md`).
 `batocera-store` (10), `batocera-services` (5), `batocera-wifi` (8), `batocera-bluetooth` (14), `batocera-scraper` (3), `batocera-ports` (4), `batocera-wine-runners` (1), `batocera-nfc` (3), `batocera-backglass` (3), `batocera-planemode` (3), `batocera-kodi` (2), `batocera-led-handheld` (10), `batocera-gameforce` (3).
 Wi-Fi et Bluetooth: sur un poste Arch, ils sont gérés par NetworkManager/BlueZ. Mieux vaut **masquer** ces menus que les réimplémenter.
 

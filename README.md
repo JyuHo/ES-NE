@@ -14,10 +14,11 @@ pour Arch Linux / CachyOS, avec les options de RetroBat, **sans aucune dépendan
 ## Statut
 | Composant | État |
 |---|---|
-| Frontend ES (fork `emulationstation-esne`, branche `esne`) | 🚧 6 patchs: option `-DESNE=ON`, chemins XDG, `LinuxApiSystem`, appels audio. **Pas encore compilé en entier ni lancé** |
-| `es-launcher` | 🚧 CLI compatible ES, catalogue de systèmes, RetroArch (config complémentaire); testé avec un faux RetroArch, pas encore avec un vrai jeu |
-| `esctl` | 🚧 `has`, `version`, `resolution`, `audio`, `config lsoutputs` écrits et testés (45 tests); **pas encore essayé sur une vraie machine**. Reste: `timezone`, `systems`, `padsinfo`, `thebezelproject`, `info`, `swissknife`. Contrat dans `docs/ESCTL_CONTRACT.md` |
-| Paquets (`PKGBUILD`), session | ❌ |
+| Frontend ES (fork `emulationstation-esne`, branche `esne`) | ✅ compile et tourne sur CachyOS (KDE Wayland). Patchs: option `-DESNE=ON`, chemins XDG, `LinuxApiSystem`, arrêt/redémarrage système, redémarrage d'ES, menu QUIT simplifié, Zaparoo désactivé par défaut |
+| `es-launcher` | ✅ lancement validé sur une vraie machine (SNES, N64, GameCube, Wii): RetroArch (manette `sdl2`, raccourcis, ratio, shaders, rewind...) et émulateurs autonomes; 134 tests |
+| `es-genconfig` | ✅ génère `es_systems.cfg`, `es_features.cfg` et les jeux de shaders depuis le catalogue (24 systèmes) |
+| `esctl` | ✅ `has`, `version`, `resolution`, `audio`, `config`, `info`, `timezone`, `padsinfo`. Reste: `systems`, `thebezelproject`, `swissknife --emukill`, `preupdate-gamelists-hook`. Contrat dans `docs/ESCTL_CONTRACT.md` |
+| Paquets (`PKGBUILD`), session, règle polkit | ❌ |
 
 Détails: `docs/ROADMAP.md` (jalons), `PARITY.md` (parité avec RetroBat), `docs/UPSTREAM.md` (patchs d'ES).
 
@@ -49,6 +50,7 @@ manquantes). Aucun paquet autoconfig n'est nécessaire: `es-launcher` utilise le
 
 Raccourcis manette en jeu (réglables: `hotkey_enable`, `hotkey_exit`, `hotkey_menu`):
 **Select + Start** quitte le jeu et revient à ES (aussi pour les émulateurs autonomes: `es-launcher` surveille la manette et ferme l'émulateur), **Select + R3** ouvre le menu RetroArch.
+Options par système/jeu dans ES (ratio, shaders, lissage, rewind, pilote vidéo Vulkan/OpenGL...): voir `PARITY.md`.
 
 ## Générer `es_systems.cfg`
 ```bash
@@ -76,8 +78,8 @@ cd ES-NE/third_party/emulationstation
 cmake -B build -DESNE=ON -DGL=ON
 cmake --build build -j"$(nproc)"
 ```
-`-DGL=ON` (OpenGL bureau) est à confirmer au premier build complet. Les dépendances (SDL2, SDL2_mixer, FreeImage,
-FreeType, cURL, RapidJSON, LibVLC, ALSA...) ne sont pas encore validées sur Arch/CachyOS.
+Dépendances de build: SDL2, SDL2_mixer, FreeImage, FreeType, cURL, RapidJSON, LibVLC, ALSA (voir `docs/UPSTREAM.md`).
+Après un `git pull`, pense à `git submodule update --init`.
 
 ## `esctl`
 Outil système qu'ES appelle à la place des `batocera-*` (voir `docs/ESCTL_CONTRACT.md`):
@@ -86,6 +88,8 @@ esctl commands            # commandes utilisables sur cette machine
 esctl has audio           # code 0 si disponible
 esctl resolution listModes
 esctl audio list
+esctl timezone get          # set peut demander une règle polkit
+esctl padsinfo              # manettes et batteries, au format lu par ES
 ```
 Sans installation: `PYTHONPATH=src python -m esne.esctl commands`.
 
