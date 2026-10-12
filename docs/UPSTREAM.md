@@ -81,6 +81,7 @@ Hashes de la branche `esne` du fork.
 | `afda9b3` | Zaparoo | pas de sondage de `127.0.0.1:7497` (ni d'erreur de connexion à chaque démarrage) sauf si `zaparoo.enabled=1` dans `esne.conf` |
 | `7a84842` | menu Quitter | retire « mettre en veille » et « extinction rapide » (l'extinction rapide ne fait qu'éviter la sauvegarde des métadonnées) |
 | `5fe47bf` | décorations | menu d'un jeu: variantes du bezel portant son titre (`thebezelproject:<nom>`), aperçu du bezel du système pour les jeux de décorations sans `default.png` |
+| `f7b40b2` | décorations | noms lisibles (BEZEL SYSTEM / BEZEL BY GAME); le menu global ne propose que le bezel système |
 
 ## Ce qui reste de Batocera dans le frontend (état actuel)
 - `updates.batocera.org`: sert seulement à la liste des thèmes téléchargeables (`themes.json`); surchargeable par `global.updates.url`.
