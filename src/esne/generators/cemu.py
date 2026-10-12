@@ -11,6 +11,7 @@ Format des fichiers lu dans le code de Cemu (``InputManager.cpp``, ``ProControll
 """
 from __future__ import annotations
 
+import dataclasses
 import logging
 import os
 import xml.etree.ElementTree as ET
@@ -81,8 +82,26 @@ def profile_xml(pad: Controller, uuid: str) -> str:
     return '<?xml version="1.0" encoding="UTF-8"?>\n' + ET.tostring(root, encoding="unicode") + "\n"
 
 
+def known_guid(pad: Controller, config: Path) -> str:
+    """GUID que Cemu (SDL3) a lui-même enregistré pour ce modèle de manette, sinon celui d'ES (SDL2).
+
+    ES et Cemu n'utilisent pas la même version de SDL: le CRC et la fin du GUID diffèrent pour la même manette.
+    Fabricant et produit (caractères 8 à 24) sont identiques, ce qui permet de retrouver le GUID de Cemu.
+    """
+    found = []
+    for file in sorted((config / "controllerProfiles").glob("*.xml")):
+        try:
+            uuid = ET.parse(file).getroot().findtext("controller/uuid") or ""
+        except (ET.ParseError, OSError):
+            continue
+        guid = uuid.split("_", 1)[-1]
+        if len(guid) == 32 and guid[8:24] == pad.guid[8:24]:
+            found.append(guid)
+    return next((g for g in found if g != pad.guid), pad.guid)
+
+
 def write_profiles(pads: list[Controller], config: Path) -> list[Path]:
-    pads = [pad for pad in pads if pad.guid][:MAX_PLAYERS]
+    pads = [dataclasses.replace(pad, guid=known_guid(pad, config)) for pad in pads if len(pad.guid) == 32][:MAX_PLAYERS]
     written = []
     for position, pad in enumerate(pads):
         target = config / "controllerProfiles" / f"controller{position}.xml"

@@ -33,8 +33,8 @@ def context(rom, pads, **settings):
 
 
 def test_uuid_counts_identical_guids():
-    pads = [pad(1), pad(2, "other"), pad(3)]
-    assert [cemu.pad_uuid(pads, i) for i in range(3)] == [f"0_{GUID}", "0_other", f"1_{GUID}"]
+    pads = [pad(1), pad(2, "o" * 32), pad(3)]
+    assert [cemu.pad_uuid(pads, i) for i in range(3)] == [f"0_{GUID}", "0_" + "o" * 32, f"1_{GUID}"]
 
 
 def test_profile_is_pro_controller_with_all_mappings():
@@ -47,7 +47,7 @@ def test_profile_is_pro_controller_with_all_mappings():
 
 
 def test_write_profiles_skips_pads_without_guid_and_caps_at_four(tmp_path):
-    pads = [pad(1, ""), *[pad(i, f"g{i}") for i in range(2, 9)]]
+    pads = [pad(1, ""), *[pad(i, f"{i:0>32}") for i in range(2, 9)]]
     written = cemu.write_profiles(pads, tmp_path)
     assert [p.name for p in written] == [f"controller{i}.xml" for i in range(4)]
 
@@ -86,3 +86,16 @@ def test_autoconfig_can_be_disabled(cemu_home, tmp_path):
     rom.write_bytes(b"x")
     cemu.Cemu().generate(context(rom, [pad(1)], cemu_autoconfig="0"))
     assert not (cemu_home / "controllerProfiles").exists()
+
+
+def test_reuses_the_guid_cemu_wrote_for_the_same_model(tmp_path):
+    cemu_guid = "03009b514c050000cc09000011810000"  # même fabricant/produit, CRC et version SDL3
+    target = tmp_path / "controllerProfiles"
+    target.mkdir()
+    (target / "controller0.xml").write_text(cemu.profile_xml(pad(1), f"0_{cemu_guid}"))
+    cemu.write_profiles([pad(1)], tmp_path)
+    assert ET.parse(target / "controller0.xml").getroot().findtext("controller/uuid") == f"0_{cemu_guid}"
+    # un autre modèle ne la reprend pas
+    other = "030000007e050000092000000000" + "0000"
+    cemu.write_profiles([pad(1, other)], tmp_path)
+    assert ET.parse(target / "controller0.xml").getroot().findtext("controller/uuid") == f"0_{other}"
