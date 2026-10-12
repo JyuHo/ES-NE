@@ -20,11 +20,23 @@ SHADER_SETS = [
 ]
 
 
+# Option personnalisée « pilote vidéo » (ES enregistre <système>.video_driver; « AUTO » = valeur vide).
+VIDEO_DRIVER_FEATURE = (
+    '<feature name="VIDEO DRIVER" value="video_driver" '
+    'description="Graphics API used by RetroArch. Vulkan is usually the most efficient with shaders; Auto picks Vulkan when available.">'
+    '<choice name="VULKAN" value="vulkan" />'
+    '<choice name="OPENGL (GLCORE)" value="glcore" />'
+    '<choice name="OPENGL (LEGACY, NO SLANG SHADERS)" value="gl" />'
+    "</feature>"
+)
+
+
 def render() -> str:
     return (
         '<?xml version="1.0"?>\n'
         "<features>\n"
-        f'  <emulator name="libretro" features="{",".join(LIBRETRO_FEATURES)}" />\n'
+        f"  <globalFeatures>{VIDEO_DRIVER_FEATURE}</globalFeatures>\n"
+        f'  <emulator name="libretro" features="{",".join(LIBRETRO_FEATURES)}">{VIDEO_DRIVER_FEATURE}</emulator>\n'
         "</features>\n"
     )
 

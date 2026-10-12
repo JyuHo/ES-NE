@@ -85,6 +85,11 @@ def _shader_dirs() -> list[Path]:
     ]
 
 
+def vulkan_available(directories=("/usr/share/vulkan/icd.d", "/etc/vulkan/icd.d")) -> bool:
+    """Vrai si un pilote Vulkan (fichier ICD) est installé. Ne garantit pas que RetroArch soit compilé avec Vulkan."""
+    return any(any(Path(d).glob("*.json")) for d in directories if Path(d).is_dir())
+
+
 def shader_dirs() -> list[Path]:
     return _shader_dirs()
 
@@ -179,7 +184,7 @@ def build_settings(ctx: Context) -> dict[str, str]:
             settings["video_shader"] = str(preset)
             # les presets slang (.slangp) exigent glcore ou vulkan; le pilote "gl" classique ne sait charger que du GLSL
             if preset.suffix == ".slangp":
-                settings["video_driver"] = "glcore"
+                settings["video_driver"] = "vulkan" if vulkan_available() else "glcore"
 
     video_driver = ctx.setting("video_driver")
     if video_driver and video_driver != "auto":

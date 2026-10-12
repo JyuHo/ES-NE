@@ -11,6 +11,20 @@ def test_features_file_declares_libretro_options():
     assert set(emulator.get("features").split(",")) == set(featurescfg.LIBRETRO_FEATURES)
 
 
+def test_video_driver_option_declared_globally_and_for_libretro():
+    root = ET.fromstring(featurescfg.render())
+    for node in (root.find("globalFeatures"), root.find("emulator")):
+        feature = node.find("feature")
+        assert feature.get("value") == "video_driver"
+        assert [c.get("value") for c in feature.findall("choice")] == ["vulkan", "glcore", "gl"]
+
+
+def test_vulkan_available(tmp_path):
+    assert not retroarch.vulkan_available((str(tmp_path),))
+    (tmp_path / "radeon_icd.x86_64.json").write_text("{}")
+    assert retroarch.vulkan_available((str(tmp_path),))
+
+
 def make_shaders(tmp_path):
     (tmp_path / "crt").mkdir(parents=True)
     (tmp_path / "crt" / "crt-geom.slangp").write_text("")
