@@ -46,7 +46,14 @@ build() {
 
 package() {
   cd "$pkgname"
-  DESTDIR="$pkgdir" cmake --install build-es
+  # pas de `cmake --install`: il copierait aussi les bibliothèques embarquées (pugixml...) qui appartiennent à d'autres paquets
+  install -Dm755 build-es/emulationstation "$pkgdir/usr/bin/emulationstation"
+  local mo lang
+  for mo in third_party/emulationstation/locale/lang/*/LC_MESSAGES/emulationstation2.mo; do
+    [ -f "$mo" ] || continue
+    lang=$(basename "$(dirname "$(dirname "$mo")")")
+    install -Dm644 "$mo" "$pkgdir/usr/share/locale/$lang/LC_MESSAGES/emulationstation2.mo"
+  done
   /usr/bin/python -m installer --destdir="$pkgdir" dist/*.whl
 
   install -d "$pkgdir/usr/share/esne"
