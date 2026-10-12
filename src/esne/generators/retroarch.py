@@ -239,17 +239,18 @@ def bezel_settings(ctx: Context) -> dict[str, str]:
         if box is None:
             log.warning("bezel %s ignoré: son ratio est trop éloigné de l'écran %dx%d (option STRETCH BEZELS)", image.name, *screen)
             return {}
-        # le pilote doit être connu: RetroArch/Vulkan applique la position de la zone personnalisée deux fois
+        # RetroArch ajoute la position de la zone personnalisée à celle de la zone centrée sur l'écran: on envoie l'écart
+        # entre la position voulue et la position centrée (0 pour une zone de jeu centrée).
         driver = str(ctx.setting("video_driver", "auto") or "auto")
         if driver == "auto":
             driver = "vulkan" if vulkan_available() else "glcore"
         settings["video_driver"] = driver
-        factor = float(ctx.setting("bezel_viewport_factor", 0.5 if driver == "vulkan" else 1.0))
         settings.update({
             "aspect_ratio_index": str(RATIOS.index("custom")),
             "video_aspect_ratio_auto": "false",
             "video_scale_integer": "false",
-            "custom_viewport_x": str(round(box[0] * factor)), "custom_viewport_y": str(round(box[1] * factor)),
+            "custom_viewport_x": str(box[0] - (screen[0] - box[2]) // 2),
+            "custom_viewport_y": str(box[1] - (screen[1] - box[3]) // 2),
             "custom_viewport_width": str(box[2]), "custom_viewport_height": str(box[3]),
         })
     overlay = bezels.write_overlay(image, paths.cache_dir() / "retroarch" / "overlays" / f"{ctx.system}.cfg")

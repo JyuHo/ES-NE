@@ -88,7 +88,7 @@ def test_bezel_settings_with_set_chosen(env):
     s = retroarch.bezel_settings(context({"bezel": "thebezelproject"}))
     assert s["input_overlay_enable"] == "true"
     assert s["aspect_ratio_index"] == str(retroarch.RATIOS.index("custom"))
-    assert (s["custom_viewport_x"], s["custom_viewport_width"]) == ("240", "1440")
+    assert (s["custom_viewport_x"], s["custom_viewport_width"]) == ("0", "1440")
     assert "snes.png" in open(s["input_overlay"]).read()
 
 
@@ -102,23 +102,24 @@ def test_bezel_auto_without_install_is_empty(env):
     assert retroarch.bezel_settings(ctx) == {}
 
 
-def test_bezel_on_16_10_screen_and_vulkan_offset(env, monkeypatch):
+def test_bezel_viewport_is_relative_to_the_centered_one(env, monkeypatch):
     monkeypatch.setattr(retroarch, "screen_size", lambda: (1920, 1200))
     monkeypatch.setattr(retroarch, "vulkan_available", lambda: True)
     s = retroarch.bezel_settings(context({"bezel": "thebezelproject"}))
-    # RetroArch/Vulkan double la position: on envoie la moitié
-    assert (s["custom_viewport_x"], s["custom_viewport_y"]) == ("120", "80")
+    # fenêtre voulue (240, 160, 1440, 880); centrée elle serait en (240, 160): écart nul
+    assert (s["custom_viewport_x"], s["custom_viewport_y"]) == ("0", "0")
     assert (s["custom_viewport_width"], s["custom_viewport_height"]) == ("1440", "880")
     assert s["video_driver"] == "vulkan"
     assert "overlay0_full_screen = true" in open(s["input_overlay"]).read()
 
 
-def test_bezel_glcore_keeps_full_offset(env, monkeypatch):
+def test_bezel_off_center_window_gives_signed_offset(env, monkeypatch):
     monkeypatch.setattr(retroarch, "screen_size", lambda: (1920, 1080))
-    s = retroarch.bezel_settings(context({"bezel": "thebezelproject", "video_driver": "glcore"}))
-    assert (s["custom_viewport_x"], s["custom_viewport_y"]) == ("240", "100") and s["video_driver"] == "glcore"
-    f = retroarch.bezel_settings(context({"bezel": "thebezelproject", "video_driver": "glcore", "bezel_viewport_factor": "0.5"}))
-    assert f["custom_viewport_x"] == "120"
+    # zone de jeu non centrée dans l'image (trou décalé vers la droite et le bas): écart signé par rapport au centrage
+    make_bezel(env / "data" / "decorations" / "shifted" / "systems" / "snes.png", hole=(60, 20, 180, 100))
+    s = retroarch.bezel_settings(context({"bezel": "shifted", "video_driver": "glcore"}))
+    # fenêtre voulue (600, 200, 1200, 800) sur 1920x1080; centrée: ((1920-1200)/2, (1080-800)/2) = (360, 140)
+    assert (s["custom_viewport_x"], s["custom_viewport_y"]) == ("240", "60") and s["video_driver"] == "glcore"
 
 
 def test_build_settings_includes_bezel(env):
