@@ -12,7 +12,8 @@ def config_dir() -> Path:
 
 
 def data_dir() -> Path:
-    return Path(os.environ.get("ESNE_DATA_DIR") or _xdg("XDG_DATA_HOME", ".local/share") / "esne")
+    """Roms, bios, saves, thèmes, décorations...: ~/esne (visible et facile à sauvegarder)."""
+    return Path(os.environ.get("ESNE_DATA_DIR") or Path.home() / "esne")
 
 
 def share_dir() -> Path:

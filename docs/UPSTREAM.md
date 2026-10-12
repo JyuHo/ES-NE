@@ -81,6 +81,7 @@ Hashes de la branche `esne` du fork.
 | `afda9b3` | Zaparoo | pas de sondage de `127.0.0.1:7497` (ni d'erreur de connexion à chaque démarrage) sauf si `zaparoo.enabled=1` dans `esne.conf` |
 | `7a84842` | menu Quitter | retire « mettre en veille » et « extinction rapide » (l'extinction rapide ne fait qu'éviter la sauvegarde des métadonnées) |
 | `3be4670` | décorations | un bezel par système: jeu de décorations « THE BEZEL PROJECT » (aperçu = image du système); pas de bezel par jeu |
+| `0ef1c7c` | chemins | dossier de données par défaut `~/esne` (au lieu de `~/.local/share/esne`) |
 
 ## Ce qui reste de Batocera dans le frontend (état actuel)
 - `updates.batocera.org`: sert seulement à la liste des thèmes téléchargeables (`themes.json`); surchargeable par `global.updates.url`.

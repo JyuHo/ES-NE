@@ -2,13 +2,13 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Prépare un environnement de test minimal pour ES-NE (développement, pas une installation):
 #  - ~/.config/esne/es_systems.cfg avec un seul système "snes" lancé par es-launcher (prérequis: retroarch et le core snes9x, et es-launcher dans le PATH)
-#  - une ROM factice dans ~/.local/share/esne/roms/snes
-#  - le thème "carbon" (RetroPie/es-theme-carbon) dans ~/.local/share/esne/themes
+#  - une ROM factice dans ~/esne/roms/snes
+#  - le thème "carbon" (RetroPie/es-theme-carbon) dans ~/esne/themes
 # Usage: sh tools/dev-setup.sh [--force]    (--force: réécrit es_systems.cfg)
 set -eu
 
 CONFIG="${ESNE_CONFIG_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/esne}"
-DATA="${ESNE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/esne}"
+DATA="${ESNE_DATA_DIR:-$HOME/esne}"
 CFG="$CONFIG/es_systems.cfg"
 
 mkdir -p "$CONFIG" "$DATA/roms/snes" "$DATA/themes"

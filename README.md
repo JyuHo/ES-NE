@@ -29,12 +29,12 @@ Détails: `docs/ROADMAP.md` (jalons), `PARITY.md` (parité avec RetroBat), `docs
 |---|---|---|
 | Ressources en lecture seule (thèmes, shaders, `es_systems.cfg`...) | `/usr/share/esne` | `ESNE_SHARE_DIR` |
 | Config (`esne.conf`, `es_settings.cfg`) | `~/.config/esne` | `ESNE_CONFIG_DIR` ou `XDG_CONFIG_HOME` |
-| Données (roms, bios, saves, screenshots...) | `~/.local/share/esne` | `ESNE_DATA_DIR` ou `XDG_DATA_HOME` |
+| Données (roms, bios, saves, screenshots...) | `~/esne` | `ESNE_DATA_DIR` |
 | Logs | `~/.local/state/esne/logs` | `ESNE_STATE_DIR` ou `XDG_STATE_HOME` |
 
 `emulationstation.ini` (hérité d'ES) peut encore surcharger chaque dossier.
 
-**Lanceur Python** (`es-launcher`): config `~/.config/esne/esne.conf`, données `~/.local/share/esne/`, cache `~/.cache/esne/`
+**Lanceur Python** (`es-launcher`): config `~/.config/esne/esne.conf`, données `~/esne/`, cache `~/.cache/esne/`
 (`ESNE_CONFIG_DIR`, `ESNE_DATA_DIR`, `ESNE_CACHE_DIR`).
 `paths.py` connaît aussi `share` (`ESNE_SHARE_DIR`) et `state` (`ESNE_STATE_DIR`), comme le frontend.
 
@@ -53,7 +53,7 @@ Raccourcis manette en jeu (réglables: `hotkey_enable`, `hotkey_exit`, `hotkey_m
 Options par système/jeu dans ES (ratio, shaders, lissage, rewind, pilote vidéo Vulkan/OpenGL...): voir `PARITY.md`.
 
 ## Bezels (décorations)
-Un seul bezel par système, celui de The Bezel Project. Menu ES **Mises à jour → The Bezel Project**: ouvrir un système puis INSTALL (ou UPDATE / REMOVE). `esctl thebezelproject install snes` télécharge seulement l'image du système (`~/.local/share/esne/decorations/thebezelproject/systems/snes.png`).
+Un seul bezel par système, celui de The Bezel Project. Menu ES **Mises à jour → The Bezel Project**: ouvrir un système puis INSTALL (ou UPDATE / REMOVE). `esctl thebezelproject install snes` télécharge seulement l'image du système (`~/esne/decorations/thebezelproject/systems/snes.png`).
 En jeu, `es-launcher` pose l'image en overlay RetroArch et cadre le jeu dans la zone transparente (le réglage de ratio d'ES est alors ignoré, comme en « auto »). Option **Decoration set** (global, système ou jeu): Auto (= The Bezel Project s'il est installé pour le système), Aucun, ou un jeu de décorations; le réglage du système prime sur le global.
 La zone de jeu est détectée dans l'image (décodeur PNG intégré, résultat mis en cache; `python-pillow` est utilisé s'il est installé, ou un fichier `.png.info` si présent). L'image est toujours affichée en plein écran; si l'écran n'a pas son ratio (16:9 sur un écran 16:10), elle est étirée et le jeu garde les proportions de sa fenêtre. Au-delà de 25 % d'écart (21:9...), le bezel est ignoré sauf option STRETCH BEZELS sur Oui.
 
@@ -64,9 +64,9 @@ es-genconfig --installed-only   # seulement les systèmes dont un core libretro 
 es-genconfig --stdout           # affiche es_systems.cfg sans rien écrire
 ```
 `es-genconfig` écrit aussi `es_features.cfg` (options par système/jeu: ratio, lissage, rewind, sauvegarde auto, pixel perfect,
-shaders) et crée les jeux de shaders dans `~/.local/share/esne/shaders/configs/` pour les presets libretro installés
+shaders) et crée les jeux de shaders dans `~/esne/shaders/configs/` pour les presets libretro installés
 (`libretro-shaders-slang`). Les systèmes viennent de `src/esne/data/systems.yml` (complété par `~/.config/esne/systems.yml`). Mets tes roms dans
-`~/.local/share/esne/roms/<système>/`; ES masque les systèmes vides.
+`~/esne/roms/<système>/`; ES masque les systèmes vides.
 
 ## Systèmes et émulateurs
 24 systèmes: consoles 8/16 bits à la GameCube, PSP, PS2/PS3, Wii/Wii U, Switch, Xbox, plus `steam` et `windows`.

@@ -60,12 +60,12 @@ Remplacements: `systemctl reboot/poweroff` pour l'arrêt, le gestionnaire de paq
 |---|---|---|
 | 49-51, 53 | `/userdata`, `.../configs/emulationstation`, `.../logs` | `$XDG_CONFIG_HOME/esne`, `$XDG_STATE_HOME/esne/logs` |
 | 50, 58 | `/usr/share/emulationstation[/themes]` | `/usr/share/esne[/themes]` |
-| 54, 55 | screenshots, saves | `$XDG_DATA_HOME/esne/{screenshots,saves}` |
-| 56, 57 | musique système / utilisateur | `/usr/share/esne/music`, `$XDG_DATA_HOME/esne/music` |
-| 59 | `/userdata/themes` | `$XDG_DATA_HOME/esne/themes` |
+| 54, 55 | screenshots, saves | `~/esne/{screenshots,saves}` |
+| 56, 57 | musique système / utilisateur | `/usr/share/esne/music`, `~/esne/music` |
+| 59 | `/userdata/themes` | `~/esne/themes` |
 | 61 | `/userdata/system/configs/evmapy` | `$XDG_CONFIG_HOME/esne/evmapy` (ou supprimer: dépend de `evmapy`, un outil Batocera) |
 | 62-65 | décorations, shaders | `/usr/share/esne/{decorations,shaders}` + dossier utilisateur |
-| 68 | sons RetroAchievements | `$XDG_DATA_HOME/esne/sounds/retroachievements` |
+| 68 | sons RetroAchievements | `~/esne/sounds/retroachievements` |
 | 70 | `/userdata/system/batocera.conf` | `$XDG_CONFIG_HOME/esne/esne.conf` |
 | 71, 72 | `notice.pdf`, `batocera.version` | `/usr/share/esne/` |
 | 73 | `/usr/bin/kodi` | `findExecutable("kodi")` dans le `PATH` |

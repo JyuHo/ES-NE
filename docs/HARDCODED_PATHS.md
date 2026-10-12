@@ -11,7 +11,7 @@ sont dans `docs/AUDIT_ANALYSIS.md`; le rapport brut dans `docs/audit/HARDCODED.m
 |---|---|---|
 | `/etc/emulationstation/` | `es_systems.cfg`, `es_input.cfg`, thèmes (`themes/`) | `/usr/share/esne/` (lecture seule) + `~/.config/esne/` |
 | `/usr/share/emulationstation/` | ressources copiées vers `/etc/` | `/usr/share/esne/resources/` |
-| `/userdata` | doit exister avec les données de `datainit` (`/usr/share/batocera/datainit/*`) | `~/.local/share/esne/` |
+| `/userdata` | doit exister avec les données de `datainit` (`/usr/share/batocera/datainit/*`) | `~/esne/` |
 | `~/.emulationstation/` | présent dans le README (variante historique); option `--home` annoncée pour Windows | `~/.config/esne/` (option `--home` à étendre à Linux) |
 | `/tmp/es-restart`, `/tmp/es-sysrestart`, `/tmp/es-shutdown` | fichiers drapeaux lus par `emulationstation.sh`. **Doublon** avec `/tmp/restart.please`, `reboot.please`, `shutdown.please` créés par `Platform.cpp:262-273` | `$XDG_RUNTIME_DIR/esne/`, un seul mécanisme (patch 7, non fait) |
 | `sudo reboot` / `sudo poweroff` | dans `emulationstation.sh` | `systemctl reboot/poweroff` ou polkit |
