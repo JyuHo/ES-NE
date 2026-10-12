@@ -47,3 +47,8 @@ umu:
   env: {GAMEID: umu-0, PROTONPATH: GE-Proton}
   cwd: rom_dir
   package: umu-launcher
+# Ports et jeux natifs: la « rom » est un script shell (voir ports.yml pour ceux que es-genconfig crée)
+shell:
+  binary: [sh]
+  args: ["{rom}"]
+  cwd: rom_dir

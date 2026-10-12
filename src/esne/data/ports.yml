@@ -1,0 +1,7 @@
+# Jeux libres natifs proposés dans le système « ports ». es-genconfig crée `<roms>/ports/<fichier>` pour chaque jeu dont le
+# programme est installé (sans écraser un fichier existant). Complété par ~/.config/esne/ports.yml.
+supertux:
+  file: SuperTux.sh
+  command: supertux2 --fullscreen
+  program: supertux2
+  package: supertux

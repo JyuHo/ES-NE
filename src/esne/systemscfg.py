@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import shutil
 import sys
 from pathlib import Path
 from xml.sax.saxutils import escape, quoteattr
@@ -80,6 +81,25 @@ def render(systems: dict, roms: Path, installed_only: bool = False, is_installed
     return "\n".join(lines) + "\n"
 
 
+def seed_ports(roms: Path, ports: dict | None = None, which=None) -> list[str]:
+    """Crée les scripts des jeux libres installés dans ``<roms>/ports`` (un fichier existant n'est jamais écrasé)."""
+    which = which or shutil.which
+    created = []
+    for entry in (catalog.load_data("ports.yml") if ports is None else ports).values():
+        if not isinstance(entry, dict) or not entry.get("file") or not entry.get("command"):
+            continue
+        if not which(str(entry.get("program") or str(entry["command"]).split()[0])):
+            continue
+        target = roms / "ports" / str(entry["file"])
+        if target.exists():
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(f"#!/bin/sh\nexec {entry['command']}\n", encoding="utf-8")
+        target.chmod(0o755)
+        created.append(target.name)
+    return created
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="es-genconfig", description="Génère es_systems.cfg à partir du catalogue ES-NE.")
     parser.add_argument("-o", "--output", type=Path, help=f"fichier à écrire (défaut: {paths.config_dir() / 'es_systems.cfg'})")
@@ -104,6 +124,9 @@ def main(argv: list[str] | None = None) -> int:
             if isinstance(entry, dict) and f"<name>{name}</name>" in xml:
                 (roms / name).mkdir(parents=True, exist_ok=True)
     print(f"écrit: {target} ({xml.count('<system>')} systèmes)")
+    if not args.no_mkdir:
+        for name in seed_ports(roms):
+            print(f"port ajouté: {name}")
 
     features = target.parent / "es_features.cfg"
     features.write_text(featurescfg.render(), encoding="utf-8")

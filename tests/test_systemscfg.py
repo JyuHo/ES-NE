@@ -63,3 +63,23 @@ def test_standalone_systems_have_emulator_without_cores(esne_env):
     assert catalog.default_choice("wii") == ("dolphin", None)
     assert catalog.default_choice("switch") == ("eden", None)
     assert catalog.default_choice("windows") == ("wine", None)
+
+
+def test_seed_ports_creates_script_only_for_installed_games(tmp_path):
+    from esne import systemscfg
+    ports = {"supertux": {"file": "SuperTux.sh", "command": "supertux2 --fullscreen", "program": "supertux2"}}
+    assert systemscfg.seed_ports(tmp_path, ports, which=lambda name: None) == []
+    assert not (tmp_path / "ports").exists()
+    assert systemscfg.seed_ports(tmp_path, ports, which=lambda name: "/usr/bin/" + name) == ["SuperTux.sh"]
+    script = tmp_path / "ports" / "SuperTux.sh"
+    assert script.read_text() == "#!/bin/sh\nexec supertux2 --fullscreen\n"
+    assert script.stat().st_mode & 0o111
+    script.write_text("custom")
+    assert systemscfg.seed_ports(tmp_path, ports, which=lambda name: "/usr/bin/" + name) == []
+    assert script.read_text() == "custom"
+
+
+def test_ports_system_runs_script_with_shell(tmp_path):
+    from esne import catalog
+    assert catalog.systems()["ports"]["extensions"] == [".sh"]
+    assert catalog.emulators()["shell"]["args"] == ["{rom}"]

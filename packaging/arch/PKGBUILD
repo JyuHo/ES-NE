@@ -12,7 +12,7 @@ arch=(x86_64 aarch64)
 url='https://github.com/JyuHo/ES-NE'
 license=(GPL-3.0-or-later MIT)
 depends=(python python-yaml python-evdev retroarch libretro-core-info libretro-shaders-slang
-         sdl2 sdl2_mixer freeimage freetype2 curl vlc alsa-lib)
+         sdl2 sdl2_mixer freeimage freetype2 curl vlc alsa-lib supertux)
 makedepends=(git cmake gettext rapidjson python-build python-installer python-setuptools python-wheel)
 optdepends=('gamescope: session de connexion dédiée (es-ne-session)'
             'libretro-snes9x: Super Nintendo' 'libretro-mupen64plus-next: Nintendo 64'
@@ -20,8 +20,10 @@ optdepends=('gamescope: session de connexion dédiée (es-ne-session)'
             'python-pillow: détection plus rapide des bezels')
 provides=(es-ne)
 conflicts=(es-ne)
-source=("$pkgname::git+https://github.com/JyuHo/ES-NE.git")
-sha256sums=(SKIP)
+# Le thème Carbon (RetroPie) n'a pas de licence explicite: il est téléchargé à la construction, jamais copié dans ce dépôt.
+source=("$pkgname::git+https://github.com/JyuHo/ES-NE.git"
+        "es-theme-carbon::git+https://github.com/RetroPie/es-theme-carbon.git")
+sha256sums=(SKIP SKIP)
 
 pkgver() {
   cd "$pkgname"
@@ -59,6 +61,11 @@ package() {
   install -d "$pkgdir/usr/share/esne"
   cp -r third_party/emulationstation/resources "$pkgdir/usr/share/esne/resources"
   printf '%s\n' "$pkgver" > "$pkgdir/usr/share/esne/esne.version"
+
+  # thème par défaut: ES prend le premier thème disponible quand aucun n'est choisi
+  install -d "$pkgdir/usr/share/esne/themes"
+  cp -r "$srcdir/es-theme-carbon" "$pkgdir/usr/share/esne/themes/es-theme-carbon"
+  rm -rf "$pkgdir/usr/share/esne/themes/es-theme-carbon/.git"
 
   install -Dm755 packaging/arch/es-ne-session "$pkgdir/usr/bin/es-ne-session"
   install -Dm644 packaging/arch/es-ne.desktop "$pkgdir/usr/share/wayland-sessions/es-ne.desktop"

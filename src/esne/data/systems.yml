@@ -222,3 +222,12 @@ windows:
   emulators:
     wine: { _priority: 1 }
     umu: {}
+ports:
+  name: Ports
+  manufacturer: Divers
+  release: 2000
+  hardware: computer
+  platform: ports
+  extensions: [.sh]
+  emulators:
+    shell: {}

@@ -16,7 +16,7 @@ pour Arch Linux / CachyOS, avec les options de RetroBat, **sans aucune dépendan
 |---|---|
 | Frontend ES (fork `emulationstation-esne`, branche `esne`) | ✅ compile et tourne sur CachyOS (KDE Wayland). Patchs: option `-DESNE=ON`, chemins (config XDG, données dans `~/esne`), `LinuxApiSystem`, arrêt/redémarrage système, redémarrage d'ES, menu QUIT simplifié, Zaparoo désactivé par défaut |
 | `es-launcher` | ✅ lancement validé sur une vraie machine (SNES, N64, GameCube, Wii): RetroArch (manette `sdl2`, raccourcis, ratio, shaders, rewind...) et émulateurs autonomes; 172 tests |
-| `es-genconfig` | ✅ génère `es_systems.cfg`, `es_features.cfg` et les jeux de shaders depuis le catalogue (24 systèmes) |
+| `es-genconfig` | ✅ génère `es_systems.cfg`, `es_features.cfg` et les jeux de shaders depuis le catalogue (25 systèmes) |
 | `esctl` | ✅ `has`, `version`, `resolution`, `audio`, `config`, `info`, `timezone`, `padsinfo`, `thebezelproject`, `systems` (état des BIOS), `swissknife --emukill`, `preupdate-gamelists-hook`. Contrat dans `docs/ESCTL_CONTRACT.md` |
 | Paquet Arch (`packaging/arch/PKGBUILD`), session `ES-NE`, règle polkit | 🚧 le paquet se construit (`makepkg -fs`); installation et session de connexion à valider. Compiler dans une copie hors du dépôt: `makepkg` réécrit `pkgver` |
 
@@ -56,6 +56,10 @@ Options par système/jeu dans ES (ratio, shaders, lissage, rewind, pilote vidéo
 Un seul bezel par système, celui de The Bezel Project. Menu ES **Mises à jour → The Bezel Project**: ouvrir un système puis INSTALL (ou UPDATE / REMOVE). `esctl thebezelproject install snes` télécharge seulement l'image du système (`~/esne/decorations/thebezelproject/systems/snes.png`).
 En jeu, `es-launcher` pose l'image en overlay RetroArch et cadre le jeu dans la zone transparente (le réglage de ratio d'ES est alors ignoré, comme en « auto »). Option **Decoration set** (global, système ou jeu): Auto (= The Bezel Project s'il est installé pour le système), Aucun, ou un jeu de décorations; le réglage du système prime sur le global.
 La zone de jeu est détectée dans l'image (décodeur PNG intégré, résultat mis en cache; `python-pillow` est utilisé s'il est installé, ou un fichier `.png.info` si présent). L'image est toujours affichée en plein écran; si l'écran n'a pas son ratio (16:9 sur un écran 16:10), elle est étirée et le jeu garde les proportions de sa fenêtre. Au-delà de 25 % d'écart (21:9...), le bezel est ignoré sauf option STRETCH BEZELS sur Oui.
+
+## Thème et jeu libre
+Le paquet livre le thème **Carbon** (RetroPie) dans `/usr/share/esne/themes`: ES le choisit seul tant qu'aucun autre thème n'est sélectionné (menu Interface utilisateur → Thème). Tes propres thèmes vont dans `~/esne/themes`.
+Le système **Ports** lance des scripts `.sh` (`~/esne/roms/ports/`). `es-genconfig` y crée `SuperTux.sh` si SuperTux est installé (dépendance du paquet) et n'écrase jamais un fichier existant; la liste est dans `src/esne/data/ports.yml` (complétable par `~/.config/esne/ports.yml`).
 
 ## Générer `es_systems.cfg`
 ```bash
