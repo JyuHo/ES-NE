@@ -90,6 +90,12 @@ def build_settings(ctx: Context) -> dict[str, str]:
         "screenshot_directory": str(paths.data_dir() / "screenshots"),
     }
 
+    # Pas de paquet autoconfig sur Arch: le pilote udev laisse les manettes "non configurées".
+    # Le pilote sdl2 s'appuie sur la base de mappings SDL (DS4, DualSense, Xbox...) sans fichier de profil.
+    joypad = ctx.setting("joypad_driver", "sdl2")
+    if joypad and joypad != "auto":
+        settings["input_joypad_driver"] = str(joypad)
+
     smooth = ctx.setting("smooth")
     if smooth is not None:
         settings["video_smooth"] = "true" if truthy(smooth) else "false"

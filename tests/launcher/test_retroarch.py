@@ -33,6 +33,10 @@ def test_default_settings(esne_env):
         assert key not in s
 
 
+def test_joypad_driver_defaults_to_sdl2(esne_env):
+    assert ra.build_settings(ctx_for())["input_joypad_driver"] == "sdl2"
+
+
 def test_user_settings(esne_env):
     s = ra.build_settings(ctx_for({"snes.smooth": "0", "snes.ratio": "16/9", "global.rewind": "1", "snes.integerscale": "1"}))
     assert s["video_smooth"] == "false"
