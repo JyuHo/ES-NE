@@ -25,7 +25,7 @@ Les menus liés à `esctl` apparaissent seulement si `esctl has <commande>` réu
 | Résolution | `batocera-resolution` | `esctl resolution` (xrandr, wlr-randr, kscreen-doctor) | ✅ code + tests; format kscreen-doctor -j capturé sur KDE réel; ❌ GNOME Wayland; setMode non essayé sur machine |
 | Sortie audio | `batocera-audio` | `esctl audio` (pactl) | ✅ code + tests; non essayé sur machine |
 | Fuseau horaire | `batocera-timezone` | `esctl timezone` (`timedatectl`) | ✅ code + tests; `set` demande peut-être une règle polkit |
-| BIOS / systèmes | `batocera-systems` | `esctl systems` | 🚧 côté ES prêt, `esctl` ❌ |
+| BIOS / systèmes | `batocera-systems` | `esctl systems` | ✅ |
 | Infos manettes | `batocera-padsinfo` | `esctl padsinfo` (evdev + batterie sysfs) | ✅ sortie réelle vérifiée (PS4) |
 | The Bezel Project | `batocera-es-thebezelproject` | `esctl thebezelproject` (téléchargement GitHub, images seules) | ✅ installation, suppression et aperçu validés dans ES |
 | Décorations (bezels) en jeu | `bezels.py` Batocera | `bezels.py` + overlay RetroArch, zone de jeu en `custom_viewport` | ✅ code + tests; à valider en jeu |

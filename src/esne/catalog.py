@@ -36,6 +36,11 @@ def _load(name: str, user_dir: Path | None = None) -> dict:
     return data
 
 
+def load_data(name: str, user_dir: Path | None = None) -> dict:
+    """Fichier de données du paquet complété par celui de ``<config>`` (clé par clé)."""
+    return _load(name, user_dir)
+
+
 def systems(user_dir: Path | None = None) -> dict:
     return _load("systems.yml", user_dir)
 

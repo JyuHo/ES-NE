@@ -68,14 +68,31 @@ def report(error: LaunchError) -> int:
     return error.code
 
 
+def _write_pid(pid: int) -> None:
+    try:
+        target = paths.emulator_pid_file()
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(f"{pid}\n", encoding="utf-8")
+    except OSError:
+        pass
+
+
+def _clear_pid() -> None:
+    try:
+        paths.emulator_pid_file().unlink()
+    except OSError:
+        pass
+
+
 def run_command(command, ctx: Context, generator) -> subprocess.CompletedProcess:
-    """Lance l'émulateur. Les émulateurs sans raccourci propre sont fermés par Select + Start (manette)."""
+    """Lance l'émulateur dans son propre groupe de processus (``esctl swissknife --emukill`` le ferme grâce au fichier pid).
+    Les émulateurs sans raccourci propre sont fermés par Select + Start (manette)."""
     env = {**os.environ, **command.env}
     codes = hotkey.required_codes(ctx.setting) if getattr(generator, "external_hotkey", False) else None
-    if codes is None:
-        return subprocess.run(command.argv, env=env, cwd=command.cwd)
 
     child = subprocess.Popen(command.argv, env=env, cwd=command.cwd, start_new_session=True)
+    _write_pid(child.pid)
+    watcher = None
 
     def close_emulator():
         log.info("raccourci manette: fermeture de l'émulateur")
@@ -85,14 +102,17 @@ def run_command(command, ctx: Context, generator) -> subprocess.CompletedProcess
             return
         threading.Timer(5.0, lambda: child.poll() is None and _kill(child)).start()
 
-    watcher = hotkey.Watcher(codes, close_emulator)
-    watcher.start()
+    if codes is not None:
+        watcher = hotkey.Watcher(codes, close_emulator)
+        watcher.start()
     try:
         returncode = child.wait()
     finally:
-        watcher.stop()
+        if watcher is not None:
+            watcher.stop()
+        _clear_pid()
     # fermé volontairement par le raccourci: ce n'est pas une erreur
-    return subprocess.CompletedProcess(command.argv, 0 if watcher.triggered else returncode)
+    return subprocess.CompletedProcess(command.argv, 0 if watcher is not None and watcher.triggered else returncode)
 
 
 def _kill(child) -> None:

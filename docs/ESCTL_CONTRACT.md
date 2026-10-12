@@ -35,14 +35,14 @@ Codes de sortie: `0` succès · `1` échec ou indisponible · `2` mauvais usage.
 | Résolution | `resolution` | ✅ | voir ci-dessous |
 | Sortie audio | `audio` | ✅ | voir ci-dessous |
 | (sorties vidéo) | — | ✅ | `esctl config lsoutputs`: noms des sorties connectées, une par ligne |
-| BIOS | `systems` | ❌ | `systems [--filter <système>]`: lignes `> <système>` puis `<statut> <md5> <chemin>` (à relire dans `getBiosInformations`) |
+| BIOS | `systems` | ✅ | `systems [--filter <système>]`: lignes `> <système>` puis `<statut> <md5> <chemin>` (`OK`, `MISSING`, `INVALID`). Catalogue `data/bios.yml` (complété par `<config>/bios.yml`), fichiers dans `<data>/bios` |
 | Manettes | `padsinfo` | ✅ | XML `<pads><pad device id name path battery status/></pads>` (batterie omise si absente) |
 | Fuseau horaire | `timezone` | ✅ | `get`, `detect`, `set "<tz>"` via `timedatectl` (`set` peut exiger polkit) |
 | Bezels | `thebezelproject` | ✅ | `list` (`[I]`/`[A]` système URL), `install <x>`, `remove <x>`; x = nom de système ES-NE; une image par système dans `<data>/decorations/thebezelproject/systems/<x>.png` (API GitHub + raw, pas d'archive) |
-| Hook gamelists | `preupdate-gamelists-hook` | ❌ | appelé avant la mise à jour des gamelists |
+| Hook gamelists | `preupdate-gamelists-hook` | ✅ | exécute les scripts exécutables de `<config>/hooks/preupdate-gamelists/` (ordre alphabétique) |
 
 Appelés sans passer par `has` (donc à fournir dès qu'`esctl` est installé): `esctl info --full` ✅ (infos système) et
-`esctl swissknife --emukill` ❌ (tuer l'émulateur).
+`esctl swissknife --emukill` ✅ (ferme l'émulateur: groupe de processus dont le pid est dans `<state>/emulator.pid`, écrit par `es-launcher`; SIGTERM puis SIGKILL après 5 s).
 
 ### `esctl resolution [--screen SORTIE] <verbe>`
 - `listModes`: une ligne par mode, **`ID:LIBELLÉ`**, du plus grand au plus petit. Le frontend découpe sur `:` : l'ID ne

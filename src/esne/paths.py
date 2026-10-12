@@ -39,3 +39,7 @@ def roms_dir() -> Path:
 
 def bios_dir() -> Path:
     return data_dir() / "bios"
+
+
+def emulator_pid_file() -> Path:
+    return state_dir() / "emulator.pid"
