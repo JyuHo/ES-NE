@@ -42,7 +42,7 @@ Détails: `docs/ROADMAP.md` (jalons), `PARITY.md` (parité avec RetroBat), `docs
 Pour les jeux libretro, `es-launcher` a besoin de:
 ```bash
 sudo pacman -S --needed retroarch libretro-core-info libretro-snes9x \
-    retroarch-assets-ozone retroarch-assets-xmb retroarch-assets-glui python-pillow \
+    retroarch-assets-ozone retroarch-assets-xmb retroarch-assets-glui \
     libretro-shaders-slang libretro-overlays
 ```
 Les `retroarch-assets-*` fournissent les icônes et polices du menu RetroArch (sans eux il s'affiche avec des ressources
@@ -55,7 +55,7 @@ Options par système/jeu dans ES (ratio, shaders, lissage, rewind, pilote vidéo
 ## Bezels (décorations)
 Un seul bezel par système, celui de The Bezel Project. Menu ES **Mises à jour → The Bezel Project**: ouvrir un système puis INSTALL (ou UPDATE / REMOVE). `esctl thebezelproject install snes` télécharge seulement l'image du système (`~/.local/share/esne/decorations/thebezelproject/systems/snes.png`).
 En jeu, `es-launcher` pose l'image en overlay RetroArch et cadre le jeu dans la zone transparente (le réglage de ratio d'ES est alors ignoré, comme en « auto »). Option **Decoration set** (global, système ou jeu): Auto (= The Bezel Project s'il est installé pour le système), Aucun, ou un jeu de décorations; le réglage du système prime sur le global.
-Il faut `python-pillow` pour détecter la zone de jeu (sinon fichier `.png.info`), et un écran au même ratio que l'image (16:9), sauf option STRETCH BEZELS.
+La zone de jeu est détectée dans l'image (décodeur PNG intégré, résultat mis en cache; `python-pillow` est utilisé s'il est installé, ou un fichier `.png.info` si présent). Il faut un écran au même ratio que l'image (16:9), sauf option STRETCH BEZELS.
 
 ## Générer `es_systems.cfg`
 ```bash

@@ -7,12 +7,16 @@ Disposition d'un jeu de décorations (identique à ES/Batocera), dans ``<data>/d
     <jeu>/default.png                    bezel par défaut
 
 Une image ``<nom>.png.info`` (JSON: width, height, top, left, bottom, right) donne la zone de jeu; sinon on la
-déduit de la zone transparente de l'image (Pillow, optionnel).
+déduit de la zone transparente de l'image (décodeur PNG intégré; Pillow est utilisé s'il est installé).
 """
 from __future__ import annotations
 
+import dataclasses
+import hashlib
 import json
 import logging
+import struct
+import zlib
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -88,24 +92,89 @@ def read_info(image: Path) -> Area | None:
     return Area(left, top, width - left - right, height - top - bottom, width, height)
 
 
-def detect_area(image: Path) -> Area | None:
-    """Zone transparente autour du centre de l'image (lignes et colonnes médianes). Nécessite Pillow."""
+def _png_alpha(image: Path) -> tuple[int, int, bytes] | None:
+    """Plan alpha d'un PNG 8 bits RGBA ou gris+alpha, sans Pillow. Le défiltrage de chaque canal ne dépend que du même
+    canal (octet à gauche, au-dessus): on ne traite donc que l'alpha. None si le format n'est pas pris en charge."""
+    try:
+        data = image.read_bytes()
+    except OSError:
+        return None
+    if data[:8] != b"\x89PNG\r\n\x1a\n":
+        return None
+    position, header, idat = 8, None, []
+    while position + 8 <= len(data):
+        length, kind = struct.unpack(">I4s", data[position:position + 8])
+        body = data[position + 8:position + 8 + length]
+        if kind == b"IHDR":
+            header = struct.unpack(">IIBBBBB", body)
+        elif kind == b"IDAT":
+            idat.append(body)
+        elif kind == b"IEND":
+            break
+        position += 12 + length
+    if header is None:
+        return None
+    width, height, depth, color, _compression, _filter, interlace = header
+    if depth != 8 or interlace != 0 or color not in (4, 6):
+        return None
+    channels = 4 if color == 6 else 2
+    stride = width * channels
+    try:
+        raw = zlib.decompress(b"".join(idat))
+    except zlib.error:
+        return None
+    if len(raw) < height * (stride + 1):
+        return None
+    rows = []
+    previous = bytearray(width)
+    for y in range(height):
+        base = y * (stride + 1)
+        kind = raw[base]
+        line = raw[base + 1:base + 1 + stride][channels - 1::channels]  # alpha seul
+        current = bytearray(width)
+        if kind == 0:
+            current[:] = line
+        elif kind == 1:  # Sub
+            left = 0
+            for x in range(width):
+                left = current[x] = (line[x] + left) & 255
+        elif kind == 2:  # Up
+            current[:] = bytes((line[x] + previous[x]) & 255 for x in range(width))
+        elif kind == 3:  # Average
+            left = 0
+            for x in range(width):
+                left = current[x] = (line[x] + ((left + previous[x]) >> 1)) & 255
+        elif kind == 4:  # Paeth
+            left = upper_left = 0
+            for x in range(width):
+                up = previous[x]
+                p = left + up - upper_left
+                pa, pb, pc = abs(p - left), abs(p - up), abs(p - upper_left)
+                predictor = left if pa <= pb and pa <= pc else (up if pb <= pc else upper_left)
+                left = current[x] = (line[x] + predictor) & 255
+                upper_left = up
+        else:
+            return None
+        rows.append(bytes(current))
+        previous = current
+    return width, height, b"".join(rows)
+
+
+def _alpha_plane(image: Path) -> tuple[int, int, bytes] | None:
     try:
         from PIL import Image
     except ImportError:
-        log.warning("Pillow absent (paquet python-pillow): zone de jeu des bezels non détectable")
-        return None
+        return _png_alpha(image)
     try:
         with Image.open(image) as source:
-            if "A" not in source.getbands() and source.mode != "P":
-                return None
             alpha = source.convert("RGBA").getchannel("A")
-            width, height = alpha.size
-            data = alpha.tobytes()
+            return alpha.size[0], alpha.size[1], alpha.tobytes()
     except (OSError, ValueError) as exc:
         log.warning("bezel illisible %s: %s", image, exc)
         return None
 
+
+def _scan(width: int, height: int, data: bytes) -> Area | None:
     cx, cy = width // 2, height // 2
     if data[cy * width + cx] >= ALPHA_LIMIT:
         return None  # le centre est opaque: pas de fenêtre de jeu
@@ -122,6 +191,38 @@ def detect_area(image: Path) -> Area | None:
     while bottom < height - 1 and data[(bottom + 1) * width + cx] < ALPHA_LIMIT:
         bottom += 1
     return Area(left, top, right - left + 1, bottom - top + 1, width, height)
+
+
+def _cache_file(image: Path) -> Path | None:
+    try:
+        stat = image.stat()
+    except OSError:
+        return None
+    key = hashlib.sha1(f"{image}|{stat.st_size}|{stat.st_mtime_ns}".encode()).hexdigest()[:20]
+    return paths.cache_dir() / "bezels" / f"{key}.json"
+
+
+def detect_area(image: Path) -> Area | None:
+    """Zone transparente autour du centre de l'image (lignes et colonnes médianes). Résultat mis en cache."""
+    cache = _cache_file(image)
+    if cache is not None and cache.is_file():
+        try:
+            values = json.loads(cache.read_text(encoding="utf-8"))
+            return Area(*values) if values else None
+        except (OSError, ValueError, TypeError):
+            pass
+    plane = _alpha_plane(image)
+    if plane is None:
+        log.warning("bezel %s: format PNG non pris en charge (8 bits RGBA attendu), zone de jeu non détectable", image.name)
+        return None
+    area = _scan(*plane)
+    if cache is not None:
+        try:
+            cache.parent.mkdir(parents=True, exist_ok=True)
+            cache.write_text(json.dumps(list(dataclasses.astuple(area)) if area else []), encoding="utf-8")
+        except OSError:
+            pass
+    return area
 
 
 def game_area(image: Path) -> Area | None:
