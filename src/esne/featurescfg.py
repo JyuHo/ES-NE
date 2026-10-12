@@ -31,12 +31,24 @@ VIDEO_DRIVER_FEATURE = (
 )
 
 
+# Options Cemu (ES enregistre <système>.cemu_api et <système>.cemu_autoconfig).
+CEMU_FEATURES = (
+    '<feature name="GRAPHICS API" value="cemu_api" '
+    'description="Applied to Cemu\'s settings.xml. Cemu must have been started once so the file exists.">'
+    '<choice name="VULKAN" value="vulkan" /><choice name="OPENGL" value="opengl" /></feature>'
+    '<feature name="AUTOCONFIGURE CONTROLLERS" value="cemu_autoconfig" '
+    'description="Write Wii U Pro Controller profiles for the pads ES sees. Turn off to keep your own mapping.">'
+    '<choice name="ON" value="1" /><choice name="OFF" value="0" /></feature>'
+)
+
+
 def render() -> str:
     return (
         '<?xml version="1.0"?>\n'
         "<features>\n"
         f"  <globalFeatures>{VIDEO_DRIVER_FEATURE}</globalFeatures>\n"
         f'  <emulator name="libretro" features="{",".join(LIBRETRO_FEATURES)}">{VIDEO_DRIVER_FEATURE}</emulator>\n'
+        f'  <emulator name="cemu" features="">{CEMU_FEATURES}</emulator>\n'
         "</features>\n"
     )
 

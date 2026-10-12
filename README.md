@@ -81,6 +81,7 @@ shaders) et crée les jeux de shaders dans `~/esne/shaders/configs/` pour les pr
 - **Autonomes** (décrits dans `emulators.yml`, lancés par `generators/standalone.py`): Dolphin (GameCube, Wii), PCSX2 (PS2),
   RPCS3 (PS3), Cemu (Wii U), Eden ou Ryujinx (Switch), xemu (Xbox), Steam (fichiers `.steam` contenant l'appid),
   Wine ou umu-run (`windows`). Ils se lancent en plein écran sans interface; leurs réglages se font encore dans leur propre configuration.
+  **Cemu** fait exception (écrit, non testé sur matériel): ES-NE génère les profils « Wii U Pro Controller » (`controllerProfiles/controllerN.xml`) depuis les manettes d'ES et applique l'option `GRAPHICS API` (Vulkan/OpenGL) à `settings.xml`. Lancer Cemu une fois à la main avant (assistant de premier démarrage, clés et dossier MLC); l'option `AUTOCONFIGURE CONTROLLERS` permet de garder son propre mapping.
 Un émulateur absent donne l'erreur 204 avec le nom du paquet à installer. Xbox 360 n'est pas inclus (aucun émulateur Linux utilisable).
 
 ## Compiler le frontend
