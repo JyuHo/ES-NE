@@ -83,6 +83,7 @@ Hashes de la branche `esne` du fork.
 | `3be4670` | décorations | un bezel par système: jeu de décorations « THE BEZEL PROJECT » (aperçu = image du système); pas de bezel par jeu |
 | `0ef1c7c` | chemins | dossier de données par défaut `~/esne` (au lieu de `~/.local/share/esne`) |
 | `96f4090` | clés | clés de développeur lues à l'exécution dans `~/.config/esne/keys.conf` (`EsneKeys.h`); scrapers à clé et RetroAchievements proposés seulement si la clé est renseignée |
+| `4e803a0` | scrapers | repli sur le premier scraper disponible si celui qui est configuré n'a pas de clé (évitait un SIGSEGV au scrape) |
 
 ## Ce qui reste de Batocera dans le frontend (état actuel)
 - `updates.batocera.org`: sert seulement à la liste des thèmes téléchargeables (`themes.json`); surchargeable par `global.updates.url`.
