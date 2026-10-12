@@ -47,7 +47,7 @@ build() {
 package() {
   cd "$pkgname"
   # pas de `cmake --install`: il copierait aussi les bibliothèques embarquées (pugixml...) qui appartiennent à d'autres paquets
-  install -Dm755 build-es/emulationstation "$pkgdir/usr/bin/emulationstation"
+  install -Dm755 third_party/emulationstation/emulationstation "$pkgdir/usr/bin/emulationstation"
   local mo lang
   for mo in third_party/emulationstation/locale/lang/*/LC_MESSAGES/emulationstation2.mo; do
     [ -f "$mo" ] || continue
