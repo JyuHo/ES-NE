@@ -175,6 +175,9 @@ def _alpha_plane(image: Path) -> tuple[int, int, bytes] | None:
 
 
 def _scan(width: int, height: int, data: bytes) -> Area | None:
+    """Fenêtre de jeu: étendue horizontale lue sur la ligne médiane, puis étendue verticale lue sur la bande centrale de
+    cette fenêtre (une ligne est ouverte si 80 % de la bande est transparente). Un filet, un logo ou un dégradé qui coupe la
+    colonne médiane n'arrête donc plus la détection."""
     cx, cy = width // 2, height // 2
     if data[cy * width + cx] >= ALPHA_LIMIT:
         return None  # le centre est opaque: pas de fenêtre de jeu
@@ -184,11 +187,18 @@ def _scan(width: int, height: int, data: bytes) -> Area | None:
     right = cx
     while right < width - 1 and data[cy * width + right + 1] < ALPHA_LIMIT:
         right += 1
+    quarter = (right - left + 1) // 4
+    band_start, band_end = left + quarter, right - quarter + 1
+
+    def open_row(y: int) -> bool:
+        part = data[y * width + band_start:y * width + band_end]
+        return sum(1 for value in part if value >= ALPHA_LIMIT) * 5 <= len(part)
+
     top = cy
-    while top > 0 and data[(top - 1) * width + cx] < ALPHA_LIMIT:
+    while top > 0 and open_row(top - 1):
         top -= 1
     bottom = cy
-    while bottom < height - 1 and data[(bottom + 1) * width + cx] < ALPHA_LIMIT:
+    while bottom < height - 1 and open_row(bottom + 1):
         bottom += 1
     return Area(left, top, right - left + 1, bottom - top + 1, width, height)
 
@@ -198,7 +208,7 @@ def _cache_file(image: Path) -> Path | None:
         stat = image.stat()
     except OSError:
         return None
-    key = hashlib.sha1(f"{image}|{stat.st_size}|{stat.st_mtime_ns}".encode()).hexdigest()[:20]
+    key = hashlib.sha1(f"2|{image}|{stat.st_size}|{stat.st_mtime_ns}".encode()).hexdigest()[:20]
     return paths.cache_dir() / "bezels" / f"{key}.json"
 
 

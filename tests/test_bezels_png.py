@@ -80,3 +80,16 @@ def test_unsupported_png_gives_none(tmp_path, monkeypatch):
     path = tmp_path / "x.png"
     path.write_bytes(b"not a png")
     assert bezels.detect_area(path) is None
+
+
+def test_scan_ignores_thin_element_crossing_center_column():
+    width, height = 100, 80
+    data = bytearray([255] * (width * height))
+    for y in range(10, 70):
+        for x in range(20, 80):
+            data[y * width + x] = 0
+    for y in (25, 55):  # filet opaque qui ne couvre que la colonne médiane
+        for x in range(48, 52):
+            data[y * width + x] = 255
+    area = bezels._scan(width, height, bytes(data))
+    assert (area.x, area.y, area.width, area.height) == (20, 10, 60, 60)
