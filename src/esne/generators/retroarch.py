@@ -219,7 +219,11 @@ class RetroArch(Generator):
         config = write_config(ctx, settings)
         log.info("réglages RetroArch (%s): %s", config, ", ".join(f"{k}={v}" for k, v in sorted(settings.items())
                                                                    if k.startswith(("video_", "aspect_", "rewind", "savestate_auto", "input_joypad"))))
-        return Command(argv=[*binary, "-L", str(core), "--appendconfig", str(config), ctx.rom])
+        argv = [*binary, "-L", str(core), "--appendconfig", str(config)]
+        if settings.get("video_shader_enable") == "true" and settings.get("video_shader"):
+            # la clé video_shader du fichier n'est pas chargée au démarrage par RetroArch: --set-shader l'impose
+            argv += ["--set-shader", settings["video_shader"]]
+        return Command(argv=[*argv, ctx.rom])
 
 
 GENERATOR = RetroArch

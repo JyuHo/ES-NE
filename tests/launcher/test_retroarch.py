@@ -134,3 +134,14 @@ def test_generate_command(emulation):
     assert command.argv[0].endswith("retroarch")
     assert command.argv[1:3] == ["-L", str(emulation.core_dir / "snes9x_libretro.so")]
     assert command.argv[3] == "--appendconfig" and command.argv[-1] == "/roms/snes/mario.sfc"
+
+
+def test_generate_command_passes_shader_with_set_shader(emulation, tmp_path, monkeypatch):
+    preset = tmp_path / "crt-geom.slangp"
+    preset.write_text("")
+    monkeypatch.setattr(ra, "find_shader", lambda name, directories=None: preset)
+    ctx = ctx_for()
+    ctx.core = "snes9x"
+    ctx.config.get = lambda key, default=None: "crt-geom" if key == "shaderset" else default
+    argv = ra.GENERATOR().generate(ctx).argv
+    assert argv[argv.index("--set-shader") + 1] == str(preset) and argv[-1] == "/roms/snes/mario.sfc"
