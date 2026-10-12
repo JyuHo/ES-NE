@@ -69,3 +69,10 @@ def test_glob_candidate_picks_latest_executable(tmp_path, monkeypatch):
     (tmp_path / "Cemu-2.7.AppImage").write_text("")  # non exécutable: ignoré
     found = standalone.find_program([str(tmp_path / "Cemu*.AppImage")], which=lambda n: None)
     assert found == [str(tmp_path / "Cemu-2.6.AppImage")]
+
+
+def test_flatpak_candidate_requires_the_app(monkeypatch):
+    monkeypatch.setattr(standalone, "_flatpak_installed", lambda flatpak, app: app == "a.b.C")
+    which = lambda n: "/usr/bin/flatpak" if n == "flatpak" else None
+    assert standalone.find_program(["flatpak run x.y.Z"], which) is None
+    assert standalone.find_program(["flatpak run x.y.Z", "flatpak run a.b.C"], which) == ["/usr/bin/flatpak", "run", "a.b.C"]

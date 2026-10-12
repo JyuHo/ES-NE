@@ -20,6 +20,7 @@ import logging
 import os
 import shlex
 import shutil
+import subprocess
 from pathlib import Path
 
 from .. import catalog
@@ -27,6 +28,13 @@ from ..errors import EMULATOR_MISSING, INVALID_CONFIG, UNKNOWN_EMULATOR, LaunchE
 from .base import Command, Context, Generator
 
 log = logging.getLogger(__name__)
+
+
+def _flatpak_installed(flatpak: str, app: str) -> bool:
+    try:
+        return subprocess.run([flatpak, "info", app], capture_output=True, timeout=10).returncode == 0
+    except (OSError, subprocess.SubprocessError):
+        return False
 
 
 def find_program(candidates, which=None) -> list[str] | None:
@@ -40,6 +48,10 @@ def find_program(candidates, which=None) -> list[str] | None:
             if found:
                 return [found[-1], *parts[1:]]
         elif which(parts[0]):
+            if os.path.basename(parts[0]) == "flatpak" and len(parts) >= 3 and parts[1] == "run":
+                app = next((p for p in parts[2:] if not p.startswith("-")), "")
+                if not _flatpak_installed(which(parts[0]), app):  # flatpak présent mais pas l'application
+                    continue
             return [which(parts[0]), *parts[1:]]
     return None
 
