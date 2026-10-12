@@ -55,7 +55,7 @@ Options par système/jeu dans ES (ratio, shaders, lissage, rewind, pilote vidéo
 ## Bezels (décorations)
 Un seul bezel par système, celui de The Bezel Project. Menu ES **Mises à jour → The Bezel Project**: ouvrir un système puis INSTALL (ou UPDATE / REMOVE). `esctl thebezelproject install snes` télécharge seulement l'image du système (`~/.local/share/esne/decorations/thebezelproject/systems/snes.png`).
 En jeu, `es-launcher` pose l'image en overlay RetroArch et cadre le jeu dans la zone transparente (le réglage de ratio d'ES est alors ignoré, comme en « auto »). Option **Decoration set** (global, système ou jeu): Auto (= The Bezel Project s'il est installé pour le système), Aucun, ou un jeu de décorations; le réglage du système prime sur le global.
-La zone de jeu est détectée dans l'image (décodeur PNG intégré, résultat mis en cache; `python-pillow` est utilisé s'il est installé, ou un fichier `.png.info` si présent). Il faut un écran au même ratio que l'image (16:9), sauf option STRETCH BEZELS.
+La zone de jeu est détectée dans l'image (décodeur PNG intégré, résultat mis en cache; `python-pillow` est utilisé s'il est installé, ou un fichier `.png.info` si présent). Si l'écran n'a pas le ratio de l'image (16:9 sur un écran 16:10, par exemple), l'image garde ses proportions, centrée avec des bandes noires; l'option STRETCH BEZELS l'étire sur tout l'écran.
 
 ## Générer `es_systems.cfg`
 ```bash

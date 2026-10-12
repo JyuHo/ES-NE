@@ -229,22 +229,37 @@ def game_area(image: Path) -> Area | None:
     return read_info(image) or detect_area(image)
 
 
-def viewport(area: Area, screen: tuple[int, int], stretch: bool = False, tolerance: float = 0.02):
-    """Zone de jeu en pixels d'écran (x, y, largeur, hauteur), ou None si l'image ne convient pas à l'écran."""
+@dataclasses.dataclass(frozen=True)
+class Layout:
+    """Placement du bezel sur l'écran: zone de jeu en pixels (x, y, largeur, hauteur) et rectangle de l'image
+    (normalisé, 0-1) ou None quand l'image remplit tout l'écran."""
+    box: tuple[int, int, int, int]
+    rect: tuple[float, float, float, float] | None
+
+
+def layout(area: Area, screen: tuple[int, int], stretch: bool = False, tolerance: float = 0.02) -> Layout:
+    """Même ratio: l'image remplit l'écran. Ratio différent: l'image entière est centrée avec des bandes noires
+    (proportions conservées), ou étirée sur tout l'écran avec l'option « stretch »."""
     screen_w, screen_h = screen
     scale_x, scale_y = screen_w / area.image_width, screen_h / area.image_height
-    if not stretch and abs(scale_x - scale_y) / max(scale_x, scale_y) > tolerance:
-        return None
-    return (round(area.x * scale_x), round(area.y * scale_y), round(area.width * scale_x), round(area.height * scale_y))
+    if stretch or abs(scale_x - scale_y) / max(scale_x, scale_y) <= tolerance:
+        box = (round(area.x * scale_x), round(area.y * scale_y), round(area.width * scale_x), round(area.height * scale_y))
+        return Layout(box, None)
+    scale = min(scale_x, scale_y)
+    draw_w, draw_h = area.image_width * scale, area.image_height * scale
+    offset_x, offset_y = (screen_w - draw_w) / 2, (screen_h - draw_h) / 2
+    box = (round(offset_x + area.x * scale), round(offset_y + area.y * scale), round(area.width * scale), round(area.height * scale))
+    return Layout(box, (offset_x / screen_w, offset_y / screen_h, draw_w / screen_w, draw_h / screen_h))
 
 
-def write_overlay(image: Path, target: Path) -> Path:
+def write_overlay(image: Path, target: Path, rect: tuple[float, float, float, float] | None = None) -> Path:
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(
-        "overlays = 1\n"
-        f'overlay0_overlay = "{image}"\n'
-        "overlay0_full_screen = true\n"
-        "overlay0_descs = 0\n",
-        encoding="utf-8",
-    )
+    lines = ["overlays = 1", f'overlay0_overlay = "{image}"']
+    if rect is None:
+        lines.append("overlay0_full_screen = true")
+    else:
+        lines += ["overlay0_normalized = true", "overlay0_full_screen = false",
+                  'overlay0_rect = "' + ",".join(f"{value:.6f}" for value in rect) + '"']
+    lines.append("overlay0_descs = 0")
+    target.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return target

@@ -227,6 +227,7 @@ def bezel_settings(ctx: Context) -> dict[str, str]:
         log.info("aucun bezel '%s' pour le système %s", choice, ctx.system)
         return {}
 
+    rect = None
     settings = {"input_overlay_enable": "true", "input_overlay_opacity": "1.000000"}
     area = bezels.game_area(image)
     screen = screen_size()
@@ -234,10 +235,8 @@ def bezel_settings(ctx: Context) -> dict[str, str]:
         log.warning("bezel %s: zone de jeu ou écran inconnus, le jeu reste plein écran sous l'image", image.name)
     else:
         stretch = ctx.setting("bezel_stretch", "auto") in (1, "1", "true", "True")
-        box = bezels.viewport(area, screen, stretch)
-        if box is None:
-            log.warning("bezel %s ignoré: son ratio ne correspond pas à l'écran %dx%d (option STRETCH BEZELS)", image.name, *screen)
-            return {}
+        placed = bezels.layout(area, screen, stretch)
+        box, rect = placed.box, placed.rect
         settings.update({
             "aspect_ratio_index": str(RATIOS.index("custom")),
             "video_aspect_ratio_auto": "false",
@@ -245,9 +244,9 @@ def bezel_settings(ctx: Context) -> dict[str, str]:
             "custom_viewport_x": str(box[0]), "custom_viewport_y": str(box[1]),
             "custom_viewport_width": str(box[2]), "custom_viewport_height": str(box[3]),
         })
-    overlay = bezels.write_overlay(image, paths.cache_dir() / "retroarch" / "overlays" / f"{ctx.system}.cfg")
+    overlay = bezels.write_overlay(image, paths.cache_dir() / "retroarch" / "overlays" / f"{ctx.system}.cfg", rect)
     settings["input_overlay"] = str(overlay)
-    log.info("bezel: %s", image)
+    log.info("bezel: %s (zone de jeu %s, image %s)", image, settings.get("custom_viewport_width", "?") + "x" + settings.get("custom_viewport_height", "?"), "plein écran" if rect is None else "centrée")
     return settings
 
 

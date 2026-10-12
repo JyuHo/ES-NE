@@ -41,11 +41,19 @@ def test_info_file_overrides_detection(tmp_path):
     assert (area.x, area.y, area.width, area.height) == (6, 5, 178, 96)
 
 
-def test_viewport_scales_and_refuses_other_ratio():
+def test_layout_same_ratio_fills_screen():
     area = bezels.Area(24, 10, 144, 88, 192, 108)
-    assert bezels.viewport(area, (1920, 1080)) == (240, 100, 1440, 880)
-    assert bezels.viewport(area, (1920, 1200)) is None
-    assert bezels.viewport(area, (1920, 1200), stretch=True) == (240, 111, 1440, 978)
+    placed = bezels.layout(area, (1920, 1080))
+    assert placed.box == (240, 100, 1440, 880) and placed.rect is None
+
+
+def test_layout_other_ratio_is_centered_with_bars():
+    area = bezels.Area(24, 10, 144, 88, 192, 108)
+    placed = bezels.layout(area, (1920, 1200))  # 16:10: l'image 16:9 garde ses proportions
+    assert placed.box == (240, 160, 1440, 880)
+    assert placed.rect == pytest.approx((0.0, 60 / 1200, 1.0, 1080 / 1200))
+    stretched = bezels.layout(area, (1920, 1200), stretch=True)
+    assert stretched.box == (240, 111, 1440, 978) and stretched.rect is None
 
 
 def test_find_image_system_then_default(tmp_path):
@@ -95,9 +103,13 @@ def test_bezel_auto_without_install_is_empty(env):
     assert retroarch.bezel_settings(ctx) == {}
 
 
-def test_bezel_wrong_screen_ratio_is_skipped(env, monkeypatch):
+def test_bezel_on_16_10_screen_is_centered(env, monkeypatch):
     monkeypatch.setattr(retroarch, "screen_size", lambda: (1920, 1200))
-    assert retroarch.bezel_settings(context({"bezel": "thebezelproject"})) == {}
+    s = retroarch.bezel_settings(context({"bezel": "thebezelproject"}))
+    assert (s["custom_viewport_x"], s["custom_viewport_y"]) == ("240", "160")
+    text = open(s["input_overlay"]).read()
+    assert "overlay0_full_screen = false" in text and 'overlay0_rect = "0.000000,0.050000,1.000000,0.900000"' in text
+    assert "overlay0_normalized = true" in text
 
 
 def test_build_settings_includes_bezel(env):
