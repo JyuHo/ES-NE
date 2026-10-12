@@ -177,6 +177,13 @@ def build_settings(ctx: Context) -> dict[str, str]:
         else:
             settings["video_shader_enable"] = "true"
             settings["video_shader"] = str(preset)
+            # les presets slang (.slangp) exigent glcore ou vulkan; le pilote "gl" classique ne sait charger que du GLSL
+            if preset.suffix == ".slangp":
+                settings["video_driver"] = "glcore"
+
+    video_driver = ctx.setting("video_driver")
+    if video_driver and video_driver != "auto":
+        settings["video_driver"] = str(video_driver)
 
     return settings
 

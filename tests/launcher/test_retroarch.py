@@ -67,6 +67,18 @@ def test_ratio_disables_core_provided_aspect(esne_env):
     assert s["aspect_ratio_index"] == "1" and s["video_aspect_ratio_auto"] == "false"
 
 
+def test_slang_shader_forces_glcore_and_driver_can_be_overridden(esne_env, tmp_path, monkeypatch):
+    preset = tmp_path / "crt-geom.slangp"
+    preset.write_text("")
+    monkeypatch.setattr(ra, "find_shader", lambda name, directories=None: preset)
+    ctx = ctx_for()
+    ctx.config.get = lambda key, default=None: "crt-geom" if key == "shaderset" else default
+    assert ra.build_settings(ctx)["video_driver"] == "glcore"
+    ctx.config.get = lambda key, default=None: {"shaderset": "crt-geom", "video_driver": "vulkan"}.get(key, default)
+    assert ra.build_settings(ctx)["video_driver"] == "vulkan"
+    assert "video_driver" not in ra.build_settings(ctx_for())
+
+
 def test_unknown_ratio_is_ignored(esne_env):
     assert "aspect_ratio_index" not in ra.build_settings(ctx_for({"snes.ratio": "n'importe quoi"}))
 
