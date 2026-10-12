@@ -60,6 +60,13 @@ def test_user_settings(esne_env):
     assert s["video_scale_integer"] == "true"
 
 
+def test_ratio_disables_core_provided_aspect(esne_env):
+    ctx = ctx_for()
+    ctx.config.get = lambda key, default=None: "16/9" if key == "ratio" else default
+    s = ra.build_settings(ctx)
+    assert s["aspect_ratio_index"] == "1" and s["video_aspect_ratio_auto"] == "false"
+
+
 def test_unknown_ratio_is_ignored(esne_env):
     assert "aspect_ratio_index" not in ra.build_settings(ctx_for({"snes.ratio": "n'importe quoi"}))
 

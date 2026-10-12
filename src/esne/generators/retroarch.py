@@ -150,6 +150,8 @@ def build_settings(ctx: Context) -> dict[str, str]:
     if ratio is not None:
         if ratio in RATIOS:
             settings["aspect_ratio_index"] = str(RATIOS.index(ratio))
+            # sans cela RetroArch garde le ratio fourni par le core et ignore aspect_ratio_index
+            settings["video_aspect_ratio_auto"] = "false"
         else:
             log.warning("ratio inconnu ignoré: %s", ratio)
 
