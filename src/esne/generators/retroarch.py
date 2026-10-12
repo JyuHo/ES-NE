@@ -206,7 +206,10 @@ class RetroArch(Generator):
         for controller in ctx.controllers:
             log.debug("manette %d: %s (%s)", controller.player, controller.name, controller.path)
 
-        config = write_config(ctx, build_settings(ctx))
+        settings = build_settings(ctx)
+        config = write_config(ctx, settings)
+        log.info("réglages RetroArch (%s): %s", config, ", ".join(f"{k}={v}" for k, v in sorted(settings.items())
+                                                                   if k.startswith(("video_", "aspect_", "rewind", "savestate_auto", "input_joypad"))))
         return Command(argv=[*binary, "-L", str(core), "--appendconfig", str(config), ctx.rom])
 
 

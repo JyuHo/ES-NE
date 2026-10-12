@@ -82,7 +82,8 @@ def build_context(argv: list[str], cfg: Config | None = None) -> Context:
         raise LaunchError(BAD_ARGUMENTS, "-system et -rom sont obligatoires")
 
     cfg = cfg if cfg is not None else Config.load(paths.conf_file())
-    rom_name = Path(rom).name
+    # même nettoyage qu'ES (FileData::getConfigurationName): "=" et "#" sont retirés du nom du fichier
+    rom_name = Path(rom).name.replace("=", "").replace("#", "")
 
     return Context(
         system=system,
