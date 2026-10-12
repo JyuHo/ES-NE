@@ -3,13 +3,13 @@ Légende: ✅ fait · 🚧 en cours · ❌ à faire. Un ✅ côté ES = code en 
 
 ## M0 — ES compilé avec chemins patchés, `esctl` minimal, 1 système ✅
 - ✅ option CMake `-DESNE=ON` (variante sans `BATOCERA`)
-- ✅ chemins XDG (`Paths.cpp`)
+- ✅ chemins (`Paths.cpp`): config/état/cache XDG, données dans `~/esne` (roms, bios, saves, thèmes, décorations)
 - ✅ `LinuxApiSystem`: traduction `batocera-*` → `esctl`, menus conditionnés, mises à jour désactivées
 - ✅ build complet d'ES sur CachyOS et lancement (KDE Wayland)
 - ✅ `esctl` minimal: `has`, `version`, `resolution`, `audio`, `config lsoutputs` (résolution et audio testés sur sorties simulées)
 - ✅ `esctl` suite: `timezone`, `padsinfo`, `info`
 - ✅ `esctl thebezelproject` (liste, installation, suppression)
-- ❌ `esctl` reste: `systems`, `swissknife --emukill`, `preupdate-gamelists-hook`
+- ✅ `esctl systems` (état des BIOS, catalogue `bios.yml`), `swissknife --emukill` (pid de l'émulateur écrit par `es-launcher`), `preupdate-gamelists-hook`: testés sur la machine
 - ✅ appels audio d'ES routés par la traduction `batocera-*` → `esctl` (sinon le menu audio échouait)
 - ✅ de bout en bout (ES → `es-launcher` → RetroArch/Dolphin): SNES, N64, GameCube, Wii validés
 
@@ -21,7 +21,7 @@ Légende: ✅ fait · 🚧 en cours · ❌ à faire. Un ✅ côté ES = code en 
 - ✅ codes de sortie 200-205 et 299 vers ES, journal `<state>/logs/es-launcher.log`
 - 🚧 validé avec un vrai RetroArch: shaders, ratio 4/3, rewind; table des ratios (`aspect_ratio_index`) en partie non validée
 - ✅ manettes: pilote `sdl2` (pas d'autoconfig); raccourci pour quitter, aussi pour les émulateurs autonomes (`hotkey.py`)
-- ❌ netplay, états de sauvegarde (`-state_slot`), bezels, jeux compressés (zip/7z), `-monitor`
+- ❌ netplay, états de sauvegarde (`-state_slot`), jeux compressés (zip/7z), `-monitor`
 
 ## M2 — config en couches + génération `es_systems.cfg` / `es_features.cfg` ✅
 - ✅ résolution en couches (`<système>["rom"].clé` > `<système>.clé` > `global.clé`)
@@ -32,7 +32,7 @@ Pad 1 via `sdl2` et raccourcis OK; multi-joueurs et configuration par jeu non fa
 ## M4 — émulateurs standalone 🚧
 Dolphin validé; PCSX2, RPCS3, Cemu, Eden/Ryujinx, xemu, Steam, Wine/umu décrits dans `emulators.yml` mais non essayés. Réglages internes des émulateurs non gérés.
 ## M5 — bezels, shaders, scraper, RetroAchievements, netplay 🚧
-Shaders ✅. Bezels: installation et affichage RetroArch codés (à valider en jeu). Reste: tatouages, scraper, RetroAchievements, netplay.
+Shaders ✅. Bezels ✅ (un par système, The Bezel Project): installation, désinstallation, aperçu et affichage RetroArch validés en jeu sur SNES et N64; restent à voir un bezel à ouverture non centrée et un écran 16:9. Reste: tatouages, scraper, RetroAchievements, netplay.
 ## M6 — PKGBUILD, session (Gamescope, Wayland/X11) 🚧
 Écrits dans `packaging/arch/` (PKGBUILD `es-ne-git`, `es-ne-session`, `es-ne.desktop`, règle polkit `50-es-ne.rules`), pas encore testés: `makepkg` et la session de connexion restent à valider sur CachyOS.
 

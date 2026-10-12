@@ -12,9 +12,9 @@ Légende: ❌ non fait · 🚧 en cours · ✅ fait · ⛔ masqué volontairemen
 | steam, windows | Steam, Wine/umu | 🚧 non testé; Steam rend la main tout de suite (le raccourci ne ferme pas le jeu) | ⛔ | ⛔ | ⛔ | ❌ | ✅ |
 | xbox 360 | — | ⛔ aucun émulateur Linux utilisable | | | | | |
 
-Bezels: un bezel par système (pas de bezel par jeu); le réglage du système prime sur le global; quand un bezel est actif, le ratio d'ES est ignoré (équivalent de « auto »): le jeu est cadré dans la zone transparente du bezel. AUTO utilise The Bezel Project s'il est installé pour le système; « NONE » désactive; ratio de l'image différent de l'écran → image étirée sur l'écran, jeu aux proportions de sa fenêtre (jusqu'à 25 % d'écart, ou toujours avec STRETCH BEZELS). RetroArch 1.22 ajoute la position de la zone personnalisée à celle de la zone centrée: on envoie l'écart (0 pour un bezel centré). Tatouages/overlays de manettes non gérés. Zone de jeu détectée par le décodeur PNG intégré (Pillow s'il est installé) ou fichier `.png.info`.
+Bezels: un bezel par système (pas de bezel par jeu); le réglage du système prime sur le global; quand un bezel est actif, le ratio d'ES est ignoré (équivalent de « auto »): le jeu est cadré dans la zone transparente du bezel. AUTO utilise The Bezel Project s'il est installé pour le système; « NONE » désactive; ratio de l'image différent de l'écran → image étirée sur l'écran, jeu aux proportions de sa fenêtre (jusqu'à 25 % d'écart, ou toujours avec STRETCH BEZELS). RetroArch 1.22 ajoute la position de la zone personnalisée à celle de la zone centrée: on envoie l'écart (0 pour un bezel centré). Tatouages/overlays de manettes non gérés. Zone de jeu détectée par le décodeur PNG intégré (Pillow s'il est installé) ou fichier `.png.info`. Les bords noirs d'une ROM PAL (N64) ne sont pas rognés: réglage du cœur (`mupen64plus-Overscan*`) laissé à l'utilisateur.
 
-Limites: table `aspect_ratio_index` reprise de la source de RetroArch (4/3, 16/9 et custom confirmés; les autres à valider); ES « full » non géré; netplay, RetroAchievements et bezels non gérés; les réglages internes des émulateurs autonomes (plein écran, résolution) ne sont pas gérés.
+Limites: table `aspect_ratio_index` reprise de la source de RetroArch (4/3, 16/9 et custom confirmés; les autres à valider); ES « full » non géré; netplay et RetroAchievements non gérés; les réglages internes des émulateurs autonomes (plein écran, résolution) ne sont pas gérés.
 
 ## 2. Menus du frontend ES
 Un ✅ = branché dans `LinuxApiSystem` et vérifié à la compilation; les menus validés dans ES lancé sont indiqués ci-dessous.
@@ -28,7 +28,7 @@ Les menus liés à `esctl` apparaissent seulement si `esctl has <commande>` réu
 | BIOS / systèmes | `batocera-systems` | `esctl systems` | ✅ |
 | Infos manettes | `batocera-padsinfo` | `esctl padsinfo` (evdev + batterie sysfs) | ✅ sortie réelle vérifiée (PS4) |
 | The Bezel Project | `batocera-es-thebezelproject` | `esctl thebezelproject` (téléchargement GitHub, images seules) | ✅ installation, suppression et aperçu validés dans ES |
-| Décorations (bezels) en jeu | `bezels.py` Batocera | `bezels.py` + overlay RetroArch, zone de jeu en `custom_viewport` | ✅ code + tests; à valider en jeu |
+| Décorations (bezels) en jeu | `bezels.py` Batocera | `bezels.py` + overlay RetroArch, zone de jeu en `custom_viewport` | ✅ validé en jeu sur SNES et N64 (écran 16:10); autres systèmes et 16:9 à valider |
 | Version affichée | `batocera-version` | `esctl version` (`share/esne.version`, sinon version du package) | ✅ |
 | Décorations / shaders | (dossiers) | menu visible si les dossiers existent (`es-genconfig` crée `decorations/`) | ✅ |
 | Netplay | `7zr` | `7zz`, `7z`, `7za` ou `7zr` dans le `PATH` | ✅ |
