@@ -8,7 +8,8 @@ Légende: ✅ fait · 🚧 en cours · ❌ à faire. Un ✅ côté ES = code en 
 - ✅ build complet d'ES sur CachyOS et lancement (KDE Wayland)
 - ✅ `esctl` minimal: `has`, `version`, `resolution`, `audio`, `config lsoutputs` (résolution et audio testés sur sorties simulées)
 - ✅ `esctl` suite: `timezone`, `padsinfo`, `info`
-- ❌ `esctl` reste: `systems`, `thebezelproject`, `swissknife --emukill`, `preupdate-gamelists-hook`
+- ✅ `esctl thebezelproject` (liste, installation, suppression)
+- ❌ `esctl` reste: `systems`, `swissknife --emukill`, `preupdate-gamelists-hook`
 - ✅ appels audio d'ES routés par la traduction `batocera-*` → `esctl` (sinon le menu audio échouait)
 - ✅ de bout en bout (ES → `es-launcher` → RetroArch/Dolphin): SNES, N64, GameCube, Wii validés
 
@@ -30,7 +31,8 @@ Légende: ✅ fait · 🚧 en cours · ❌ à faire. Un ✅ côté ES = code en 
 Pad 1 via `sdl2` et raccourcis OK; multi-joueurs et configuration par jeu non faits.
 ## M4 — émulateurs standalone 🚧
 Dolphin validé; PCSX2, RPCS3, Cemu, Eden/Ryujinx, xemu, Steam, Wine/umu décrits dans `emulators.yml` mais non essayés. Réglages internes des émulateurs non gérés.
-## M5 — bezels, shaders, scraper, RetroAchievements, netplay ❌
+## M5 — bezels, shaders, scraper, RetroAchievements, netplay 🚧
+Shaders ✅. Bezels: installation et affichage RetroArch codés (à valider en jeu). Reste: tatouages, scraper, RetroAchievements, netplay.
 ## M6 — PKGBUILD, session (Gamescope, Wayland/X11) ❌
 
 ## Chantiers ES hors jalons (voir `docs/AUDIT_ANALYSIS.md` §5)

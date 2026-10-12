@@ -17,7 +17,7 @@ pour Arch Linux / CachyOS, avec les options de RetroBat, **sans aucune dépendan
 | Frontend ES (fork `emulationstation-esne`, branche `esne`) | ✅ compile et tourne sur CachyOS (KDE Wayland). Patchs: option `-DESNE=ON`, chemins XDG, `LinuxApiSystem`, arrêt/redémarrage système, redémarrage d'ES, menu QUIT simplifié, Zaparoo désactivé par défaut |
 | `es-launcher` | ✅ lancement validé sur une vraie machine (SNES, N64, GameCube, Wii): RetroArch (manette `sdl2`, raccourcis, ratio, shaders, rewind...) et émulateurs autonomes; 134 tests |
 | `es-genconfig` | ✅ génère `es_systems.cfg`, `es_features.cfg` et les jeux de shaders depuis le catalogue (24 systèmes) |
-| `esctl` | ✅ `has`, `version`, `resolution`, `audio`, `config`, `info`, `timezone`, `padsinfo`. Reste: `systems`, `thebezelproject`, `swissknife --emukill`, `preupdate-gamelists-hook`. Contrat dans `docs/ESCTL_CONTRACT.md` |
+| `esctl` | ✅ `has`, `version`, `resolution`, `audio`, `config`, `info`, `timezone`, `padsinfo`, `thebezelproject`. Reste: `systems`, `swissknife --emukill`, `preupdate-gamelists-hook`. Contrat dans `docs/ESCTL_CONTRACT.md` |
 | Paquets (`PKGBUILD`), session, règle polkit | ❌ |
 
 Détails: `docs/ROADMAP.md` (jalons), `PARITY.md` (parité avec RetroBat), `docs/UPSTREAM.md` (patchs d'ES).
@@ -42,7 +42,7 @@ Détails: `docs/ROADMAP.md` (jalons), `PARITY.md` (parité avec RetroBat), `docs
 Pour les jeux libretro, `es-launcher` a besoin de:
 ```bash
 sudo pacman -S --needed retroarch libretro-core-info libretro-snes9x \
-    retroarch-assets-ozone retroarch-assets-xmb retroarch-assets-glui \
+    retroarch-assets-ozone retroarch-assets-xmb retroarch-assets-glui python-pillow \
     libretro-shaders-slang libretro-overlays
 ```
 Les `retroarch-assets-*` fournissent les icônes et polices du menu RetroArch (sans eux il s'affiche avec des ressources
@@ -51,6 +51,9 @@ manquantes). Aucun paquet autoconfig n'est nécessaire: `es-launcher` utilise le
 Raccourcis manette en jeu (réglables: `hotkey_enable`, `hotkey_exit`, `hotkey_menu`):
 **Select + Start** quitte le jeu et revient à ES (aussi pour les émulateurs autonomes: `es-launcher` surveille la manette et ferme l'émulateur), **Select + R3** ouvre le menu RetroArch.
 Options par système/jeu dans ES (ratio, shaders, lissage, rewind, pilote vidéo Vulkan/OpenGL...): voir `PARITY.md`.
+
+## Bezels (décorations)
+Menu ES « The Bezel Project » (Mises à jour) : télécharge les bezels d'un système depuis GitHub (`esctl thebezelproject install snes`). En jeu, `es-launcher` pose l'image en overlay RetroArch et cadre le jeu dans la zone transparente. Option « DECORATION SET » par système/jeu (AUTO = The Bezel Project s'il est installé). Il faut `python-pillow` pour détecter la zone de jeu (sinon fichier `.png.info`), et un écran au même ratio que l'image (16:9).
 
 ## Générer `es_systems.cfg`
 ```bash

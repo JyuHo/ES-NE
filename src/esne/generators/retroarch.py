@@ -11,7 +11,7 @@ import shlex
 import shutil
 from pathlib import Path
 
-from .. import catalog, paths
+from .. import bezels, catalog, paths
 from ..errors import CORE_MISSING, EMULATOR_MISSING, OTHER_ERROR, LaunchError
 from .base import Command, Context, Generator
 
@@ -191,10 +191,64 @@ def build_settings(ctx: Context) -> dict[str, str]:
             if preset.suffix == ".slangp":
                 settings["video_driver"] = "vulkan" if vulkan_available() else "glcore"
 
+    settings.update(bezel_settings(ctx))
+
     video_driver = ctx.setting("video_driver")
     if video_driver and video_driver != "auto":
         settings["video_driver"] = str(video_driver)
 
+    return settings
+
+
+def screen_size() -> tuple[int, int] | None:
+    """Résolution actuelle de l'écran principal (outils de esctl resolution), None si inconnue."""
+    try:
+        from ..esctl.commands import resolution
+        _backend, outputs = resolution.read_outputs()
+        output = resolution.pick_output(outputs, None)
+        mode = output.current_mode() if output else None
+        return (mode.width, mode.height) if mode else None
+    except Exception as exc:  # outil absent, sortie illisible...
+        log.debug("résolution de l'écran inconnue: %s", exc)
+        return None
+
+
+def bezel_settings(ctx: Context) -> dict[str, str]:
+    """Overlay + zone de jeu pour le jeu de décorations choisi (``<système>.bezel``). Vide si aucun bezel."""
+    choice = str(ctx.setting("bezel", "") or "").strip()
+    if choice.lower() in ("none", "off", "0"):
+        return {}
+    if choice in ("", "auto"):
+        if not bezels.tbp_installed(ctx.system):
+            return {}
+        choice = bezels.TBP_SET
+    stem = Path(ctx.rom).stem
+    image = bezels.find_image(choice, ctx.system, stem)
+    if image is None:
+        log.info("aucun bezel '%s' pour %s", choice, stem)
+        return {}
+
+    settings = {"input_overlay_enable": "true", "input_overlay_opacity": "1.000000"}
+    area = bezels.game_area(image)
+    screen = screen_size()
+    if area is None or screen is None:
+        log.warning("bezel %s: zone de jeu ou écran inconnus, le jeu reste plein écran sous l'image", image.name)
+    else:
+        stretch = ctx.setting("bezel_stretch", "auto") in (1, "1", "true", "True")
+        box = bezels.viewport(area, screen, stretch)
+        if box is None:
+            log.warning("bezel %s ignoré: son ratio ne correspond pas à l'écran %dx%d (option STRETCH BEZELS)", image.name, *screen)
+            return {}
+        settings.update({
+            "aspect_ratio_index": str(RATIOS.index("custom")),
+            "video_aspect_ratio_auto": "false",
+            "video_scale_integer": "false",
+            "custom_viewport_x": str(box[0]), "custom_viewport_y": str(box[1]),
+            "custom_viewport_width": str(box[2]), "custom_viewport_height": str(box[3]),
+        })
+    overlay = bezels.write_overlay(image, paths.cache_dir() / "retroarch" / "overlays" / f"{ctx.system}.cfg")
+    settings["input_overlay"] = str(overlay)
+    log.info("bezel: %s", image)
     return settings
 
 
@@ -228,7 +282,7 @@ class RetroArch(Generator):
         settings = build_settings(ctx)
         config = write_config(ctx, settings)
         log.info("réglages RetroArch (%s): %s", config, ", ".join(f"{k}={v}" for k, v in sorted(settings.items())
-                                                                   if k.startswith(("video_", "aspect_", "rewind", "savestate_auto", "input_joypad"))))
+                                                                   if k.startswith(("video_", "aspect_", "custom_viewport", "input_overlay", "rewind", "savestate_auto", "input_joypad"))))
         argv = [*binary, "-L", str(core), "--appendconfig", str(config)]
         if settings.get("video_shader_enable") == "true" and settings.get("video_shader"):
             # la clé video_shader du fichier n'est pas chargée au démarrage par RetroArch: --set-shader l'impose

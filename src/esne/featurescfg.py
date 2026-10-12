@@ -11,7 +11,7 @@ from . import paths
 from .generators import retroarch
 
 # Fonctions d'ES (voir EmulatorFeatures::parseFeatures) prises en charge par le générateur libretro.
-LIBRETRO_FEATURES = ["autosave", "ratio", "rewind", "smooth", "shaders", "pixel_perfect"]
+LIBRETRO_FEATURES = ["autosave", "ratio", "rewind", "smooth", "shaders", "pixel_perfect", "decoration"]
 
 # Presets libretro proposés dans « SHADER SET » s'ils sont installés (nom du fichier sans extension).
 SHADER_SETS = [

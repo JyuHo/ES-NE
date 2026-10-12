@@ -49,10 +49,10 @@ def test_commands_lists_only_usable(fake, capsys, monkeypatch):
     monkeypatch.setattr(padsinfo, "available", lambda: False)
     monkeypatch.setattr(timezone, "available", lambda: False)
     assert main(["commands"]) == 0
-    assert capsys.readouterr().out.splitlines() == ["info", "version"]
+    assert capsys.readouterr().out.splitlines() == ["info", "thebezelproject", "version"]
     fake.tools.update({"pactl", "xrandr"})
     assert main(["commands"]) == 0
-    assert capsys.readouterr().out.splitlines() == ["audio", "config", "info", "resolution", "version"]
+    assert capsys.readouterr().out.splitlines() == ["audio", "config", "info", "resolution", "thebezelproject", "version"]
 
 
 def test_unknown_command_and_help(capsys):

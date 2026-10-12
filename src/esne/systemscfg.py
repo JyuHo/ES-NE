@@ -108,6 +108,8 @@ def main(argv: list[str] | None = None) -> int:
     features = target.parent / "es_features.cfg"
     features.write_text(featurescfg.render(), encoding="utf-8")
     print(f"écrit: {features}")
+    # ES n'affiche les menus de décorations (bezels) que si ce dossier existe
+    (paths.data_dir() / "decorations").mkdir(parents=True, exist_ok=True)
     shader_sets = featurescfg.installed_shader_sets()
     featurescfg.write_shader_sets(featurescfg.shaders_root(), shader_sets)
     print(f"jeux de shaders: {', '.join(shader_sets) if shader_sets else 'aucun (installez libretro-shaders-slang)'}")
