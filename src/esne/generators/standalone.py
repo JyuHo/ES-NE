@@ -61,6 +61,7 @@ def _expand(value, variables: dict[str, str]) -> str:
 
 class Standalone(Generator):
     name = "standalone"
+    external_hotkey = True  # ces émulateurs n'ont pas de raccourci manette: es-launcher le fournit
 
     def generate(self, ctx: Context) -> Command:
         spec = catalog.emulator_info(ctx.emulator)

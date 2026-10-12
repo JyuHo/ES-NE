@@ -48,7 +48,7 @@ Les `retroarch-assets-*` fournissent les icônes et polices du menu RetroArch (s
 manquantes). Aucun paquet autoconfig n'est nécessaire: `es-launcher` utilise le pilote joypad `sdl2`.
 
 Raccourcis manette en jeu (réglables: `hotkey_enable`, `hotkey_exit`, `hotkey_menu`):
-**Select + Start** quitte le jeu et revient à ES, **Select + R3** ouvre le menu RetroArch.
+**Select + Start** quitte le jeu et revient à ES (aussi pour les émulateurs autonomes: `es-launcher` surveille la manette et ferme l'émulateur), **Select + R3** ouvre le menu RetroArch.
 
 ## Générer `es_systems.cfg`
 ```bash

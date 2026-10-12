@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import logging
 import os
+import signal
 import subprocess
 import sys
+import threading
 import traceback
 
-from . import catalog, paths
+from . import catalog, hotkey, paths
 from .errors import (
     EMULATOR_EXITED, OTHER_ERROR, UNKNOWN_EMULATOR, LaunchError, launch_error_file,
 )
@@ -66,6 +68,40 @@ def report(error: LaunchError) -> int:
     return error.code
 
 
+def run_command(command, ctx: Context, generator) -> subprocess.CompletedProcess:
+    """Lance l'émulateur. Les émulateurs sans raccourci propre sont fermés par Select + Start (manette)."""
+    env = {**os.environ, **command.env}
+    codes = hotkey.required_codes(ctx.setting) if getattr(generator, "external_hotkey", False) else None
+    if codes is None:
+        return subprocess.run(command.argv, env=env, cwd=command.cwd)
+
+    child = subprocess.Popen(command.argv, env=env, cwd=command.cwd, start_new_session=True)
+
+    def close_emulator():
+        log.info("raccourci manette: fermeture de l'émulateur")
+        try:
+            os.killpg(child.pid, signal.SIGTERM)
+        except OSError:
+            return
+        threading.Timer(5.0, lambda: child.poll() is None and _kill(child)).start()
+
+    watcher = hotkey.Watcher(codes, close_emulator)
+    watcher.start()
+    try:
+        returncode = child.wait()
+    finally:
+        watcher.stop()
+    # fermé volontairement par le raccourci: ce n'est pas une erreur
+    return subprocess.CompletedProcess(command.argv, 0 if watcher.triggered else returncode)
+
+
+def _kill(child) -> None:
+    try:
+        os.killpg(child.pid, signal.SIGKILL)
+    except OSError:
+        pass
+
+
 def launch(ctx: Context) -> int:
     try:
         resolve_choice(ctx)
@@ -82,7 +118,7 @@ def launch(ctx: Context) -> int:
         log.info("commande: %s", " ".join(command.argv))
 
         try:
-            process = subprocess.run(command.argv, env={**os.environ, **command.env}, cwd=command.cwd)
+            process = run_command(command, ctx, generator)
         except OSError as exc:
             raise LaunchError(OTHER_ERROR, f"impossible de lancer {command.argv[0]}: {exc}") from exc
         finally:
