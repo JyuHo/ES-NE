@@ -51,6 +51,11 @@ def ctx(pads, **settings):
 
 
 ES_GUID = "03008fe54c050000cc09000000006800"  # même modèle, GUID calculé par ES
+EDEN_GUID = "030000004c050000cc09000000006800"  # ce que voit Eden: CRC du nom à zéro
+
+
+def test_eden_guid_zeroes_the_name_crc():
+    assert eden.eden_guid(ES_GUID) == EDEN_GUID
 
 
 def test_template_ignores_empty_and_keyboard():
@@ -61,9 +66,9 @@ def test_template_ignores_empty_and_keyboard():
 def test_second_pad_of_same_model_gets_port_1(ini):
     assert eden.configure(ini, ctx([pad(1, ES_GUID), pad(2, ES_GUID)]))
     text = ini.read_text()
-    assert f'player_1_button_a="engine:sdl,guid:{GUID},port:1,button:1"' in text
+    assert f'player_1_button_a="engine:sdl,guid:{EDEN_GUID},port:1,button:1"' in text
     assert "player_1_connected=true" in text and "player_1_connected\\default=false" in text
-    assert f'player_0_button_a="engine:sdl,guid:{GUID},port:0,button:1"' in text
+    assert f'player_0_button_a="engine:sdl,guid:{EDEN_GUID},port:0,button:1"' in text  # GUID corrigé aussi pour le joueur 1
     assert "engine:keyboard" not in text  # le clavier du joueur 2 est remplacé
     assert "[Core]\nuse_multi_core=true" in text  # le reste est conservé
     assert text.count("player_1_button_a=") == 1

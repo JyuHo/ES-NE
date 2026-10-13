@@ -5,8 +5,9 @@ Eden (fork de yuzu) enregistre chaque manette physique avec des index bruts SDL 
 manette, et un GUID SDL qui n'est pas celui qu'ES calcule. ES-NE ne peut donc pas deviner la disposition seul.
 Il s'appuie sur ce que tu as configuré dans Eden pour le joueur 1 (Configurer > Contrôles):
 
-* ce mappage devient le modèle: pour chaque manette du **même modèle** (fabricant + produit) transmise par ES, les joueurs
-  suivants reçoivent le même mappage avec le bon ``port`` (n-ième manette de même GUID) et passent à « connecté »;
+* ce mappage (boutons, axes) devient le modèle: pour chaque manette du **même modèle** (fabricant + produit) transmise par
+  ES, le joueur correspondant reçoit ce mappage avec le GUID que voit Eden (celui d'ES, CRC du nom à zéro), le bon ``port``
+  (n-ième manette de même GUID) et passe à « connecté »;
 * une manette d'un autre modèle n'est pas touchée (à configurer à la main dans Eden);
 * ``eden_autoconfig=0`` désactive tout ça.
 
@@ -62,6 +63,14 @@ def read_template(lines: list[str]) -> tuple[str, dict[str, str]] | None:
     return (guid, template) if guid and template else None
 
 
+def eden_guid(es_guid: str) -> str:
+    """GUID vu par Eden: celui d'ES avec le CRC du nom (caractères 5 à 8) mis à zéro.
+
+    Constaté sur une PS4: ES ``03008fe54c05...6800`` correspond à ``03000000 4c05...6800`` dans le qt-config.ini d'Eden.
+    """
+    return es_guid[:4] + "0000" + es_guid[8:]
+
+
 def instantiate(value: str, guid: str, port: int) -> str:
     value = re.sub(r"guid:[0-9a-fA-F]{32}", f"guid:{guid}", value)
     return re.sub(r"port:\d+", f"port:{port}", value)
@@ -93,14 +102,14 @@ def configure(ini: Path, ctx: Context) -> bool:
     if template is None:
         log.info("eden: aucun mappage SDL pour le joueur 1 dans qt-config.ini, configure la manette dans Eden une fois")
         return False
-    guid, mapping = template
+    template_guid, mapping = template
     seen = 0
     changed = False
     for player, pad in enumerate(ctx.controllers[:MAX_PLAYERS]):
-        if pad.guid[8:24] != guid[8:24]:
+        if pad.guid[8:24] != template_guid[8:24]:
             log.info("eden: manette %d (%s) d'un autre modèle que le joueur 1, à configurer dans Eden", player + 1, pad.name)
             continue
-        keys = {f"player_{player}_{name}": instantiate(value, guid, seen) for name, value in mapping.items()}
+        keys = {f"player_{player}_{name}": instantiate(value, eden_guid(pad.guid), seen) for name, value in mapping.items()}
         keys[f"player_{player}_connected"] = "true"
         lines = set_keys(lines, keys)
         seen += 1
