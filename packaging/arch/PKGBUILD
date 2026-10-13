@@ -39,7 +39,7 @@ build() {
   cd "$pkgname"
   cmake -S third_party/emulationstation -B build-es -DESNE=ON -DGL=ON \
         -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DESNE_SHARE_DIR=/usr/share/esne \
-        -DCMAKE_EXE_LINKER_FLAGS="-Wl,--no-as-needed -ljpegxr -ljxrglue -lm"   # libfreeimage récente: symboles JPEG XR non liés
+        -DCMAKE_EXE_LINKER_FLAGS="-Wl,--no-as-needed -ljpegxr -ljxrglue"   # libfreeimage récente: symboles JPEG XR non liés
   cmake --build build-es
   /usr/bin/python -m build --wheel --no-isolation
 }
