@@ -13,7 +13,7 @@ pcsx2:
   args: [-batch, -fullscreen, --, "{rom}"]
   package: pcsx2
 rpcs3:
-  binary: [rpcs3, "flatpak run net.rpcs3.RPCS3"]
+  binary: [rpcs3, "~/.local/bin/[Rr][Pp][Cc][Ss]3*.AppImage", "~/Applications/[Rr][Pp][Cc][Ss]3*.AppImage", "flatpak run net.rpcs3.RPCS3"]
   args: [--no-gui, "{rom}"]
   package: rpcs3
 cemu:

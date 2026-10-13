@@ -30,7 +30,7 @@ Légende: ✅ fait · 🚧 en cours · ❌ à faire. Un ✅ côté ES = code en 
 ## M3 — manettes (es_input, SDL DB, multi-joueurs) 🚧
 Pad 1 via `sdl2` et raccourcis OK; multi-joueurs et configuration par jeu non faits.
 ## M4 — émulateurs standalone 🚧
-Dolphin validé; PCSX2, RPCS3, Cemu, Eden/Ryujinx, xemu, Steam, Wine/umu décrits dans `emulators.yml` mais non essayés. Réglages internes: Cemu (profils de manette SDL + API graphique) validé en jeu avec 2 manettes; PCSX2 (manettes SDL + résolution) validé en jeu; Eden (recopie du mappage joueur 1) validé en jeu avec 2 manettes; les autres émulateurs restent à faire.
+Dolphin validé; PCSX2, RPCS3, Cemu, Eden/Ryujinx, xemu, Steam, Wine/umu décrits dans `emulators.yml` mais non essayés. Réglages internes: Cemu (profils de manette SDL + API graphique) validé en jeu avec 2 manettes; PCSX2 (manettes SDL + résolution) validé en jeu; RPCS3 (manettes SDL + vidéo) écrit, non testé; Eden (recopie du mappage joueur 1) validé en jeu avec 2 manettes; les autres émulateurs restent à faire.
 ## M5 — bezels, shaders, scraper, RetroAchievements, netplay 🚧
 Shaders ✅. Bezels ✅ (un par système, The Bezel Project): installation, désinstallation, aperçu et affichage RetroArch validés en jeu sur SNES et N64; restent à voir un bezel à ouverture non centrée et un écran 16:9. Reste: tatouages, scraper, RetroAchievements, netplay.
 ## M6 — PKGBUILD, session (Gamescope, Wayland/X11) 🚧

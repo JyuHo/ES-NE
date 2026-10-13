@@ -69,6 +69,22 @@ EDEN_FEATURES = (
 )
 
 
+RPCS3_FEATURES = (
+    '<feature name="GRAPHICS API" value="rpcs3_gfxbackend" description="Backend used by RPCS3. Vulkan is strongly recommended.">'
+    '<choice name="VULKAN" value="vulkan" /><choice name="OPENGL" value="opengl" /></feature>'
+    '<feature name="RENDER RESOLUTION (SCALING)" value="rpcs3_resolution_scale" description="Internal resolution relative to 720p.">'
+    '<choice name="1280X720 (100%)" value="100" /><choice name="1920X1080 (150%)" value="150" />'
+    '<choice name="2560X1440 (200%)" value="200" /><choice name="3840X2160 (300%)" value="300" /></feature>'
+    '<feature name="ASPECT RATIO" value="rpcs3_ratio" description="PS3 internal aspect ratio.">'
+    '<choice name="16:9" value="16:9" /><choice name="4:3" value="4:3" /></feature>'
+    '<feature name="VSYNC MODE" value="rpcs3_vsync" description="Synchronize frames with the monitor.">'
+    '<choice name="DISABLED" value="Disabled" /><choice name="FULL" value="Full" /><choice name="ADAPTIVE" value="Adaptive" /></feature>'
+    '<feature name="AUTOCONFIGURE CONTROLLERS" value="rpcs3_autoconfig" '
+    'description="Write the SDL pad mapping for the pads ES sees. Turn off to keep your own mapping.">'
+    '<choice name="ON" value="1" /><choice name="OFF" value="0" /></feature>'
+)
+
+
 def render() -> str:
     return (
         '<?xml version="1.0"?>\n'
@@ -78,6 +94,7 @@ def render() -> str:
         f'  <emulator name="cemu" features="">{CEMU_FEATURES}</emulator>\n'
         f'  <emulator name="pcsx2" features="">{PCSX2_FEATURES}</emulator>\n'
         f'  <emulator name="eden" features="">{EDEN_FEATURES}</emulator>\n'
+        f'  <emulator name="rpcs3" features="">{RPCS3_FEATURES}</emulator>\n'
         "</features>\n"
     )
 
