@@ -62,6 +62,13 @@ PCSX2_FEATURES = (
 )
 
 
+EDEN_FEATURES = (
+    '<feature name="AUTOCONFIGURE CONTROLLERS" value="eden_autoconfig" '
+    'description="Copy the player 1 mapping you set in Eden to the other pads of the same model. Turn off to keep your own mapping.">'
+    '<choice name="ON" value="1" /><choice name="OFF" value="0" /></feature>'
+)
+
+
 def render() -> str:
     return (
         '<?xml version="1.0"?>\n'
@@ -70,6 +77,7 @@ def render() -> str:
         f'  <emulator name="libretro" features="{",".join(LIBRETRO_FEATURES)}">{VIDEO_DRIVER_FEATURE}</emulator>\n'
         f'  <emulator name="cemu" features="">{CEMU_FEATURES}</emulator>\n'
         f'  <emulator name="pcsx2" features="">{PCSX2_FEATURES}</emulator>\n'
+        f'  <emulator name="eden" features="">{EDEN_FEATURES}</emulator>\n'
         "</features>\n"
     )
 

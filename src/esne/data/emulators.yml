@@ -25,7 +25,7 @@ xemu:
   args: [-full-screen, -dvd_path, "{rom}"]
   package: xemu
 eden:
-  binary: [eden, "flatpak run dev.eden_emu.eden"]
+  binary: [eden, "~/.local/bin/[Ee]den*.AppImage", "~/Applications/[Ee]den*.AppImage", "flatpak run dev.eden_emu.eden"]
   args: [-f, -g, "{rom}"]
   package: eden
 ryujinx:
