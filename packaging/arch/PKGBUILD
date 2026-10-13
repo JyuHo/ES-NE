@@ -66,6 +66,8 @@ package() {
 
   install -Dm755 packaging/arch/es-ne-session "$pkgdir/usr/bin/es-ne-session"
   install -Dm644 packaging/arch/es-ne.desktop "$pkgdir/usr/share/wayland-sessions/es-ne.desktop"
+  install -Dm644 packaging/arch/es-ne-app.desktop "$pkgdir/usr/share/applications/es-ne.desktop"
+  install -Dm644 third_party/emulationstation/resources/window_icon_256.png "$pkgdir/usr/share/icons/hicolor/256x256/apps/es-ne.png"
   install -Dm644 packaging/arch/50-es-ne.rules "$pkgdir/usr/share/polkit-1/rules.d/50-es-ne.rules"
 
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"

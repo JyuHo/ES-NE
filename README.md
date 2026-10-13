@@ -61,6 +61,7 @@ La zone de jeu est détectée dans l'image (décodeur PNG intégré, résultat m
 Rien n'est compilé ni empaqueté. `es-genconfig` crée `~/.config/esne/keys.conf` (mode 600) avec un modèle commenté: décommente et remplis `SCREENSCRAPER_DEV_LOGIN`, `GAMESDB_APIKEY`, `CHEEVOS_DEV_LOGIN`..., puis redémarre ES. Un scraper dont la clé manque n'apparaît pas dans le menu. Ce fichier ne doit jamais être commité. Tes identifiants personnels (compte ScreenScraper, RetroAchievements) se saisissent dans les menus d'ES.
 
 ## Thème et jeu libre
+Le paquet ajoute **ES-NE** au menu des applications (catégorie Jeux, icône ES), en plus de l'entrée de session de connexion.
 Le paquet livre le thème **Carbon** (RetroPie) dans `/usr/share/esne/themes`: ES le choisit seul tant qu'aucun autre thème n'est sélectionné (menu Interface utilisateur → Thème). Tes propres thèmes vont dans `~/esne/themes`.
 Le système **Ports** lance des scripts `.sh` (`~/esne/roms/ports/`). `es-genconfig` y crée `SuperTux.sh` si SuperTux est installé (dépendance du paquet) et n'écrase jamais un fichier existant; la liste est dans `src/esne/data/ports.yml` (complétable par `~/.config/esne/ports.yml`).
 

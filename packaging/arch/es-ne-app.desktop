@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=ES-NE
+GenericName=Game launcher
+Comment=EmulationStation front-end with RetroBat-like options
+Exec=es-ne-session
+TryExec=emulationstation
+Icon=es-ne
+Terminal=false
+Type=Application
+Categories=Game;Emulator;
+Keywords=emulation;retro;games;emulationstation;
+StartupNotify=false
