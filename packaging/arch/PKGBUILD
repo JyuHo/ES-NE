@@ -12,7 +12,7 @@ arch=(x86_64 aarch64)
 url='https://github.com/JyuHo/ES-NE'
 license=(GPL-3.0-or-later MIT)
 depends=(python python-yaml python-evdev retroarch libretro-core-info libretro-shaders-slang
-         sdl2 sdl2_mixer freeimage freetype2 curl vlc alsa-lib supertux)
+         sdl2 sdl2_mixer freeimage jxrlib freetype2 curl vlc alsa-lib supertux)
 makedepends=(git cmake gettext rapidjson python-build python-installer python-setuptools python-wheel)
 optdepends=('gamescope: session de connexion dédiée (es-ne-session)'
             'libretro-snes9x: Super Nintendo' 'libretro-mupen64plus-next: Nintendo 64'
@@ -38,7 +38,8 @@ prepare() {
 build() {
   cd "$pkgname"
   cmake -S third_party/emulationstation -B build-es -DESNE=ON -DGL=ON \
-        -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DESNE_SHARE_DIR=/usr/share/esne
+        -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DESNE_SHARE_DIR=/usr/share/esne \
+        -DCMAKE_EXE_LINKER_FLAGS="-Wl,--no-as-needed -ljpegxr -ljxrglue"   # libfreeimage récente: symboles JPEG XR non liés
   cmake --build build-es
   /usr/bin/python -m build --wheel --no-isolation
 }
