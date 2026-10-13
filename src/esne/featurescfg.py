@@ -42,6 +42,26 @@ CEMU_FEATURES = (
 )
 
 
+# Options PCSX2 (ES enregistre <système>.<clé>).
+PCSX2_FEATURES = (
+    '<feature name="GRAPHICS API" value="pcsx2_gfxbackend" description="Renderer used by PCSX2. Applied to PCSX2.ini, which PCSX2 creates at its first launch.">'
+    '<choice name="VULKAN" value="vulkan" /><choice name="OPENGL" value="opengl" /><choice name="SOFTWARE" value="software" /></feature>'
+    '<feature name="RENDERING RESOLUTION" value="pcsx2_resolution" description="Increase the internal resolution.">'
+    '<choice name="NATIVE (PS2)" value="1" /><choice name="2X (~720P)" value="2" /><choice name="3X (~1080P)" value="3" />'
+    '<choice name="4X (~1440P)" value="4" /><choice name="6X (~4K)" value="6" /></feature>'
+    '<feature name="GAME ASPECT RATIO" value="pcsx2_ratio" description="Force the aspect ratio.">'
+    '<choice name="AUTO 4:3 / 3:2" value="Auto 4:3/3:2" /><choice name="4:3" value="4:3" />'
+    '<choice name="16:9" value="16:9" /><choice name="STRETCH" value="Stretch" /></feature>'
+    '<feature name="VSYNC" value="pcsx2_vsync" description="Fix screen tearing.">'
+    '<choice name="OFF" value="false" /><choice name="ON" value="true" /></feature>'
+    '<feature name="FXAA" value="pcsx2_fxaa" description="FXAA anti-aliasing.">'
+    '<choice name="OFF" value="false" /><choice name="ON" value="true" /></feature>'
+    '<feature name="AUTOCONFIGURE CONTROLLERS" value="pcsx2_autoconfig" '
+    'description="Map the pads ES sees to DualShock 2 ports. Turn off to keep your own mapping.">'
+    '<choice name="ON" value="1" /><choice name="OFF" value="0" /></feature>'
+)
+
+
 def render() -> str:
     return (
         '<?xml version="1.0"?>\n'
@@ -49,6 +69,7 @@ def render() -> str:
         f"  <globalFeatures>{VIDEO_DRIVER_FEATURE}</globalFeatures>\n"
         f'  <emulator name="libretro" features="{",".join(LIBRETRO_FEATURES)}">{VIDEO_DRIVER_FEATURE}</emulator>\n'
         f'  <emulator name="cemu" features="">{CEMU_FEATURES}</emulator>\n'
+        f'  <emulator name="pcsx2" features="">{PCSX2_FEATURES}</emulator>\n'
         "</features>\n"
     )
 

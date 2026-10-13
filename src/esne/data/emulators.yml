@@ -9,7 +9,7 @@ dolphin:
   args: [-b, -e, "{rom}"]
   package: dolphin-emu
 pcsx2:
-  binary: [pcsx2-qt, pcsx2, "flatpak run net.pcsx2.PCSX2"]
+  binary: [pcsx2-qt, pcsx2, "~/.local/bin/[Pp][Cc][Ss][Xx]2*.AppImage", "~/Applications/[Pp][Cc][Ss][Xx]2*.AppImage", "flatpak run net.pcsx2.PCSX2"]
   args: [-batch, -fullscreen, --, "{rom}"]
   package: pcsx2
 rpcs3:

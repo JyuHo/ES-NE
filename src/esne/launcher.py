@@ -20,7 +20,7 @@ from .generators.base import Context
 log = logging.getLogger("es-launcher")
 
 # Nom d'émulateur (ES, catalogue) -> module de génération
-GENERATORS = {"libretro": "retroarch", "cemu": "cemu"}
+GENERATORS = {"libretro": "retroarch", "cemu": "cemu", "pcsx2": "pcsx2"}
 
 
 def setup_logging() -> None:

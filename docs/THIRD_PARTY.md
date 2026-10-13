@@ -9,3 +9,6 @@
 
 Aucun code de `batocera-configgen` ni de `batocera.linux` n'a été copié à ce jour. Si ça arrive, ajouter ici une ligne par fichier
 (source, commit, licence exacte du fichier, voir `docs/LICENSING.md`).
+
+## Batocera (GPL-3.0-or-later)
+Les noms de sections, de clés et de valeurs de `PCSX2.ini` utilisés par `generators/pcsx2.py` (ainsi que la liste d'options graphiques) ont été relevés dans le générateur PCSX2 de Batocera (https://github.com/batocera-linux/batocera.linux, `python-src/batocera-launch-pcsx2`). Le code est réécrit pour ES-NE; seules les informations de format sont reprises.
