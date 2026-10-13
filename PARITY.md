@@ -8,7 +8,7 @@ Légende: ❌ non fait · 🚧 en cours · ✅ fait · ⛔ masqué volontairemen
 | n64 | libretro | ✅ validé en jeu | ✅ | ✅ | ✅ | ❌ | ✅ |
 | psp | libretro | 🚧 non testé (pas de roms) | ✅ | ✅ | ✅ | ❌ | ✅ |
 | gc, wii | Dolphin | ✅ validé en jeu | ⛔ réglages de l'émulateur | ⛔ | ⛔ | ❌ | ✅ quitter: Select+Start |
-| ps2, ps3, wiiu, switch, xbox | PCSX2, RPCS3, Cemu, Eden/Ryujinx, xemu | 🚧 arguments écrits de mémoire, non testés (Cemu: manettes + API graphique générées, non testées) | ⛔ | ⛔ | ⛔ | ❌ | ✅ |
+| ps2, ps3, wiiu, switch, xbox | PCSX2, RPCS3, Cemu, Eden/Ryujinx, xemu | 🚧 arguments écrits de mémoire, non testés (Cemu ✅ validé: manettes + API graphique) | ⛔ | ⛔ | ⛔ | ❌ | ✅ |
 | steam, windows | Steam, Wine/umu | 🚧 non testé; Steam rend la main tout de suite (le raccourci ne ferme pas le jeu) | ⛔ | ⛔ | ⛔ | ❌ | ✅ |
 | xbox 360 | — | ⛔ aucun émulateur Linux utilisable | | | | | |
 
