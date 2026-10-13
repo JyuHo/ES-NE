@@ -96,3 +96,11 @@ Hashes de la branche `esne` du fork.
 - Vérification de syntaxe (`g++ -fsyntax-only`) de `Paths.cpp`, `Platform.cpp`, `ThemeData.cpp`, `ApiSystem.cpp` et `LinuxApiSystem.cpp` en variantes `ESNE`, `BATOCERA` et par défaut.
 - Test d'exécution des chemins (`Paths`) et de la logique de `LinuxApiSystem` (traduction, recherche dans le `PATH`, affichage conditionnel des menus avec un faux `esctl`).
 - **Non fait**: build complet d'ES, lancement, test des menus dans l'interface.
+
+## Nettoyage des warnings (fork `esne`)
+
+Compilation : 791 warnings -> 1. Changements notables : destructeurs virtuels, macro `LOG`
+en expression, liste des scrapers initialisée à la demande (ordre d'initialisation statique),
+`Paths::homePath` en statique local, `-Wno-sign-compare` (~230 warnings de style).
+Bugs suspects laissés tels quels (comportement amont) : propriété thème « multiLine »
+(TextComponent), `repeat = 1` (ThemeStoryboard), `mLastCursor = -9999` (ImageGridComponent).
