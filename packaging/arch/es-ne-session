@@ -4,6 +4,8 @@
 # plein écran. Depuis un gestionnaire de connexion (SDDM...), la session démarre gamescope comme compositeur (s'il est installé).
 # ES se relance lui-même (menu « redémarrer ES »): aucune boucle ici.
 mkdir -p "${XDG_STATE_HOME:-$HOME/.local/state}/esne"
+# Met à jour menus et options après une mise à jour du paquet (idempotent, ne remplace jamais tes ports ni tes clés).
+command -v es-genconfig >/dev/null 2>&1 && es-genconfig >/dev/null 2>&1
 if [ -z "$WAYLAND_DISPLAY$DISPLAY" ] && [ -z "$ESNE_NO_GAMESCOPE" ] && command -v gamescope >/dev/null 2>&1; then
     exec gamescope -e -f -- emulationstation "$@"
 fi

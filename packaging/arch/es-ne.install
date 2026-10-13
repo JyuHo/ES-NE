@@ -4,3 +4,7 @@ post_install() {
   echo ">> Le système « Ports » contient SuperTux (jeu libre) dès que es-genconfig a été lancé."
   echo ">> Session de connexion: choisis « ES-NE » dans ton gestionnaire de connexion."
 }
+
+post_upgrade() {
+  echo ">> ES-NE: relance « es-genconfig » en tant qu'utilisateur pour mettre à jour les menus et options (es_features.cfg, es_systems.cfg), puis redémarre ES."
+}
