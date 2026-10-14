@@ -99,3 +99,17 @@ def test_reuses_the_guid_cemu_wrote_for_the_same_model(tmp_path):
     other = "030000007e050000092000000000" + "0000"
     cemu.write_profiles([pad(1, other)], tmp_path)
     assert ET.parse(target / "controller0.xml").getroot().findtext("controller/uuid") == f"0_{other}"
+
+
+def test_settings_are_created_and_changed(tmp_path):
+    settings = tmp_path / "settings.xml"
+    settings.write_text("<content><console_language>2</console_language><Graphic><api>1</api><VSync>0</VSync></Graphic></content>")
+    ctx = context(tmp_path / "a.wua", [], cemu_language="1", cemu_vsync="1", cemu_volume="25", cemu_fps="true", cemu_upscale="9")
+    changed = cemu.set_settings(settings, ctx)
+    root = ET.parse(settings).getroot()
+    assert root.findtext("console_language") == "1" and root.findtext("Graphic/VSync") == "1"
+    assert root.findtext("Audio/TVVolume") == "25" and root.findtext("Graphic/Overlay/FPS") == "true"
+    assert root.findtext("Graphic/api") == "1" and root.find("Graphic/UpscaleFilter") is None  # valeur invalide ignorée
+    assert "console_language" in changed
+    assert cemu.set_settings(settings, ctx) == []  # déjà appliqué
+    assert cemu.set_settings(tmp_path / "absent.xml", ctx) == []

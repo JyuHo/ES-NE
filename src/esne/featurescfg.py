@@ -39,6 +39,23 @@ CEMU_FEATURES = (
     '<feature name="AUTOCONFIGURE CONTROLLERS" value="cemu_autoconfig" '
     'description="Write Wii U Pro Controller profiles for the pads ES sees. Turn off to keep your own mapping.">'
     '<choice name="ON" value="1" /><choice name="OFF" value="0" /></feature>'
+    '<feature name="CONSOLE LANGUAGE" value="cemu_language" description="Wii U system language. Applied to settings.xml.">'
+    '<choice name="JAPANESE" value="0" /><choice name="ENGLISH" value="1" /><choice name="FRENCH" value="2" />'
+    '<choice name="GERMAN" value="3" /><choice name="ITALIAN" value="4" /><choice name="SPANISH" value="5" />'
+    '<choice name="CHINESE" value="6" /><choice name="KOREAN" value="7" /><choice name="DUTCH" value="8" />'
+    '<choice name="PORTUGUESE" value="9" /><choice name="RUSSIAN" value="10" /><choice name="TAIWANESE" value="11" /></feature>'
+    '<feature name="VSYNC" value="cemu_vsync" description="Fix screen tearing.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="UPSCALE FILTER" value="cemu_upscale" description="Filter used when the image is enlarged.">'
+    '<choice name="BILINEAR" value="0" /><choice name="BICUBIC" value="1" /><choice name="HERMITE" value="2" />'
+    '<choice name="NEAREST NEIGHBOR" value="3" /></feature>'
+    '<feature name="FULLSCREEN SCALING" value="cemu_scaling" description="Keep the aspect ratio or stretch to the screen.">'
+    '<choice name="KEEP ASPECT RATIO" value="0" /><choice name="STRETCH" value="1" /></feature>'
+    '<feature name="TV VOLUME" value="cemu_volume" description="Game volume.">'
+    '<choice name="0%" value="0" /><choice name="25%" value="25" /><choice name="50%" value="50" />'
+    '<choice name="75%" value="75" /><choice name="100%" value="100" /></feature>'
+    '<feature name="SHOW FPS" value="cemu_fps" description="Frame counter overlay.">'
+    '<choice name="OFF" value="false" /><choice name="ON" value="true" /></feature>'
 )
 
 
@@ -66,6 +83,30 @@ EDEN_FEATURES = (
     '<feature name="AUTOCONFIGURE CONTROLLERS" value="eden_autoconfig" '
     'description="Copy the player 1 mapping you set in Eden to the other pads of the same model. Turn off to keep your own mapping.">'
     '<choice name="ON" value="1" /><choice name="OFF" value="0" /></feature>'
+    '<feature name="CONSOLE MODE" value="eden_docked" description="Docked uses the TV resolution, handheld is lighter. Applied to qt-config.ini.">'
+    '<choice name="DOCKED" value="1" /><choice name="HANDHELD" value="0" /></feature>'
+    '<feature name="RESOLUTION" value="eden_resolution" description="Internal resolution scale.">'
+    '<choice name="1X (720P/1080P)" value="2" /><choice name="1.5X" value="3" /><choice name="2X" value="4" />'
+    '<choice name="3X" value="5" /><choice name="4X" value="6" /></feature>'
+    '<feature name="ANTI-ALIASING" value="eden_aa" description="Post-processing anti-aliasing.">'
+    '<choice name="NONE" value="0" /><choice name="FXAA" value="1" /><choice name="SMAA" value="2" /></feature>'
+    '<feature name="SCALING FILTER" value="eden_filter" description="Filter used to resize the image.">'
+    '<choice name="NEAREST" value="0" /><choice name="BILINEAR" value="1" /><choice name="BICUBIC" value="2" />'
+    '<choice name="GAUSSIAN" value="3" /><choice name="SCALEFORCE" value="4" /><choice name="FSR" value="5" /></feature>'
+    '<feature name="ASPECT RATIO" value="eden_ratio" description="Screen aspect ratio.">'
+    '<choice name="DEFAULT (16:9)" value="0" /><choice name="FORCE 4:3" value="1" /><choice name="FORCE 21:9" value="2" />'
+    '<choice name="FORCE 16:10" value="3" /><choice name="STRETCH" value="4" /></feature>'
+    '<feature name="CONSOLE LANGUAGE" value="eden_language" description="Switch system language used by games.">'
+    '<choice name="JAPANESE" value="0" /><choice name="ENGLISH (US)" value="1" /><choice name="FRENCH" value="2" />'
+    '<choice name="GERMAN" value="3" /><choice name="ITALIAN" value="4" /><choice name="SPANISH" value="5" />'
+    '<choice name="KOREAN" value="7" /><choice name="DUTCH" value="8" /><choice name="PORTUGUESE" value="9" />'
+    '<choice name="RUSSIAN" value="10" /><choice name="ENGLISH (UK)" value="12" /><choice name="CANADIAN FRENCH" value="13" />'
+    '<choice name="LATIN AMERICAN SPANISH" value="14" /><choice name="SIMPLIFIED CHINESE" value="15" />'
+    '<choice name="TRADITIONAL CHINESE" value="16" /><choice name="BRAZILIAN PORTUGUESE" value="17" /></feature>'
+    '<feature name="CONSOLE REGION" value="eden_region" description="Switch region.">'
+    '<choice name="JAPAN" value="0" /><choice name="USA" value="1" /><choice name="EUROPE" value="2" />'
+    '<choice name="AUSTRALIA" value="3" /><choice name="CHINA" value="4" /><choice name="KOREA" value="5" />'
+    '<choice name="TAIWAN" value="6" /></feature>'
 )
 
 
@@ -89,6 +130,10 @@ XEMU_FEATURES = (
     '<feature name="AUTOCONFIGURE CONTROLLERS" value="xemu_autoconfig" '
     'description="Assign the pads ES sees to the Xbox controller ports. Turn off to keep your own mapping.">'
     '<choice name="ON" value="1" /><choice name="OFF" value="0" /></feature>'
+    '<feature name="RENDER RESOLUTION" value="xemu_scale" description="Internal resolution scale. Applied to xemu.toml.">'
+    '<choice name="1X (NATIVE)" value="1" /><choice name="2X" value="2" /><choice name="3X" value="3" /><choice name="4X" value="4" /></feature>'
+    '<feature name="ASPECT RATIO" value="xemu_aspect" description="Screen aspect ratio.">'
+    '<choice name="NATIVE" value="native" /><choice name="AUTO" value="auto" /><choice name="4:3" value="4x3" /><choice name="16:9" value="16x9" /></feature>'
 )
 
 
@@ -108,6 +153,10 @@ XENIA_FEATURES = (
     '<choice name="8X" value="4" /><choice name="16X" value="5" /></feature>'
     '<feature name="FRAME RATE LIMIT" value="xenia_fps" description="Maximum frames per second.">'
     '<choice name="30 FPS" value="30" /><choice name="60 FPS" value="60" /><choice name="UNLIMITED" value="0" /></feature>'
+    '<feature name="MUTE AUDIO" value="xenia_mute" description="Turn the sound off.">'
+    '<choice name="OFF" value="false" /><choice name="ON" value="true" /></feature>'
+    '<feature name="AUDIO SYSTEM" value="xenia_apu" description="Audio backend.">'
+    '<choice name="AUTO" value="any" /><choice name="ALSA" value="alsa" /><choice name="SDL" value="sdl" /></feature>'
 )
 
 

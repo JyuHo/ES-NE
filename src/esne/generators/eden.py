@@ -11,6 +11,10 @@ Il s'appuie sur ce que tu as configuré dans Eden pour le joueur 1 (Configurer >
 * une manette d'un autre modèle n'est pas touchée (à configurer à la main dans Eden);
 * ``eden_autoconfig=0`` désactive tout ça.
 
+Réglages choisis dans ES (``eden_*``), écrits dans ``qt-config.ini`` quand ils sont définis (un réglage non choisi garde la valeur
+d'Eden): mode docké ou portable, résolution, anti-crénelage, filtre de mise à l'échelle, format d'image, langue et région de
+la console. Les valeurs sont les index d'Eden (mêmes que dans l'interface); noms de clés relevés sur un ``qt-config.ini`` réel.
+
 Le fichier n'est modifié que s'il existe déjà (Eden le crée à son premier lancement) et seules les lignes
 ``player_N_...`` de la section ``[Controls]`` sont réécrites; le reste est conservé tel quel.
 """
@@ -94,6 +98,66 @@ def set_keys(lines: list[str], keys: dict[str, str]) -> list[str]:
     return lines[:start + 1] + body + lines[end:]
 
 
+# clé ES -> (section, clé du qt-config.ini, valeurs permises)
+SETTINGS: dict[str, tuple[str, str, frozenset[str]]] = {
+    "eden_docked": ("System", "use_docked_mode", frozenset({"0", "1"})),
+    "eden_resolution": ("Renderer", "resolution_setup", frozenset({"2", "3", "4", "5", "6"})),
+    "eden_aa": ("Renderer", "anti_aliasing", frozenset({"0", "1", "2"})),
+    "eden_filter": ("Renderer", "scaling_filter", frozenset({"0", "1", "2", "3", "4", "5"})),
+    "eden_ratio": ("Renderer", "aspect_ratio", frozenset({"0", "1", "2", "3", "4"})),
+    "eden_language": ("System", "language_index", frozenset(str(n) for n in (0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17))),
+    "eden_region": ("System", "region_index", frozenset(str(n) for n in range(7))),
+}
+
+
+def set_section_keys(lines: list[str], section: str, keys: dict[str, str]) -> list[str]:
+    """Écrit ``clé\\default=false`` + ``clé=valeur`` dans ``[section]`` (créée au besoin), comme le fait Eden."""
+    if _section_bounds(lines, section) is None:
+        if lines and not lines[-1].endswith("\n"):
+            lines[-1] += "\n"
+        lines = [*lines, f"\n[{section}]\n"]
+    start, end = _section_bounds(lines, section)
+    body = lines[start + 1:end]
+    for key, value in keys.items():
+        for suffix, new in (("\\default", "false"), ("", value)):
+            wanted = f"{key}{suffix}="
+            for i, line in enumerate(body):
+                if line.startswith(wanted):
+                    body[i] = f"{wanted}{new}\n"
+                    break
+            else:
+                at = len(body)
+                while at and not body[at - 1].strip():   # avant les lignes vides qui terminent la section
+                    at -= 1
+                body.insert(at, f"{wanted}{new}\n")
+    return lines[:start + 1] + body + lines[end:]
+
+
+def apply_settings(ini: Path, ctx: Context) -> bool:
+    """Écrit les réglages ``eden_*`` définis dans ES; les valeurs hors liste sont ignorées."""
+    if not ini.is_file():
+        return False
+    chosen: dict[str, dict[str, str]] = {}
+    for name, (section, key, allowed) in SETTINGS.items():
+        value = str(ctx.setting(name, "") or "").strip()
+        if not value:
+            continue
+        if value not in allowed:
+            log.warning("valeur inconnue pour %s ignorée: %s", name, value)
+            continue
+        chosen.setdefault(section, {})[key] = value
+    if not chosen:
+        return False
+    lines = ini.read_text(encoding="utf-8").splitlines(keepends=True)
+    for section, keys in chosen.items():
+        lines = set_section_keys(lines, section, keys)
+    temporary = ini.with_suffix(".ini.esne-tmp")
+    temporary.write_text("".join(lines), encoding="utf-8")
+    temporary.replace(ini)
+    log.info("eden: réglages %s", ", ".join(f"{k}={v}" for keys in chosen.values() for k, v in keys.items()))
+    return True
+
+
 def configure(ini: Path, ctx: Context) -> bool:
     if not ini.is_file() or str(ctx.setting("eden_autoconfig", "1")) == "0":
         return False
@@ -127,7 +191,9 @@ class Eden(Standalone):
 
     def generate(self, ctx: Context) -> Command:
         command = super().generate(ctx)
-        if not configure(config_dir(command.argv) / "qt-config.ini", ctx):
+        ini = config_dir(command.argv) / "qt-config.ini"
+        apply_settings(ini, ctx)
+        if not configure(ini, ctx):
             log.info("eden: manettes laissées telles quelles")
         return command
 

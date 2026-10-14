@@ -122,3 +122,8 @@ def test_xenia_video_options_come_before_the_game(esne_env, monkeypatch, tmp_pat
 def test_xenia_unset_and_invalid_options_are_not_passed(esne_env, monkeypatch, tmp_path):
     command, rom = _xenia(esne_env, monkeypatch, tmp_path, {"xenia_scaling": "dlaa"})
     assert command.argv[1:] == ["--fullscreen=true", str(rom)]
+
+
+def test_xenia_audio_options(esne_env, monkeypatch, tmp_path):
+    command, rom = _xenia(esne_env, monkeypatch, tmp_path, {"xenia_mute": "true", "xenia_apu": "sdl"})
+    assert "--mute=true" in command.argv and "--apu=sdl" in command.argv and command.argv[-1] == str(rom)

@@ -7,6 +7,8 @@
   laisse la valeur actuelle (par exemple l'EEPROM créée par xemu).
 * Manettes (``xemu_autoconfig=0`` pour garder les tiennes): la n-ième manette d'ES va sur le port n (``portN`` et
   ``portN_driver`` de ``[input.bindings]``); xemu désigne une manette par le même GUID SDL que celui d'ES.
+* Réglages choisis dans ES (``xemu_scale``: échelle de rendu 1 à 4, ``xemu_aspect``: native, auto, 4x3, 16x9), écrits dans
+  ``[display.quality]`` et ``[display.ui]`` quand ils sont définis.
 * Le plein écran vient de la ligne de commande (``-full-screen``).
 
 xemu n'écrit dans ``xemu.toml`` que les valeurs différentes de ses défauts: une clé ou une section absente est donc créée.
@@ -102,12 +104,33 @@ def set_key(lines: list[str], section: str, key: str, value) -> None:
     lines += [f"[{section}]\n", entry]
 
 
+# clé ES -> (section, clé, valeurs permises, entier ou chaîne)
+SETTINGS = {
+    "xemu_scale": ("display.quality", "surface_scale", frozenset({"1", "2", "3", "4"}), int),
+    "xemu_aspect": ("display.ui", "aspect_ratio", frozenset({"native", "auto", "4x3", "16x9"}), str),
+}
+
+
+def chosen_settings(ctx: Context) -> list[tuple[str, str, object]]:
+    chosen = []
+    for name, (section, key, allowed, kind) in SETTINGS.items():
+        value = str(ctx.setting(name, "") or "").strip().lower()
+        if not value:
+            continue
+        if value not in allowed:
+            log.warning("valeur inconnue pour %s ignorée: %s", name, value)
+            continue
+        chosen.append((section, key, kind(value)))
+    return chosen
+
+
 def apply(lines: list[str], ctx: Context, bios: Path) -> list[str]:
     wanted = [("sys.files", key, value) for key, value in find_system_files(bios).items()]
     if str(ctx.setting("xemu_autoconfig", "1")) != "0":
         for number, pad in enumerate(ctx.controllers[:MAX_PLAYERS], start=1):
             if GUID.match(pad.guid or ""):
                 wanted += [("input.bindings", f"port{number}", pad.guid), ("input.bindings", f"port{number}_driver", "usb-xbox-gamepad")]
+    wanted += chosen_settings(ctx)
     for section, key, value in wanted:
         set_key(lines, section, key, value)
     return lines

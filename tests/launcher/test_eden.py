@@ -96,3 +96,38 @@ def test_generate_integration(tmp_path, monkeypatch, esne_env, ini):
                                            controllers=[pad(1, ES_GUID), pad(2, ES_GUID)]))
     assert command.argv == ["/usr/bin/eden", "-f", "-g", str(rom)]
     assert "port:1" in (tmp_path / "eden" / "qt-config.ini").read_text()
+
+
+REAL = """[Renderer]
+backend=1
+resolution_setup\\default=false
+resolution_setup=3
+anti_aliasing=2
+
+[System]
+language_index=2
+region_index=2
+use_docked_mode=1
+
+[UI]
+fullscreen=true
+"""
+
+
+def test_settings_are_written_in_the_right_sections(tmp_path):
+    ini = tmp_path / "qt-config.ini"
+    ini.write_text(REAL)
+    assert eden.apply_settings(ini, ctx([], eden_resolution="4", eden_language="1", eden_docked="0", eden_filter="5"))
+    text = ini.read_text()
+    assert "resolution_setup\\default=false\nresolution_setup=4\n" in text
+    assert "language_index=1\n" in text and "use_docked_mode=0\n" in text
+    assert "scaling_filter\\default=false\nscaling_filter=5\n" in text  # clé absente: créée
+    assert "region_index=2\n" in text and "anti_aliasing=2\n" in text and "fullscreen=true\n" in text  # intacts
+
+
+def test_settings_unset_invalid_or_missing_file_change_nothing(tmp_path):
+    ini = tmp_path / "qt-config.ini"
+    assert not eden.apply_settings(ini, ctx([], eden_resolution="4"))
+    ini.write_text(REAL)
+    assert not eden.apply_settings(ini, ctx([], eden_resolution="99", eden_language="6"))
+    assert ini.read_text() == REAL

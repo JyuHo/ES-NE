@@ -125,3 +125,18 @@ def test_appimage_is_found(tmp_path, monkeypatch, esne_env):
     rom = tmp_path / "Halo.iso"
     rom.write_bytes(b"x")
     assert xemu.Xemu().generate(context(rom)).argv[0] == str(image)
+
+
+def test_render_settings_are_written_as_valid_toml(home, tmp_path):
+    toml, bios = home
+    xemu.configure(toml, context(tmp_path / "jeu.iso", [], xemu_scale="3", xemu_aspect="16x9"), bios)
+    data = tomllib.loads(toml.read_text())
+    assert data["display"]["quality"]["surface_scale"] == 3
+    assert data["display"]["ui"]["aspect_ratio"] == "16x9"
+    assert data["display"]["window"]["fullscreen_on_startup"] is False  # intact
+
+
+def test_invalid_render_settings_are_ignored(home, tmp_path):
+    toml, bios = home
+    xemu.configure(toml, context(tmp_path / "jeu.iso", [], xemu_scale="40", xemu_aspect="rond"), bios)
+    assert "surface_scale" not in toml.read_text() and "aspect_ratio" not in toml.read_text()

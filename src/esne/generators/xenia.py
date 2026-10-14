@@ -7,7 +7,8 @@ dans ES garde la valeur de ce fichier. Valeurs permises relevées dans les comme
 
 Options ES (``<système>.<clé>``): ``xenia_resolution`` (échelle de rendu 1 à 4), ``xenia_vsync`` (true, false),
 ``xenia_aa`` (none, fxaa, fxaa_extreme), ``xenia_scaling`` (bilinear, cas, fsr), ``xenia_af`` (filtrage anisotrope: 0, 2 à 5),
-``xenia_fps`` (limite d'images par seconde, 0 = illimité).
+``xenia_fps`` (limite d'images par seconde, 0 = illimité), ``xenia_mute`` (true, false), ``xenia_apu`` (système audio:
+any, alsa, sdl).
 """
 from __future__ import annotations
 
@@ -26,6 +27,8 @@ CHOICES: dict[str, tuple[frozenset[str], tuple[str, ...]]] = {
     "xenia_scaling": (frozenset({"bilinear", "cas", "fsr"}), ("postprocess_scaling_and_sharpening",)),
     "xenia_af": (frozenset({"0", "2", "3", "4", "5"}), ("anisotropic_override",)),
     "xenia_fps": (frozenset({"0", "30", "60"}), ("framerate_limit",)),
+    "xenia_mute": (frozenset({"true", "false"}), ("mute",)),
+    "xenia_apu": (frozenset({"any", "alsa", "sdl"}), ("apu",)),
 }
 
 

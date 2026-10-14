@@ -7,6 +7,10 @@
 * ``cemu_api`` (``vulkan`` ou ``opengl``): écrit ``Graphic/api`` dans ``settings.xml`` s'il existe déjà (Cemu le crée à son
   premier lancement: lance-le une fois à la main pour son assistant de configuration, clés de la console et dossier MLC).
 
+* Réglages choisis dans ES, écrits dans ``settings.xml`` quand ils sont définis: ``cemu_vsync`` (0 ou 1), ``cemu_upscale``
+  (filtre de mise à l'échelle 0 à 3), ``cemu_scaling`` (plein écran: 0 garde le format, 1 étire), ``cemu_fps`` (compteur
+  d'images), ``cemu_volume`` (volume TV 0 à 100), ``cemu_language`` (langue de la console 0 à 11).
+
 Format des fichiers lu dans le code de Cemu (``InputManager.cpp``, ``ProController.cpp``, ``Controller.h``).
 """
 from __future__ import annotations
@@ -140,6 +144,56 @@ def set_graphic_api(settings: Path, api: str) -> bool:
     return True
 
 
+# clé ES -> (chemin dans <content>, valeurs permises)
+SETTINGS: dict[str, tuple[tuple[str, ...], frozenset[str]]] = {
+    "cemu_vsync": (("Graphic", "VSync"), frozenset({"0", "1"})),
+    "cemu_upscale": (("Graphic", "UpscaleFilter"), frozenset({"0", "1", "2", "3"})),
+    "cemu_scaling": (("Graphic", "FullscreenScaling"), frozenset({"0", "1"})),
+    "cemu_fps": (("Graphic", "Overlay", "FPS"), frozenset({"true", "false"})),
+    "cemu_volume": (("Audio", "TVVolume"), frozenset({"0", "25", "50", "75", "100"})),
+    "cemu_language": (("console_language",), frozenset(str(n) for n in range(12))),
+}
+
+
+def set_settings(settings: Path, ctx: Context) -> list[str]:
+    """Écrit dans un ``settings.xml`` existant les réglages ``cemu_*`` définis dans ES. Renvoie les clés changées."""
+    chosen: dict[tuple[str, ...], str] = {}
+    for name, (path, allowed) in SETTINGS.items():
+        value = str(ctx.setting(name, "") or "").strip().lower()
+        if not value:
+            continue
+        if value not in allowed:
+            log.warning("valeur inconnue pour %s ignorée: %s", name, value)
+            continue
+        chosen[path] = value
+    if not chosen or not settings.is_file():
+        return []
+    try:
+        tree = ET.parse(settings)
+    except (ET.ParseError, OSError) as exc:
+        log.warning("cemu: settings.xml illisible (%s), réglages inchangés", exc)
+        return []
+    root = tree.getroot()
+    content = root if root.tag == "content" else root.find("content")
+    if content is None:
+        return []
+    changed = []
+    for path, value in chosen.items():
+        node = content
+        for part in path:
+            child = node.find(part)
+            node = child if child is not None else ET.SubElement(node, part)
+        if node.text != value:
+            node.text = value
+            changed.append("/".join(path))
+    if changed:
+        ET.indent(tree)
+        temporary = settings.with_suffix(".xml.esne-tmp")
+        tree.write(temporary, encoding="utf-8", xml_declaration=True)
+        temporary.replace(settings)
+    return changed
+
+
 class Cemu(Standalone):
     name = "cemu"
 
@@ -152,6 +206,9 @@ class Cemu(Standalone):
         api = str(ctx.setting("cemu_api", "") or "")
         if api and set_graphic_api(config / "settings.xml", api):
             log.info("cemu: API graphique %s", api)
+        changed = set_settings(config / "settings.xml", ctx)
+        if changed:
+            log.info("cemu: réglages %s", ", ".join(changed))
         return command
 
 
