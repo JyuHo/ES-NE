@@ -87,3 +87,14 @@ def test_launcher_log_is_written(emulation):
     main(line())
     log = (paths.state_dir() / "logs" / "es-launcher.log").read_text()
     assert "système=snes émulateur=libretro core=snes9x" in log
+
+
+def test_esne_module_logs_reach_the_launcher_log(esne_env):
+    import logging
+    from esne import launcher, paths
+    launcher.setup_logging()
+    logging.getLogger("esne.hotkey").info("raccourci manette: surveille /dev/input/event9 (PS4 Controller)")
+    for handler in logging.getLogger("esne").handlers:
+        handler.flush()
+    text = (paths.state_dir() / "logs" / "es-launcher.log").read_text()
+    assert "surveille /dev/input/event9" in text

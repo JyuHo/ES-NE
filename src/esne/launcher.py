@@ -20,27 +20,34 @@ from .generators.base import Context
 log = logging.getLogger("es-launcher")
 
 # Nom d'émulateur (ES, catalogue) -> module de génération
-GENERATORS = {"libretro": "retroarch", "cemu": "cemu", "pcsx2": "pcsx2", "eden": "eden", "rpcs3": "rpcs3", "xemu": "xemu"}
+GENERATORS = {"libretro": "retroarch", "cemu": "cemu", "pcsx2": "pcsx2", "eden": "eden", "rpcs3": "rpcs3", "xemu": "xemu", "steam": "steam"}
 
 
 def setup_logging() -> None:
-    """Journal dans <state>/logs/es-launcher.log, et sur stderr (ES le redirige vers son propre journal)."""
-    log.setLevel(logging.DEBUG)
-    for handler in list(log.handlers):   # appel répété (tests, rechargement): repartir de zéro
-        log.removeHandler(handler)
-        handler.close()
+    """Journal dans <state>/logs/es-launcher.log, et sur stderr (ES le redirige vers son propre journal).
+
+    Les messages de ``es-launcher`` et ceux des modules ``esne.*`` (raccourci manette, générateurs) vont au même endroit."""
+    loggers = [log, logging.getLogger("esne")]
+    for logger in loggers:
+        logger.setLevel(logging.DEBUG)
+        for handler in list(logger.handlers):   # appel répété (tests, rechargement): repartir de zéro
+            logger.removeHandler(handler)
+            handler.close()
     stderr = logging.StreamHandler(sys.stderr)
     stderr.setLevel(logging.INFO)
     stderr.setFormatter(logging.Formatter("es-launcher: %(message)s"))
-    log.addHandler(stderr)
+    handlers = [stderr]
     try:
         directory = paths.state_dir() / "logs"
         directory.mkdir(parents=True, exist_ok=True)
         handler = logging.FileHandler(directory / "es-launcher.log", encoding="utf-8")
         handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
-        log.addHandler(handler)
+        handlers.append(handler)
     except OSError:
         pass  # journal facultatif
+    for logger in loggers:
+        for handler in handlers:
+            logger.addHandler(handler)
 
 
 def resolve_choice(ctx: Context) -> None:

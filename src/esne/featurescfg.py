@@ -92,6 +92,13 @@ XEMU_FEATURES = (
 )
 
 
+STEAM_FEATURES = (
+    '<feature name="KEEP STEAM OPEN" value="steam_keep_open" '
+    'description="Keep the Steam client running after the game (faster next launch). Off: close it when ES-NE had to open it.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+)
+
+
 def render() -> str:
     return (
         '<?xml version="1.0"?>\n'
@@ -103,6 +110,7 @@ def render() -> str:
         f'  <emulator name="eden" features="">{EDEN_FEATURES}</emulator>\n'
         f'  <emulator name="rpcs3" features="">{RPCS3_FEATURES}</emulator>\n'
         f'  <emulator name="xemu" features="">{XEMU_FEATURES}</emulator>\n'
+        f'  <emulator name="steam" features="">{STEAM_FEATURES}</emulator>\n'
         "</features>\n"
     )
 

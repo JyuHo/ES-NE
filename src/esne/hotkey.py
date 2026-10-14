@@ -52,6 +52,13 @@ def _is_gamepad(caps: str) -> bool:
     return bool(value >> BTN_GAMEPAD & 1)
 
 
+def _device_name(path: str, sys_root="/sys/class/input") -> str:
+    try:
+        return (Path(sys_root) / Path(path).name / "device" / "name").read_text().strip()
+    except OSError:
+        return "?"
+
+
 def find_gamepads(sys_root="/sys/class/input", dev_root="/dev/input") -> list[str]:
     found = []
     for event in sorted(Path(sys_root).glob("event*")):
@@ -85,7 +92,7 @@ class Watcher(threading.Thread):
                 continue
             try:
                 opened[path] = (os.open(path, os.O_RDONLY | os.O_NONBLOCK), set())
-                log.debug("raccourci manette: surveille %s", path)
+                log.info("raccourci manette: surveille %s (%s)", path, _device_name(path))
             except OSError as exc:
                 log.debug("raccourci manette: %s illisible (%s)", path, exc)
 

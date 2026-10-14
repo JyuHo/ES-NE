@@ -98,3 +98,81 @@ def test_sigterm_closes_the_game(tmp_path):
 
 def test_usage(capsys):
     assert steamrun.main(["620", "steam"]) == 2
+
+
+def test_shutdown_command_keeps_the_program_but_drops_launch_arguments():
+    assert steamrun.shutdown_command(["/usr/bin/steam", "-silent", "steam://rungameid/620"]) == ["/usr/bin/steam", "-shutdown"]
+    assert steamrun.shutdown_command(["/usr/bin/flatpak", "run", "com.valvesoftware.Steam", "-silent", "steam://rungameid/1"]) == \
+        ["/usr/bin/flatpak", "run", "com.valvesoftware.Steam", "-shutdown"]
+
+
+def comm(tmp_path, pid, name):
+    proc = fake_proc(tmp_path, {})
+    (proc / str(pid)).mkdir(exist_ok=True)
+    (proc / str(pid) / "comm").write_text(name + "\n")
+    return proc
+
+
+def test_steam_running_reads_comm(tmp_path):
+    proc = fake_proc(tmp_path, {})
+    assert steamrun.steam_running(proc) is False
+    comm(tmp_path, 20, "steam")
+    assert steamrun.steam_running(proc) is True
+
+
+def test_close_shuts_down_steam_only_when_we_opened_it(tmp_path):
+    for already_open in (False, True):
+        base = tmp_path / str(already_open)
+        base.mkdir()
+        proc = fake_proc(base, {})
+        if already_open:
+            comm(base, 20, "steam")
+        calls = []
+        ticks = []
+
+        def sleep(_):
+            ticks.append(1)
+            if len(ticks) == 1:
+                fake_proc(base, {10: ["reaper", "SteamLaunch", "AppId=620"]})
+            if len(ticks) == 2:
+                (proc / "10" / "cmdline").unlink()
+                (proc / "10").rmdir()
+            if not already_open and calls[-1:] == [["/usr/bin/steam", "-shutdown"]] and (proc / "20").exists():
+                (proc / "20" / "comm").unlink()
+                (proc / "20").rmdir()
+
+        def popen(argv, **kw):
+            calls.append(argv)
+            if len(calls) == 1 and not already_open:
+                comm(base, 20, "steam")  # le client est ouvert par notre lancement
+
+        steamrun.run("620", ["/usr/bin/steam", "-silent", "steam://rungameid/620"], proc, popen=popen, sleep=sleep, close=True)
+        shut = [["/usr/bin/steam", "-shutdown"]] if not already_open else []
+        assert calls[1:] == shut
+
+
+def test_main_accepts_close_flag(monkeypatch):
+    seen = {}
+    monkeypatch.setattr(steamrun, "run", lambda appid, command, close=False: seen.update(appid=appid, command=command, close=close) or 0)
+    assert steamrun.main(["--close", "620", "--", "steam", "-silent"]) == 0
+    assert seen == {"appid": "620", "command": ["steam", "-silent"], "close": True}
+
+
+def test_generator_adds_close_unless_kept_open(tmp_path, monkeypatch, esne_env):
+    from esne.generators import standalone, steam as steam_generator
+    from esne.generators.base import Context
+
+    class Cfg:
+        def __init__(self, **values):
+            self.values = values
+
+        def get(self, key, default=None):
+            return self.values.get(key, default)
+
+    monkeypatch.setattr(standalone.shutil, "which", lambda n: f"/usr/bin/{n}" if n == "steam" else None)
+    rom = tmp_path / "Portal.steam"
+    rom.write_text("620\n")
+    def argv(**settings):
+        return steam_generator.Steam().generate(Context(system="steam", rom=str(rom), config=Cfg(**settings), emulator="steam")).argv
+    assert argv()[:3] == ["esne-steam-run", "--close", "620"]
+    assert argv(steam_keep_open="1")[:2] == ["esne-steam-run", "620"]
