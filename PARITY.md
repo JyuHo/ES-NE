@@ -28,7 +28,7 @@ Les menus liés à `esctl` apparaissent seulement si `esctl has <commande>` réu
 | BIOS / systèmes | `batocera-systems` | `esctl systems` | ✅ |
 | Infos manettes | `batocera-padsinfo` | `esctl padsinfo` (evdev + batterie sysfs) | ✅ sortie réelle vérifiée (PS4) |
 | The Bezel Project | `batocera-es-thebezelproject` | `esctl thebezelproject` (téléchargement GitHub, images seules) | ✅ installation, suppression et aperçu validés dans ES |
-| Décorations (bezels) en jeu | `bezels.py` Batocera | `bezels.py` + overlay RetroArch, zone de jeu en `custom_viewport` | ✅ validé en jeu sur SNES et N64 (écran 16:10); autres systèmes et 16:9 à valider |
+| Décorations (bezels) en jeu | `bezels.py` Batocera | `bezels.py` + overlay RetroArch, zone de jeu en `custom_viewport` | ✅ validé en jeu sur SNES, N64, PSX et GBA (écran 16:10), avec bezels par jeu téléchargés à la demande; 16:9 à valider |
 | Version affichée | `batocera-version` | `esctl version` (`share/esne.version`, sinon version du package) | ✅ |
 | Décorations / shaders | (dossiers) | menu visible si les dossiers existent (`es-genconfig` crée `decorations/`) | ✅ |
 | Netplay | `7zr` | `7zz`, `7z`, `7za` ou `7zr` dans le `PATH` | ✅ |

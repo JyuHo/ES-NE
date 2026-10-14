@@ -32,7 +32,7 @@ Pad 1 via `sdl2` et raccourcis OK; multi-joueurs et configuration par jeu non fa
 ## M4 — émulateurs standalone 🚧
 Dolphin validé; PCSX2, RPCS3, Cemu, Eden/Ryujinx, xemu, Steam, Wine/umu décrits dans `emulators.yml` mais non essayés. Réglages internes: Cemu (profils de manette SDL + API graphique) validé en jeu avec 2 manettes; PCSX2 (manettes SDL + résolution) validé en jeu; RPCS3 (manettes SDL + vidéo) validé en jeu avec 2 manettes; Eden (recopie du mappage joueur 1) validé en jeu avec 2 manettes; les autres émulateurs restent à faire.
 ## M5 — bezels, shaders, scraper, RetroAchievements, netplay 🚧
-Shaders ✅. Bezels ✅ (un par système, The Bezel Project): installation, désinstallation, aperçu et affichage RetroArch validés en jeu sur SNES et N64; restent à voir un bezel à ouverture non centrée et un écran 16:9. Scraper ScreenScraper ✅ (clés lues dans `keys.conf`, scrape validé). Reste: tatouages, RetroAchievements (clé à tester), netplay.
+Shaders ✅. Bezels ✅ (un par système, The Bezel Project): installation, désinstallation, aperçu et affichage RetroArch validés en jeu sur SNES et N64; bezels par jeu (téléchargés à la demande, repli sur le système) validés sur SNES, N64, PSX et GBA; reste un écran 16:9. Scraper ScreenScraper ✅ (clés lues dans `keys.conf`, scrape validé). Reste: tatouages, RetroAchievements (clé à tester), netplay.
 ## M6 — PKGBUILD, session (Gamescope, Wayland/X11) 🚧
 Écrits dans `packaging/arch/` (PKGBUILD `es-ne-git`, `es-ne-session`, `es-ne.desktop`, règle polkit `50-es-ne.rules`), pas encore testés: `makepkg` et la session de connexion restent à valider sur CachyOS.
 
