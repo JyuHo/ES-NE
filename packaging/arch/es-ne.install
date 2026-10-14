@@ -1,7 +1,7 @@
 post_install() {
   echo ">> ES-NE: lance « es-genconfig » en tant qu'utilisateur pour créer ~/.config/esne/es_systems.cfg et les dossiers de roms."
   echo ">> Le thème Carbon est livré dans /usr/share/esne/themes; d'autres thèmes vont dans ~/esne/themes."
-  echo ">> Le système « Ports » contient SuperTux (jeu libre) dès que es-genconfig a été lancé."
+  echo ">> Jeu libre de démonstration pour le système « Ports »: « es-genconfig --install-port digger » (0,5 Mo, télécharge depuis PortMaster)."
   echo ">> Session de connexion: choisis « ES-NE » dans ton gestionnaire de connexion."
 }
 

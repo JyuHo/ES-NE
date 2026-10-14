@@ -63,7 +63,7 @@ Rien n'est compilé ni empaqueté. `es-genconfig` crée `~/.config/esne/keys.con
 ## Thème et jeu libre
 Le paquet ajoute **ES-NE** au menu des applications (catégorie Jeux, icône ES), en plus de l'entrée de session de connexion.
 Le paquet livre le thème **Carbon** (RetroPie) dans `/usr/share/esne/themes`: ES le choisit seul tant qu'aucun autre thème n'est sélectionné (menu Interface utilisateur → Thème). Tes propres thèmes vont dans `~/esne/themes`.
-Le système **Ports** lance des scripts `.sh` (`~/esne/roms/ports/`). `es-genconfig` y crée `SuperTux.sh` si SuperTux est installé (dépendance du paquet) et n'écrase jamais un fichier existant; la liste est dans `src/esne/data/ports.yml` (complétable par `~/.config/esne/ports.yml`).
+Le système **Ports** lance des scripts `.sh` (`~/esne/roms/ports/`). Aucun jeu n'est livré: `es-genconfig --install-port digger` télécharge **Digger** (0,5 Mo, GPL-2.0, x86_64 et aarch64) depuis le catalogue [PortMaster](https://github.com/PortsMaster/PortMaster-New) et crée son lanceur (`--list-ports` liste les jeux proposés). Seul le dossier du jeu est repris, sans PortMaster. Digger se joue au clavier (les manettes passent par `gptokeyb` sous PortMaster, non fourni ici). `es-genconfig` n'écrase jamais un lanceur existant; la liste est dans `src/esne/data/ports.yml` (complétable par `~/.config/esne/ports.yml`, formes `command:` pour un programme installé ou `portmaster:`).
 
 ## Générer `es_systems.cfg`
 ```bash

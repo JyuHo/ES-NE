@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 from xml.sax.saxutils import escape, quoteattr
 
-from . import catalog, featurescfg, paths
+from . import catalog, featurescfg, paths, portmaster
 from .generators import standalone
 from .generators.retroarch import find_binary, find_core
 
@@ -112,23 +112,64 @@ def seed_keys(config: Path) -> bool:
     return True
 
 
+LAUNCHER_PORTMASTER = """#!/bin/sh
+# Lanceur ES-NE d'un jeu du catalogue PortMaster (le script PortMaster d'origine n'est pas utilisé).
+cd "$(dirname "$0")/{dir}" || exit 1
+ARCH=$(uname -m)
+LD_LIBRARY_PATH="$PWD/libs.$ARCH${{LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}}" exec "./{binary}.$ARCH"
+"""
+
+
 def seed_ports(roms: Path, ports: dict | None = None, which=None) -> list[str]:
-    """Crée les scripts des jeux libres installés dans ``<roms>/ports`` (un fichier existant n'est jamais écrasé)."""
+    """Crée les scripts des jeux libres installés dans ``<roms>/ports`` (un fichier existant n'est jamais écrasé).
+
+    Deux formes d'entrée: ``command`` (programme du système, trouvé dans le PATH) ou ``portmaster`` (jeu installé par
+    ``es-genconfig --install-port``, dossier ``dir`` contenant ``<binary>.<arch>``).
+    """
     which = which or shutil.which
     created = []
-    for entry in (catalog.load_data("ports.yml") if ports is None else ports).values():
-        if not isinstance(entry, dict) or not entry.get("file") or not entry.get("command"):
+    for key, entry in (catalog.load_data("ports.yml") if ports is None else ports).items():
+        if not isinstance(entry, dict) or not entry.get("file"):
             continue
-        if not which(str(entry.get("program") or str(entry["command"]).split()[0])):
+        if entry.get("portmaster"):
+            game_dir = str(entry.get("dir", key))
+            binary = str(entry.get("binary", key))
+            if not (roms / "ports" / game_dir / f"{binary}.{portmaster.machine()}").is_file():
+                continue
+            content = LAUNCHER_PORTMASTER.format(dir=game_dir, binary=binary)
+        elif entry.get("command"):
+            if not which(str(entry.get("program") or str(entry["command"]).split()[0])):
+                continue
+            content = f"#!/bin/sh\nexec {entry['command']}\n"
+        else:
             continue
         target = roms / "ports" / str(entry["file"])
         if target.exists():
             continue
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(f"#!/bin/sh\nexec {entry['command']}\n", encoding="utf-8")
+        target.write_text(content, encoding="utf-8")
         target.chmod(0o755)
         created.append(target.name)
     return created
+
+
+def install_port(name: str, roms: Path, ports: dict | None = None) -> int:
+    """``es-genconfig --install-port NOM``: télécharge un jeu PortMaster puis crée son lanceur."""
+    games = {key: e for key, e in (catalog.load_data("ports.yml") if ports is None else ports).items()
+             if isinstance(e, dict) and e.get("portmaster")}
+    if name not in games:
+        print(f"jeu inconnu: {name} (disponibles: {', '.join(sorted(games)) or 'aucun'})", file=sys.stderr)
+        return 1
+    entry = games[name]
+    try:
+        files = portmaster.install(str(entry["portmaster"]), str(entry.get("dir", name)), roms / "ports")
+    except portmaster.PortmasterError as exc:
+        print(f"erreur: {exc}", file=sys.stderr)
+        return 1
+    print(f"{name}: {len(files)} fichiers installés dans {roms / 'ports'}")
+    for script in seed_ports(roms, games):
+        print(f"port ajouté: {script}")
+    return 0
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -136,11 +177,21 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("-o", "--output", type=Path, help=f"fichier à écrire (défaut: {paths.config_dir() / 'es_systems.cfg'})")
     parser.add_argument("--stdout", action="store_true", help="écrit sur la sortie standard au lieu d'un fichier")
     parser.add_argument("--installed-only", action="store_true", help="ne garde que les systèmes dont un core est installé")
+    parser.add_argument("--install-port", metavar="NOM", help="télécharge un jeu libre du catalogue PortMaster (ex: digger) dans le système ports")
+    parser.add_argument("--list-ports", action="store_true", help="liste les jeux PortMaster proposés")
     parser.add_argument("--no-mkdir", action="store_true", help="ne crée pas les dossiers de roms")
     args = parser.parse_args(argv)
 
-    systems = catalog.systems()
     roms = paths.roms_dir()
+    if args.list_ports:
+        for key, e in sorted(catalog.load_data("ports.yml").items()):
+            if isinstance(e, dict) and e.get("portmaster"):
+                print(f"{key}\t{e.get('title', key)}")
+        return 0
+    if args.install_port:
+        return install_port(args.install_port, roms)
+
+    systems = catalog.systems()
     xml = render(systems, roms, args.installed_only)
 
     if args.stdout:

@@ -95,3 +95,53 @@ def test_seed_keys_creates_private_template_once(tmp_path):
     target.write_text("GAMESDB_APIKEY=secret\n")
     assert systemscfg.seed_keys(config) is False
     assert target.read_text() == "GAMESDB_APIKEY=secret\n"
+
+
+def _zip(files):
+    import io
+    import zipfile
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w") as archive:
+        for name, (data, mode) in files.items():
+            info = zipfile.ZipInfo(name)
+            info.external_attr = mode << 16
+            archive.writestr(info, data)
+    return buf.getvalue()
+
+
+def test_portmaster_install_keeps_only_game_dir_and_seeds_launcher(tmp_path, monkeypatch):
+    import hashlib
+    import json
+    from esne import portmaster, systemscfg
+    monkeypatch.setattr(portmaster, "machine", lambda: "x86_64")
+    data = _zip({"Digger.sh": (b"#!/bin/bash", 0o755), "digger/digger.x86_64": (b"ELF", 0o644),
+                 "digger/licenses/L.txt": (b"gpl", 0o644)})
+    catalog_json = json.dumps({"ports": {"digger.zip": {"attr": {"arch": ["aarch64", "x86_64"]},
+                                                       "source": {"url": "u://zip", "md5": hashlib.md5(data).hexdigest()}}}}).encode()
+    fetch = lambda url: data if url == "u://zip" else catalog_json
+    files = portmaster.install("digger.zip", "digger", tmp_path / "ports", fetch=fetch)
+    assert sorted(files) == ["digger/digger.x86_64", "digger/licenses/L.txt"]
+    assert not (tmp_path / "ports" / "Digger.sh").exists()
+    assert (tmp_path / "ports" / "digger" / "digger.x86_64").stat().st_mode & 0o111
+    ports = {"digger": {"file": "Digger.sh", "portmaster": "digger.zip", "dir": "digger", "binary": "digger"}}
+    assert systemscfg.seed_ports(tmp_path, ports) == ["Digger.sh"]
+    assert 'exec "./digger.$ARCH"' in (tmp_path / "ports" / "Digger.sh").read_text()
+
+
+def test_portmaster_rejects_bad_md5_wrong_arch_and_traversal(tmp_path, monkeypatch):
+    import json
+    import pytest
+    from esne import portmaster
+    monkeypatch.setattr(portmaster, "machine", lambda: "x86_64")
+    data = _zip({"digger/a": (b"x", 0o644)})
+
+    def make(arch, md5):
+        cat = json.dumps({"ports": {"d.zip": {"attr": {"arch": arch}, "source": {"url": "u://z", "md5": md5}}}}).encode()
+        return lambda url: data if url == "u://z" else cat
+
+    with pytest.raises(portmaster.PortmasterError):
+        portmaster.install("d.zip", "digger", tmp_path, fetch=make(["x86_64"], "0" * 32))
+    with pytest.raises(portmaster.PortmasterError):
+        portmaster.install("d.zip", "digger", tmp_path, fetch=make(["aarch64"], ""))
+    evil = _zip({"digger/../../x": (b"x", 0o644)})
+    assert portmaster.extract_game(evil, "digger", tmp_path / "ports") == []
