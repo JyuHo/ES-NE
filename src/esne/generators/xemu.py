@@ -1,15 +1,17 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Générateur xemu (Xbox): ligne de commande de ``emulators.yml`` + fichiers système et plein écran dans ``xemu.toml``.
+"""Générateur xemu (Xbox): ligne de commande de ``emulators.yml`` + fichiers système et manettes dans ``xemu.toml``.
 
-* Fichiers système: les fichiers du dossier ``<bios>/xbox`` sont reconnus à leur **taille**, pas à leur nom: MCPX boot ROM
-  (512 octets), EEPROM (256 octets), flash/BIOS (256 Kio, 512 Kio ou 1 Mio), disque dur ``*.qcow2``. Seules les clés
-  ``bootrom_path``, ``flashrom_path``, ``eeprom_path`` et ``hdd_path`` de ``[sys.files]`` sont réécrites, et seulement
-  celles qui existent déjà dans ``xemu.toml``.
-* Plein écran au démarrage, sans écran d'accueil ni vérification de mise à jour.
-* Manettes (``xemu_autoconfig=0`` pour garder les tiennes): la n-ième manette d'ES va sur le port n (``port1``...).
+* Fichiers système: les fichiers du dossier ``<bios>/xbox`` (majuscules indifférentes) sont reconnus à leur **taille**, pas à
+  leur nom: MCPX boot ROM (512 octets), EEPROM (256 octets), flash/BIOS (256 Kio, 512 Kio ou 1 Mio), disque dur ``*.qcow2``.
+  Ils renseignent ``bootrom_path``, ``flashrom_path``, ``eeprom_path`` et ``hdd_path`` de ``[sys.files]``. Un fichier absent
+  laisse la valeur actuelle (par exemple l'EEPROM créée par xemu).
+* Manettes (``xemu_autoconfig=0`` pour garder les tiennes): la n-ième manette d'ES va sur le port n (``portN`` et
+  ``portN_driver`` de ``[input.bindings]``); xemu désigne une manette par le même GUID SDL que celui d'ES.
+* Le plein écran vient de la ligne de commande (``-full-screen``).
 
-Règle générale: ``xemu.toml`` n'est modifié que s'il existe (xemu l'écrit au premier lancement avec toutes ses clés), et
-une clé absente du fichier est ignorée plutôt qu'inventée. Écrit de mémoire pour xemu 0.8, à valider sur une machine.
+xemu n'écrit dans ``xemu.toml`` que les valeurs différentes de ses défauts: une clé ou une section absente est donc créée.
+Le fichier n'est modifié que s'il existe (xemu le crée à son premier lancement). Noms de clés confirmés sur un
+``xemu.toml`` réel; le reste du fichier est conservé tel quel.
 """
 from __future__ import annotations
 
@@ -35,6 +37,16 @@ def config_file(argv: list[str] | None = None) -> Path:
     if argv and any("flatpak" in part for part in argv[:2]):
         return Path.home() / ".var/app/app.xemu.xemu/data/xemu/xemu/xemu.toml"
     return Path(os.environ.get("XDG_DATA_HOME") or Path.home() / ".local/share") / "xemu" / "xemu" / "xemu.toml"
+
+
+def bios_directory(root: Path | None = None) -> Path:
+    """``<bios>/xbox`` en ignorant la casse (``Xbox``, ``XBOX``...); le chemin en minuscules par défaut."""
+    root = root or paths.bios_dir()
+    if root.is_dir():
+        for child in sorted(root.iterdir()):
+            if child.is_dir() and child.name.lower() == "xbox":
+                return child
+    return root / "xbox"
 
 
 def find_system_files(directory: Path) -> dict[str, str]:
@@ -65,31 +77,39 @@ def toml_value(value) -> str:
     return json.dumps(str(value), ensure_ascii=False)  # chaîne TOML « basique »: les guillemets et antislashs sont échappés
 
 
-def set_existing(lines: list[str], section: str, key: str, value) -> bool:
-    """Remplace ``key`` dans ``[section]`` s'il y existe déjà. Renvoie False si la clé est absente."""
+def set_key(lines: list[str], section: str, key: str, value) -> None:
+    """Remplace ``key`` dans ``[section]``; la crée (et la section si besoin) quand elle est absente."""
     current = ""
+    header_at = None
     for index, line in enumerate(lines):
         header = SECTION.match(line)
         if header:
             current = header.group(1).strip()
+            if current == section:
+                header_at = index
             continue
         if current == section and re.match(rf"^\s*{re.escape(key)}\s*=", line):
             lines[index] = f"{key} = {toml_value(value)}\n"
-            return True
-    return False
+            return
+    entry = f"{key} = {toml_value(value)}\n"
+    if header_at is not None:
+        lines.insert(header_at + 1, entry)
+        return
+    if lines and not lines[-1].endswith("\n"):
+        lines[-1] += "\n"
+    if lines and lines[-1].strip():
+        lines.append("\n")
+    lines += [f"[{section}]\n", entry]
 
 
 def apply(lines: list[str], ctx: Context, bios: Path) -> list[str]:
     wanted = [("sys.files", key, value) for key, value in find_system_files(bios).items()]
-    wanted += [("display.window", "fullscreen_on_startup", True), ("general", "show_welcome", False),
-               ("general.updates", "check", False)]
     if str(ctx.setting("xemu_autoconfig", "1")) != "0":
         for number, pad in enumerate(ctx.controllers[:MAX_PLAYERS], start=1):
             if GUID.match(pad.guid or ""):
                 wanted += [("input.bindings", f"port{number}", pad.guid), ("input.bindings", f"port{number}_driver", "usb-xbox-gamepad")]
     for section, key, value in wanted:
-        if not set_existing(lines, section, key, value):
-            log.info("xemu: clé %s.%s absente de xemu.toml, ignorée", section, key)
+        set_key(lines, section, key, value)
     return lines
 
 
@@ -97,7 +117,7 @@ def configure(toml: Path, ctx: Context, bios: Path | None = None) -> bool:
     if not toml.is_file():
         return False
     lines = toml.read_text(encoding="utf-8").splitlines(keepends=True)
-    new = apply(list(lines), ctx, bios or paths.bios_dir() / "xbox")
+    new = apply(list(lines), ctx, bios or bios_directory())
     if new == lines:
         return True
     temporary = toml.with_suffix(".toml.esne-tmp")
@@ -112,7 +132,7 @@ class Xemu(Standalone):
     def generate(self, ctx: Context) -> Command:
         command = super().generate(ctx)
         if not configure(config_file(command.argv), ctx):
-            log.info("xemu: xemu.toml introuvable, lance xemu une fois à la main pour le créer (BIOS dans %s)", paths.bios_dir() / "xbox")
+            log.info("xemu: xemu.toml introuvable, lance xemu une fois à la main pour le créer (BIOS dans %s)", bios_directory())
         return command
 
 

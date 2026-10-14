@@ -65,16 +65,27 @@ def test_system_files_are_found_by_size(home):
                      "eeprom_path": str(bios / "eeprom.bin"), "hdd_path": str(bios / "xbox_hdd.qcow2")}
 
 
-def test_configure_rewrites_existing_keys_and_stays_valid_toml(home, tmp_path):
+def test_configure_rewrites_and_creates_keys_and_stays_valid_toml(home, tmp_path):
     toml, bios = home
     pad = Controller(player=1, index=0, guid=GUID, name="PS4")
     assert xemu.configure(toml, context(tmp_path / "jeu.iso", [pad]), bios)
     data = tomllib.loads(toml.read_text())
     assert data["sys"]["files"]["bootrom_path"] == str(bios / "mcpx_1.0.bin")
-    assert data["display"]["window"]["fullscreen_on_startup"] is True
-    assert data["general"]["show_welcome"] is False and data["general"]["updates"]["check"] is False
-    assert data["general"]["skip_boot_anim"] is False  # non touché
+    assert data["general"]["skip_boot_anim"] is False and data["general"]["show_welcome"] is True  # non touchés
     assert data["input"]["bindings"]["port1"] == GUID
+
+
+def test_real_sparse_file_gets_missing_keys(home, tmp_path):
+    toml, bios = home
+    toml.write_text("[general]\nshow_welcome = false\n\n[input]\ngamepad_mappings = [\n    { gamepad_id = 'abc'}\n    ]\n\n"
+                    "[sys.files]\neeprom_path = '/x/eeprom.bin'\n")
+    pad = Controller(player=1, index=0, guid=GUID)
+    xemu.configure(toml, context(tmp_path / "jeu.iso", [pad]), bios)
+    data = tomllib.loads(toml.read_text())
+    assert data["sys"]["files"]["hdd_path"] == str(bios / "xbox_hdd.qcow2")
+    assert data["input"]["bindings"] == {"port1": GUID, "port1_driver": "usb-xbox-gamepad"}  # section créée
+    assert data["input"]["gamepad_mappings"] == [{"gamepad_id": "abc"}]
+    assert data["general"]["show_welcome"] is False
 
 
 def test_autoconfig_off_keeps_pads(home, tmp_path):
@@ -84,11 +95,10 @@ def test_autoconfig_off_keeps_pads(home, tmp_path):
     assert tomllib.loads(toml.read_text())["input"]["bindings"]["port1"] == ""
 
 
-def test_unknown_keys_are_not_invented(home, tmp_path):
-    toml, bios = home
-    toml.write_text("[general]\nshow_welcome = true\n")
-    xemu.configure(toml, context(tmp_path / "jeu.iso"), bios)
-    assert tomllib.loads(toml.read_text()) == {"general": {"show_welcome": False}}
+def test_bios_directory_ignores_case(tmp_path):
+    (tmp_path / "Xbox").mkdir()
+    assert xemu.bios_directory(tmp_path) == tmp_path / "Xbox"
+    assert xemu.bios_directory(tmp_path / "vide") == tmp_path / "vide" / "xbox"
 
 
 def test_missing_config_is_left_alone(home, tmp_path):
