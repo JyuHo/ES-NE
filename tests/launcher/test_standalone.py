@@ -92,4 +92,4 @@ def test_xenia_appimage_is_found_and_gets_the_game(esne_env, monkeypatch, tmp_pa
     rom = tmp_path / "Jeu.iso"
     rom.write_bytes(b"x")
     command = standalone.Standalone().generate(ctx("xenia", rom, "xbox360"))
-    assert command.argv == [str(new), str(rom)]
+    assert command.argv == [str(new), "--fullscreen=true", str(rom)]
