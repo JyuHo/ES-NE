@@ -1,0 +1,22 @@
+#!/usr/bin/python -I
+# SPDX-License-Identifier: GPL-3.0-or-later
+"""Aide exécutée en root par pkexec (voir org.esne.install-core.policy): installe UN core libretro de la liste blanche.
+
+Le seul argument est un nom de core; le paquet est déduit de la table d'ES-NE, jamais fourni par l'appelant.
+"""
+import subprocess
+import sys
+
+from esne import cores
+
+
+def main(argv):
+    if len(argv) != 2 or argv[1] not in cores.OFFICIAL:
+        print("usage: install-core <core des dépôts officiels>", file=sys.stderr)
+        return 2
+    package = cores.OFFICIAL[argv[1]]
+    return subprocess.call(["/usr/bin/pacman", "-S", "--needed", "--noconfirm", package])
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))

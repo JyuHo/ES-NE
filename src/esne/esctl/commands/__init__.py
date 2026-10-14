@@ -6,8 +6,8 @@ Chaque module expose:
   available()  True si la commande est utilisable sur cette machine (répond à ``esctl has <NAME>``)
   run(args)    exécute la commande, renvoie le code de sortie
 """
-from . import (audio, config, info, padsinfo, preupdate_gamelists_hook, resolution, swissknife, systems, thebezelproject,
+from . import (audio, config, info, install_core, padsinfo, preupdate_gamelists_hook, resolution, swissknife, systems, thebezelproject,
                timezone, version)
 
-COMMANDS = {module.NAME: module for module in (audio, config, info, padsinfo, preupdate_gamelists_hook, resolution, swissknife, systems, thebezelproject,
+COMMANDS = {module.NAME: module for module in (audio, config, info, install_core, padsinfo, preupdate_gamelists_hook, resolution, swissknife, systems, thebezelproject,
                                            timezone, version)}

@@ -65,6 +65,12 @@ def render(systems: dict, roms: Path, installed_only: bool = False, is_installed
         for emulator, core, priority in cores:
             by_emulator.setdefault(emulator, []).append((core, priority))
         default_emulator, default_core = catalog.default_choice(name)
+        # le core par défaut est le plus prioritaire des cores installés (sinon celui du catalogue: « cœur manquant »)
+        if not is_installed(default_emulator, default_core or ""):
+            for emulator, core, _ in cores:
+                if is_installed(emulator, core):
+                    default_emulator, default_core = emulator, core or None
+                    break
         for emulator, emulator_cores in by_emulator.items():
             named = [core for core, _ in emulator_cores if core]
             if not named:

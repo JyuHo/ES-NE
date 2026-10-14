@@ -10,9 +10,9 @@ import sys
 import threading
 import traceback
 
-from . import catalog, hotkey, paths
+from . import catalog, cores, hotkey, paths
 from .errors import (
-    EMULATOR_EXITED, OTHER_ERROR, UNKNOWN_EMULATOR, LaunchError, launch_error_file,
+    CORE_MISSING, EMULATOR_EXITED, OTHER_ERROR, UNKNOWN_EMULATOR, LaunchError, launch_error_file,
 )
 from .generators import load_generator
 from .generators.base import Context
@@ -123,6 +123,7 @@ def _kill(child) -> None:
 
 
 def launch(ctx: Context) -> int:
+    cores.clear_hint()
     try:
         resolve_choice(ctx)
         module = GENERATORS.get(ctx.emulator)
@@ -153,6 +154,8 @@ def launch(ctx: Context) -> int:
         return 0
 
     except LaunchError as error:
+        if error.code == CORE_MISSING and ctx.emulator == "libretro" and ctx.core:
+            cores.write_hint(ctx.core)  # le frontend propose alors d'installer le core
         return report(error)
     except Exception as exc:  # bogue du lanceur: ES affichera le message
         log.error("erreur inattendue: %s", traceback.format_exc())
