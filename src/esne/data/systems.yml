@@ -98,6 +98,7 @@ psx:
     libretro:
       pcsx_rearmed: { priority: 1 }
       swanstation: {}
+      mednafen_psx: {}
 pcengine:
   name: NEC PC Engine
   manufacturer: NEC

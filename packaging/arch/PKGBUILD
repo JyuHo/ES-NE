@@ -15,7 +15,13 @@ depends=(python python-yaml python-evdev retroarch libretro-core-info libretro-s
          sdl2 sdl2_mixer freeimage freetype2 curl vlc alsa-lib)
 makedepends=(git cmake gettext rapidjson python-build python-installer python-setuptools python-wheel)
 optdepends=('gamescope: session de connexion dédiée (es-ne-session)'
-            'libretro-snes9x: Super Nintendo' 'libretro-mupen64plus-next: Nintendo 64'
+            'libretro-nestopia: NES' 'libretro-snes9x: Super Nintendo' 'libretro-bsnes: Super Nintendo (précis)'
+            'libretro-gambatte: Game Boy, Game Boy Color' 'libretro-mgba: Game Boy Advance (et GB/GBC)'
+            'libretro-genesis-plus-gx: Master System, Mega Drive, Game Gear' 'libretro-picodrive: Mega Drive, 32X'
+            'libretro-mupen64plus-next: Nintendo 64' 'libretro-parallel-n64: Nintendo 64 (autre core)'
+            'libretro-beetle-psx: PlayStation' 'libretro-beetle-pce-fast: PC Engine'
+            'libretro-melonds: Nintendo DS' 'libretro-desmume: Nintendo DS (autre core)'
+            'libretro-ppsspp: PSP' 'libretro-mame: arcade (MAME)'
             'retroarch-assets-ozone: icônes du menu RetroArch' 'libretro-overlays: surimpressions'
             'python-pillow: détection plus rapide des bezels')
 provides=(es-ne)
