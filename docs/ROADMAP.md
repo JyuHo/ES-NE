@@ -30,7 +30,7 @@ Légende: ✅ fait · 🚧 en cours · ❌ à faire. Un ✅ côté ES = code en 
 ## M3 — manettes (es_input, SDL DB, multi-joueurs) 🚧
 Pad 1 via `sdl2` et raccourcis OK; multi-joueurs et configuration par jeu non faits.
 ## M4 — émulateurs standalone 🚧
-Dolphin validé; Wine/umu décrits dans `emulators.yml` mais non essayés; Steam: lancement et manette validés (`esne-steam-run`, fermeture du client), raccourci Select+Start sans effet sur les jeux Steam (en cours: sans doute la manette virtuelle de Steam Input). Réglages internes: Cemu (profils de manette SDL + API graphique) validé en jeu avec 2 manettes; PCSX2 (manettes SDL + résolution) validé en jeu; RPCS3 (manettes SDL + vidéo) validé en jeu avec 2 manettes; Eden (recopie du mappage joueur 1) validé en jeu avec 2 manettes; xemu: validé en jeu (fichiers BIOS reconnus à leur taille dans `bios/xbox`, manettes dans `xemu.toml`, AppImage); les autres émulateurs restent à faire.
+Dolphin validé; Wine/umu décrits dans `emulators.yml` mais non essayés; Steam: lancement, manette, raccourci Select+Start (arbre de processus du jeu fermé) et fermeture du client validés avec Cuphead (`esne-steam-run`). Réglages internes: Cemu (profils de manette SDL + API graphique) validé en jeu avec 2 manettes; PCSX2 (manettes SDL + résolution) validé en jeu; RPCS3 (manettes SDL + vidéo) validé en jeu avec 2 manettes; Eden (recopie du mappage joueur 1) validé en jeu avec 2 manettes; xemu: validé en jeu (fichiers BIOS reconnus à leur taille dans `bios/xbox`, manettes dans `xemu.toml`, AppImage); les autres émulateurs restent à faire.
 ## M5 — bezels, shaders, scraper, RetroAchievements, netplay 🚧
 Shaders ✅. Bezels ✅ (un par système, The Bezel Project): installation, désinstallation, aperçu et affichage RetroArch validés en jeu sur SNES et N64; bezels par jeu (téléchargés à la demande, repli sur le système) validés sur SNES, N64, PSX et GBA; reste un écran 16:9. Scraper ScreenScraper ✅ (clés lues dans `keys.conf`, scrape validé). Reste: tatouages, RetroAchievements (clé à tester), netplay.
 ## M6 — PKGBUILD, session (Gamescope, Wayland/X11) 🚧
@@ -45,7 +45,7 @@ Dans `packaging/arch/` (PKGBUILD `es-ne-git`, `es-ne-session`, `es-ne.desktop`, 
 - ❌ patch 10: fonctions optionnelles (scraper, ports, LED...)
 
 ## Prochaines étapes
-- Raccourci Select+Start pour les jeux Steam; tester KEEP STEAM OPEN / fermeture du client
+- Steam: tester KEEP STEAM OPEN; piste Batocera: fin de partie lue dans `console_log.txt` de Steam
 - Autres ports PortMaster (OpenTyrian, SDLPoP, OpenGGS), Wine/umu, Ryujinx
 - RetroArch: états de sauvegarde, netplay, RetroAchievements en jeu
 - Traductions dans d'autres langues; bezels sur écran 16:9; option pour garder le ratio du bezel avec bandes noires en 16:10
