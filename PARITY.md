@@ -32,7 +32,6 @@ Les menus liés à `esctl` apparaissent seulement si `esctl has <commande>` réu
 | Version affichée | `batocera-version` | `esctl version` (`share/esne.version`, sinon version du package) | ✅ |
 | Décorations / shaders | (dossiers) | menu visible si les dossiers existent (`es-genconfig` crée `decorations/`) | ✅ |
 | Netplay | `7zr` | `7zz`, `7z`, `7za` ou `7zr` dans le `PATH` | ✅ |
-| Kodi | `batocera-kodi` | `kodi --standalone` direct | ✅ code, non testé |
 | Veille, arrêt rapide | `pm-suspend` | retirés du menu QUIT | ⛔ |
 | Manuel PDF | `pdftoppm`, `pdfinfo` | cherchés dans le `PATH` | ✅ |
 | Thèmes (téléchargement) | — | inchangé | ✅ code d'ES |

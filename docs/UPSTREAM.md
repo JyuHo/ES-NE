@@ -69,7 +69,7 @@ Hashes de la branche `esne` du fork.
 | `e142310` | paths | disposition XDG dans `Paths.cpp` (`ESNE_{CONFIG,DATA,STATE,SHARE}_DIR`) |
 | `e28606c` | paths | ne plus lire `batocera.arch` ni réécrire `/recalbox` sous ESNE |
 | `67167a7` | build | définir `X86`/`X86_64` depuis `CMAKE_SYSTEM_PROCESSOR` |
-| `b935f4c` | syscalls | `LinuxApiSystem`: traduction `batocera-*` → `esctl`, menus conditionnés, mises à jour désactivées, Kodi et suspend directs |
+| `b935f4c` | syscalls | `LinuxApiSystem`: traduction `batocera-*` → `esctl`, menus conditionnés, mises à jour désactivées, suspend direct; Kodi retiré (absent d'ES-NE, entrées masquées) |
 | `3bdea9b` | syscalls | les 4 fonctions audio (`get`/`set` périphérique et profil) passent par `executeScript` / `executeEnumerationScript` au lieu de `popen`/`system` |
 | `3dfc4be` | menus | crée `esne.conf` au premier lancement (sinon aucun réglage ne s'enregistre), entrée « QUIT EMULATIONSTATION » dans le menu Quitter, menu disposition clavier masqué (`batocera-keyboard`) |
 | `f074529` | i18n | applique `system.language` au démarrage (Batocera l'exporte via ses scripts d'init) et cherche les `.mo` à côté de l'exécutable, quel que soit le dossier courant |

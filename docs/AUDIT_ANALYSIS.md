@@ -45,7 +45,7 @@ Côté ES: ✅ traduction `batocera-x` → `esctl x` et menus conditionnés à `
 | `batocera-preupdate-gamelists-hook` | 3 | hook avant maj des gamelists | no-op ou hook utilisateur |
 
 ### B. Optionnel / fonctionnalités avancées (reporter après M5)
-Côté ES: ⛔ masqués par `LinuxApiSystem` pour Wi-Fi, Bluetooth, store, services, plane mode, backglass, NFC. `kodi`: ✅ lancement direct de `kodi --standalone`. Les autres (scraper, ports, LED, gameforce...) ne sont pas encore traités: 🚧 patch 6 (voir `docs/UPSTREAM.md`).
+Côté ES: ⛔ masqués par `LinuxApiSystem` pour Wi-Fi, Bluetooth, store, services, plane mode, backglass, NFC. `kodi`: ⛔ absent d'ES-NE, entrées de menu masquées. Les autres (scraper, ports, LED, gameforce...) ne sont pas encore traités: 🚧 patch 6 (voir `docs/UPSTREAM.md`).
 `batocera-store` (10), `batocera-services` (5), `batocera-wifi` (8), `batocera-bluetooth` (14), `batocera-scraper` (3), `batocera-ports` (4), `batocera-wine-runners` (1), `batocera-nfc` (3), `batocera-backglass` (3), `batocera-planemode` (3), `batocera-kodi` (2), `batocera-led-handheld` (10), `batocera-gameforce` (3).
 Wi-Fi et Bluetooth: sur un poste Arch, ils sont gérés par NetworkManager/BlueZ. Mieux vaut **masquer** ces menus que les réimplémenter.
 
@@ -68,14 +68,14 @@ Remplacements: `systemctl reboot/poweroff` pour l'arrêt, le gestionnaire de paq
 | 68 | sons RetroAchievements | `~/esne/sounds/retroachievements` |
 | 70 | `/userdata/system/batocera.conf` | `$XDG_CONFIG_HOME/esne/esne.conf` |
 | 71, 72 | `notice.pdf`, `batocera.version` | `/usr/share/esne/` |
-| 73 | `/usr/bin/kodi` | `findExecutable("kodi")` dans le `PATH` |
+| 73 | `/usr/bin/kodi` | sans objet: Kodi retiré d'ES-NE |
 
 **Réalisé dans le patch 2** (`Paths.cpp`, branche `#if ESNE`). Écarts par rapport à la proposition ci-dessus:
 - les dossiers sont répartis en quatre racines: `share` (`ESNE_SHARE_DIR`, défaut `/usr/share/esne`), `config`, `data`, `state` (logs dans `~/.local/state/esne/logs`), chacune surchargeable par `ESNE_{SHARE,CONFIG,DATA,STATE}_DIR`;
 - les mappages clavier (`padtokey`) restent dans `share/padtokey` et `config/padtokey` (pas d'`evmapy`, outil Batocera);
 - les shaders gardent le sous-dossier `shaders/configs` pour rester compatibles avec `batocera-shaders`;
 - les sons RetroAchievements sont dans `share/sounds/retroachievements` et `data/sounds/retroachievements` (et non `/usr/share/libretro/assets/sounds`);
-- `kodi` reste `/usr/bin/kodi` (`Paths::getKodiPath()`), pas de recherche dans le `PATH`;
+- `kodi`: sans objet, Kodi n'est pas fourni (entrées de menu masquées par `LinuxApiSystem`);
 - `emulationstation.ini` garde la priorité finale.
 
 Autres chemins hors `Paths.cpp` (état):
