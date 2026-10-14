@@ -25,11 +25,11 @@ Légende: ✅ fait · 🚧 en cours · ❌ à faire. Un ✅ côté ES = code en 
 - 🚧 écrits, tests unitaires, pas encore validés en jeu: netplay (`--host`/`--connect`, réglages `netplay_*`, `netplay="true"` dans `es_systems.cfg`), `-monitor` (`video_monitor_index`)
 
 ## M2 — config en couches + génération `es_systems.cfg` / `es_features.cfg` ✅
-- ✅ résolution en couches (`<système>["rom"].clé` > `<système>.clé` > `global.clé`)
+- ✅ résolution en couches (`<système>["rom"].clé` > `<système>.clé` > `global.clé`), tests unitaires seulement: pas validée en jeu, pas de couche par core
 - ✅ `es-genconfig`: `es_systems.cfg`, `es_features.cfg`, jeux de shaders, dossiers de roms (catalogue `systems.yml`, options `featurescfg.py`)
 
 ## M3 — manettes (es_input, SDL DB, multi-joueurs) 🚧
-Pad 1 via `sdl2` et raccourcis OK; multi-joueurs testé sur Cemu avec 2 manettes (reste à tester sur RetroArch et les autres émulateurs); configuration par jeu non faite.
+Pad 1 via `sdl2` et raccourcis OK; multi-joueurs testé sur Cemu avec 2 manettes (reste à tester sur RetroArch et les autres émulateurs); configuration par jeu (`<système>["rom"].clé`): écrite et testée en unitaire, pas validée en jeu; pas de couche par core (seul le choix du core est par jeu ou par système).
 ## M4 — émulateurs standalone 🚧
 Dolphin validé; Wine/umu décrits dans `emulators.yml` mais non essayés; Steam: lancement, manette, raccourci Select+Start (arbre de processus du jeu fermé) et fermeture du client validés avec Cuphead (`esne-steam-run`). Réglages internes: Cemu (profils de manette SDL + API graphique) validé en jeu avec 2 manettes; PCSX2 (manettes SDL + résolution) validé en jeu; RPCS3 (manettes SDL + vidéo) validé en jeu avec 2 manettes; Eden (recopie du mappage joueur 1) validé en jeu avec 2 manettes; xemu: validé en jeu (fichiers BIOS reconnus à leur taille dans `bios/xbox`, manettes dans `xemu.toml`, AppImage); les autres émulateurs restent à faire.
 ## M5 — bezels, shaders, scraper, RetroAchievements, netplay 🚧
