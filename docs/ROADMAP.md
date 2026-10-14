@@ -16,7 +16,7 @@ Légende: ✅ fait · 🚧 en cours · ❌ à faire. Un ✅ côté ES = code en 
 ## M1 — `es-launcher` + générateur RetroArch ✅
 - ✅ contrat de lancement lu (`FileData.cpp`): ES construit la ligne depuis la balise `<command>` d'`es_systems.cfg`, puis lit le code de sortie (200-205: messages fixes; 250/299: message dans `/tmp/launch_error.log`)
 - ✅ CLI compatible avec la ligne d'ES (`-system -rom -emulator -core -gameinfoxml -systemname -p<N>index/guid/path/name/nbbuttons/nbhats/nbaxes`), options d'ES non interprétées conservées
-- ✅ choix émulateur/core: arguments d'ES > `esne.conf` (en couches) > catalogue `systems.yml` (24 systèmes, surchargeable dans `~/.config/esne/systems.yml`)
+- ✅ choix émulateur/core: arguments d'ES > `esne.conf` (en couches) > catalogue `systems.yml` (26 systèmes, surchargeable dans `~/.config/esne/systems.yml`)
 - ✅ RetroArch: configuration complémentaire `--appendconfig` (le `retroarch.cfg` de l'utilisateur n'est jamais modifié): plein écran, dossiers de sauvegarde/BIOS, `smooth`, `ratio`, `rewind`, `autosave`, `integerscale`, `shaderset` (`--set-shader`, pilote vulkan ou glcore), pilote joypad `sdl2`, raccourcis Select+Start / Select+R3
 - ✅ codes de sortie 200-205 et 299 vers ES, journal `<state>/logs/es-launcher.log`
 - 🚧 validé avec un vrai RetroArch: shaders, ratio 4/3, rewind; table des ratios (`aspect_ratio_index`) en partie non validée

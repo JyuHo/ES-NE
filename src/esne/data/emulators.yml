@@ -25,6 +25,12 @@ xemu:
   binary: [xemu, "~/.local/bin/[Xx]emu*.AppImage", "~/Applications/[Xx]emu*.AppImage", "flatpak run app.xemu.xemu"]
   args: [-full-screen, -dvd_path, "{rom}"]
   package: xemu
+xenia:
+  # Xenia Canary (Xbox 360): pas de paquet officiel, AppImage du fork Linux natif (github.com/peerloomllc/xenia-canary/releases).
+  # Les options de ligne de commande sont celles de sa configuration; seul le chemin du jeu est passé pour l'instant.
+  binary: ["~/.local/bin/[Xx]enia*.AppImage", "~/Applications/[Xx]enia*.AppImage", xenia_canary, xenia]
+  args: ["{rom}"]
+  package: "l'AppImage Xenia Canary dans ~/.local/bin"
 eden:
   binary: [eden, "~/.local/bin/[Ee]den*.AppImage", "~/Applications/[Ee]den*.AppImage", "flatpak run dev.eden_emu.eden"]
   args: [-f, -g, "{rom}"]

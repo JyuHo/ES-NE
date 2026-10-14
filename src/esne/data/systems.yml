@@ -204,6 +204,14 @@ xbox:
   extensions: [.iso, .xiso]
   emulators:
     xemu: {}
+xbox360:
+  name: Microsoft Xbox 360
+  manufacturer: Microsoft
+  release: 2005
+  hardware: console
+  extensions: [.iso, .xex]
+  emulators:
+    xenia: {}
 steam:
   name: Steam
   manufacturer: Valve

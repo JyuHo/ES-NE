@@ -76,3 +76,20 @@ def test_flatpak_candidate_requires_the_app(monkeypatch):
     which = lambda n: "/usr/bin/flatpak" if n == "flatpak" else None
     assert standalone.find_program(["flatpak run x.y.Z"], which) is None
     assert standalone.find_program(["flatpak run x.y.Z", "flatpak run a.b.C"], which) == ["/usr/bin/flatpak", "run", "a.b.C"]
+
+
+def test_xenia_appimage_is_found_and_gets_the_game(esne_env, monkeypatch, tmp_path):
+    home = tmp_path / "home"
+    bin_dir = home / ".local" / "bin"
+    bin_dir.mkdir(parents=True)
+    old = bin_dir / "xenia_canary_linux-native-2026.09.17-x86_64.AppImage"
+    new = bin_dir / "xenia_canary_linux-native-2026.10.05.1-x86_64.AppImage"
+    for f in (old, new):
+        f.write_bytes(b"x")
+        f.chmod(0o755)
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setattr(standalone.shutil, "which", lambda name: None)
+    rom = tmp_path / "Jeu.iso"
+    rom.write_bytes(b"x")
+    command = standalone.Standalone().generate(ctx("xenia", rom, "xbox360"))
+    assert command.argv == [str(new), str(rom)]
