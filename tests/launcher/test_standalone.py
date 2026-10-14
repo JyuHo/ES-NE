@@ -93,3 +93,32 @@ def test_xenia_appimage_is_found_and_gets_the_game(esne_env, monkeypatch, tmp_pa
     rom.write_bytes(b"x")
     command = standalone.Standalone().generate(ctx("xenia", rom, "xbox360"))
     assert command.argv == [str(new), "--fullscreen=true", str(rom)]
+
+
+def _xenia(esne_env, monkeypatch, tmp_path, settings):
+    from esne.generators import xenia
+    exe = tmp_path / "xenia"
+    exe.write_bytes(b"x")
+    exe.chmod(0o755)
+    monkeypatch.setattr(standalone.shutil, "which", lambda name: str(exe) if name == "xenia" else None)
+    rom = tmp_path / "Jeu.iso"
+    rom.write_bytes(b"x")
+    class Settings:
+        def get(self, key, default=None):
+            return settings.get(key, default)
+    c = Context(system="xbox360", rom=str(rom), config=Settings(), emulator="xenia")
+    return xenia.Xenia().generate(c), rom
+
+
+def test_xenia_video_options_come_before_the_game(esne_env, monkeypatch, tmp_path):
+    command, rom = _xenia(esne_env, monkeypatch, tmp_path, {
+        "xenia_resolution": "2", "xenia_aa": "fxaa", "xenia_af": "5"})
+    assert command.argv[-1] == str(rom)
+    for option in ("--draw_resolution_scale_x=2", "--draw_resolution_scale_y=2",
+                   "--postprocess_antialiasing=fxaa", "--anisotropic_override=5", "--fullscreen=true"):
+        assert option in command.argv
+
+
+def test_xenia_unset_and_invalid_options_are_not_passed(esne_env, monkeypatch, tmp_path):
+    command, rom = _xenia(esne_env, monkeypatch, tmp_path, {"xenia_scaling": "dlaa"})
+    assert command.argv[1:] == ["--fullscreen=true", str(rom)]
