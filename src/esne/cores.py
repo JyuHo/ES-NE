@@ -29,15 +29,20 @@ OFFICIAL = {
     "mame": "libretro-mame",
 }
 
-# cores absents des dépôts officiels -> paquet de l'AUR
+# cores absents des dépôts officiels -> noms possibles du paquet de l'AUR (le premier existant est utilisé)
 AUR = {
-    "fceumm": "libretro-fceumm",
-    "fbneo": "libretro-fbneo",
-    "pcsx_rearmed": "libretro-pcsx-rearmed",
-    "stella": "libretro-stella",
-    "gpsp": "libretro-gpsp",
-    "swanstation": "libretro-swanstation",
+    "fceumm": ["libretro-fceumm", "libretro-fceumm-git"],
+    "fbneo": ["libretro-fbneo", "libretro-fbneo-git"],
+    "pcsx_rearmed": ["libretro-pcsx-rearmed", "libretro-pcsx-rearmed-git"],
+    "stella": ["libretro-stella", "libretro-stella-git"],
+    "gpsp": ["libretro-gpsp", "libretro-gpsp-git"],
+    "swanstation": ["libretro-swanstation", "libretro-swanstation-git"],
 }
+
+
+def aur_names() -> set[str]:
+    return {name for names in AUR.values() for name in names}
+
 
 POLKIT_ACTION = "org.esne.install-core"
 HELPER = "/usr/lib/esne/install-core"
@@ -55,7 +60,7 @@ def classify(core: str) -> tuple[str, str]:
     if core in OFFICIAL:
         return "official", OFFICIAL[core]
     if core in AUR:
-        return "aur", AUR[core]
+        return "aur", AUR[core][0]
     return "unknown", ""
 
 

@@ -25,7 +25,7 @@ def main(argv):
     package = os.path.basename(parent)
     match = re.fullmatch(r"(libretro-[a-z0-9-]+?)-[^/]*\.pkg\.tar\.(zst|xz)", name)
     expected = os.path.join(home, ".cache", "esne", "aur", package)
-    if (package not in cores.AUR.values() or not match or match.group(1) != package
+    if (package not in cores.aur_names() or not match or match.group(1) != package
             or os.path.realpath(parent) != os.path.realpath(expected)
             or os.path.islink(path) or not os.path.isfile(path)):
         print("fichier refusé", file=sys.stderr)

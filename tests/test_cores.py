@@ -6,6 +6,7 @@ from esne.esctl.commands import install_core
 def test_classify():
     assert cores.classify("mgba") == ("official", "libretro-mgba")
     assert cores.classify("fceumm") == ("aur", "libretro-fceumm")
+    assert "libretro-fbneo-git" in cores.aur_names()
     assert cores.classify("nimporte") == ("unknown", "")
 
 
@@ -28,14 +29,30 @@ def test_install_refuses_unknown():
     assert install_core.run(["x; rm -rf /"], call=never) == install_core.EXIT_UNKNOWN
 
 
-def test_install_aur_builds_then_installs(tmp_path):
+def test_install_aur_builds_then_installs(tmp_path, monkeypatch):
+    monkeypatch.setattr(install_core, "assistant", lambda: None)
+    monkeypatch.setattr(install_core.shutil, "which", lambda name: "/usr/bin/" + name)
     calls = []
-    pkg = tmp_path / "libretro-fceumm-1-1-x86_64.pkg.tar.zst"
-    assert install_core.run(["fceumm"], call=lambda argv: calls.append(argv) or 0, build=lambda p: pkg if p == "libretro-fceumm" else None) == 0
+    pkg = tmp_path / "libretro-fceumm-git-1-1-x86_64.pkg.tar.zst"
+    # le premier nom n'existe pas dans l'AUR, le second oui
+    build = lambda name: pkg if name == "libretro-fceumm-git" else None
+    assert install_core.run(["fceumm"], call=lambda argv: calls.append(argv) or 0, build=build) == 0
     assert calls == [["pkexec", cores.AUR_HELPER, str(pkg)]]
 
 
-def test_install_aur_build_failure_skips_install():
+def test_install_aur_with_paru_uses_pkexec_as_sudo(monkeypatch):
+    monkeypatch.setattr(install_core, "assistant", lambda: "paru")
+    calls = []
+    results = iter([1, 0])  # premier nom refusé, second accepté
+    code = install_core.run(["fbneo"], call=lambda argv: calls.append(argv) or next(results))
+    assert code == 0
+    assert calls == [["paru", "-S", "--needed", "--noconfirm", "--sudo", "pkexec", "libretro-fbneo"],
+                     ["paru", "-S", "--needed", "--noconfirm", "--sudo", "pkexec", "libretro-fbneo-git"]]
+
+
+def test_install_aur_build_failure_skips_install(monkeypatch):
+    monkeypatch.setattr(install_core, "assistant", lambda: None)
+    monkeypatch.setattr(install_core.shutil, "which", lambda name: "/usr/bin/" + name)
     never = lambda argv: (_ for _ in ()).throw(AssertionError("ne doit rien installer"))
     assert install_core.run(["fceumm"], call=never, build=lambda p: None) == install_core.EXIT_AUR
 
@@ -50,6 +67,7 @@ def test_build_aur_clone_make_and_pick_package(tmp_path):
             (tmp_path / "libretro-stella" / "libretro-stella-debug-1-1-x86_64.pkg.tar.zst").write_text("")
         elif argv[0] == "git":
             (tmp_path / "libretro-stella").mkdir()
+            (tmp_path / "libretro-stella" / "PKGBUILD").write_text("")
         return 0
 
     built = install_core.build_aur("libretro-stella", call=fake, base=tmp_path)

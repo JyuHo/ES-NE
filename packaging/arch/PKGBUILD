@@ -23,7 +23,8 @@ optdepends=('gamescope: session de connexion dédiée (es-ne-session)'
             'libretro-melonds: Nintendo DS' 'libretro-desmume: Nintendo DS (autre core)'
             'libretro-ppsspp: PSP' 'libretro-mame: arcade (MAME)'
             'retroarch-assets-ozone: icônes du menu RetroArch' 'libretro-overlays: surimpressions'
-            'python-pillow: détection plus rapide des bezels')
+            'python-pillow: détection plus rapide des bezels'
+            'paru: installation des cores AUR depuis ES (ou yay)')
 provides=(es-ne)
 conflicts=(es-ne)
 # Le thème Carbon (RetroPie) n'a pas de licence explicite: il est téléchargé à la construction, jamais copié dans ce dépôt.
