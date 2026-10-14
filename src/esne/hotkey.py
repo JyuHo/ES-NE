@@ -82,6 +82,7 @@ class Watcher(threading.Thread):
         self.rescan = rescan
         self._halt = threading.Event()
         self.triggered = False
+        self._failed: set[str] = set()
 
     def stop(self) -> None:
         self._halt.set()
@@ -94,7 +95,9 @@ class Watcher(threading.Thread):
                 opened[path] = (os.open(path, os.O_RDONLY | os.O_NONBLOCK), set())
                 log.info("raccourci manette: surveille %s (%s)", path, _device_name(path))
             except OSError as exc:
-                log.debug("raccourci manette: %s illisible (%s)", path, exc)
+                if path not in self._failed:
+                    self._failed.add(path)
+                    log.warning("raccourci manette: %s (%s) illisible: %s", path, _device_name(path), exc)
 
     def run(self) -> None:
         opened: dict[str, tuple[int, set[int]]] = {}
