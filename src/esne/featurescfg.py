@@ -85,6 +85,13 @@ RPCS3_FEATURES = (
 )
 
 
+XEMU_FEATURES = (
+    '<feature name="AUTOCONFIGURE CONTROLLERS" value="xemu_autoconfig" '
+    'description="Assign the pads ES sees to the Xbox controller ports. Turn off to keep your own mapping.">'
+    '<choice name="ON" value="1" /><choice name="OFF" value="0" /></feature>'
+)
+
+
 def render() -> str:
     return (
         '<?xml version="1.0"?>\n'
@@ -95,6 +102,7 @@ def render() -> str:
         f'  <emulator name="pcsx2" features="">{PCSX2_FEATURES}</emulator>\n'
         f'  <emulator name="eden" features="">{EDEN_FEATURES}</emulator>\n'
         f'  <emulator name="rpcs3" features="">{RPCS3_FEATURES}</emulator>\n'
+        f'  <emulator name="xemu" features="">{XEMU_FEATURES}</emulator>\n'
         "</features>\n"
     )
 
