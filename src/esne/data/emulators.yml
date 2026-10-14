@@ -21,7 +21,7 @@ cemu:
   args: [-f, -g, "{rom}"]
   package: cemu
 xemu:
-  binary: [xemu, "flatpak run app.xemu.xemu"]
+  binary: [xemu, "~/.local/bin/[Xx]emu*.AppImage", "~/Applications/[Xx]emu*.AppImage", "flatpak run app.xemu.xemu"]
   args: [-full-screen, -dvd_path, "{rom}"]
   package: xemu
 eden:

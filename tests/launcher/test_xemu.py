@@ -103,3 +103,15 @@ def test_generate_uses_xemu_command_line(home, tmp_path):
     rom.write_bytes(b"x")
     command = xemu.Xemu().generate(context(rom))
     assert command.argv == ["/usr/bin/xemu", "-full-screen", "-dvd_path", str(rom)]
+
+
+def test_appimage_is_found(tmp_path, monkeypatch, esne_env):
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setattr(standalone.shutil, "which", lambda n: None)
+    image = tmp_path / ".local" / "bin" / "xemu-v0.8.0-x86_64.AppImage"
+    image.parent.mkdir(parents=True)
+    image.write_bytes(b"x")
+    image.chmod(0o755)
+    rom = tmp_path / "Halo.iso"
+    rom.write_bytes(b"x")
+    assert xemu.Xemu().generate(context(rom)).argv[0] == str(image)
