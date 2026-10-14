@@ -116,7 +116,12 @@ LAUNCHER_PORTMASTER = """#!/bin/sh
 # Lanceur ES-NE d'un jeu du catalogue PortMaster (le script PortMaster d'origine n'est pas utilisé).
 cd "$(dirname "$0")/{dir}" || exit 1
 ARCH=$(uname -m)
-LD_LIBRARY_PATH="$PWD/libs.$ARCH${{LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}}" exec "./{binary}.$ARCH"
+export LD_LIBRARY_PATH="$PWD/libs.$ARCH${{LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}}"
+# manette -> clavier avec la correspondance .gptk du jeu (si fournie), sans quoi le jeu se lance tel quel
+if [ -f "{binary}.gptk" ] && command -v esne-padkeys >/dev/null 2>&1; then
+    exec esne-padkeys "{binary}.gptk" -- "./{binary}.$ARCH"
+fi
+exec "./{binary}.$ARCH"
 """
 
 

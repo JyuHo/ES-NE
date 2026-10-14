@@ -18,6 +18,7 @@ dev = ["pytest"]
 es-launcher = "esne.cli:main"
 esctl = "esne.esctl.cli:main"
 es-genconfig = "esne.systemscfg:main"
+esne-padkeys = "esne.padkeys:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -69,6 +69,8 @@ package() {
   install -Dm644 packaging/arch/es-ne-app.desktop "$pkgdir/usr/share/applications/es-ne.desktop"
   install -Dm644 third_party/emulationstation/resources/window_icon_256.png "$pkgdir/usr/share/icons/hicolor/256x256/apps/es-ne.png"
   install -Dm644 packaging/arch/50-es-ne.rules "$pkgdir/usr/share/polkit-1/rules.d/50-es-ne.rules"
+  install -Dm644 packaging/arch/60-es-ne-uinput.rules "$pkgdir/usr/lib/udev/rules.d/60-es-ne-uinput.rules"
+  install -Dm644 packaging/arch/es-ne-modules.conf "$pkgdir/usr/lib/modules-load.d/es-ne.conf"
 
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 third_party/emulationstation/LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE-emulationstation.md"

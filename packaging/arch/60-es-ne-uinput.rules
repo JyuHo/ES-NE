@@ -1,0 +1,2 @@
+# ES-NE: esne-padkeys crée un clavier virtuel via /dev/uinput; l'utilisateur de la session active y a accès
+KERNEL=="uinput", SUBSYSTEM=="misc", TAG+="uaccess", OPTIONS+="static_node=uinput"

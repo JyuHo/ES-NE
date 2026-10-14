@@ -2,6 +2,7 @@ post_install() {
   echo ">> ES-NE: lance « es-genconfig » en tant qu'utilisateur pour créer ~/.config/esne/es_systems.cfg et les dossiers de roms."
   echo ">> Le thème Carbon est livré dans /usr/share/esne/themes; d'autres thèmes vont dans ~/esne/themes."
   echo ">> Jeu libre de démonstration pour le système « Ports »: « es-genconfig --install-port digger » (0,5 Mo, télécharge depuis PortMaster)."
+  echo ">> Manette -> clavier (esne-padkeys): module uinput et droits via udev; si ça ne marche pas tout de suite: sudo modprobe uinput && sudo udevadm control --reload && sudo udevadm trigger (puis reconnecte la session)."
   echo ">> Session de connexion: choisis « ES-NE » dans ton gestionnaire de connexion."
 }
 

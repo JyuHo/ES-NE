@@ -125,7 +125,8 @@ def test_portmaster_install_keeps_only_game_dir_and_seeds_launcher(tmp_path, mon
     assert (tmp_path / "ports" / "digger" / "digger.x86_64").stat().st_mode & 0o111
     ports = {"digger": {"file": "Digger.sh", "portmaster": "digger.zip", "dir": "digger", "binary": "digger"}}
     assert systemscfg.seed_ports(tmp_path, ports) == ["Digger.sh"]
-    assert 'exec "./digger.$ARCH"' in (tmp_path / "ports" / "Digger.sh").read_text()
+    launcher = (tmp_path / "ports" / "Digger.sh").read_text()
+    assert 'exec "./digger.$ARCH"' in launcher and 'exec esne-padkeys "digger.gptk" -- "./digger.$ARCH"' in launcher
 
 
 def test_portmaster_rejects_bad_md5_wrong_arch_and_traversal(tmp_path, monkeypatch):
