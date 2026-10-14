@@ -127,3 +127,29 @@ def test_xenia_unset_and_invalid_options_are_not_passed(esne_env, monkeypatch, t
 def test_xenia_audio_options(esne_env, monkeypatch, tmp_path):
     command, rom = _xenia(esne_env, monkeypatch, tmp_path, {"xenia_mute": "true", "xenia_apu": "sdl"})
     assert "--mute=true" in command.argv and "--apu=sdl" in command.argv and command.argv[-1] == str(rom)
+
+
+def test_xenia_console_language_patches_a_single_byte(esne_env, monkeypatch, tmp_path):
+    from esne.generators import xenia
+    xconfig = tmp_path / "Xenia" / "xconfig.settings"
+    xconfig.parent.mkdir()
+    data = bytearray(6912)
+    data[100] = 7
+    data[xenia.LANGUAGE_OFFSET] = 4
+    xconfig.write_bytes(bytes(data))
+    monkeypatch.setenv("XDG_DATA_HOME", str(tmp_path))
+    command, rom = _xenia(esne_env, monkeypatch, tmp_path, {"xenia_language": "1"})
+    new = xconfig.read_bytes()
+    assert new[xenia.LANGUAGE_OFFSET] == 1 and new[100] == 7 and len(new) == 6912
+    assert command.argv[-1] == str(rom)
+
+
+def test_xenia_console_language_rejects_unexpected_files(tmp_path):
+    from esne.generators import xenia
+    odd = tmp_path / "xconfig.settings"
+    odd.write_bytes(bytes(6912))          # octet de langue à 0: pas un fichier reconnu
+    assert not xenia.set_console_language(odd, "1") and odd.read_bytes() == bytes(6912)
+    odd.write_bytes(bytes(10))
+    assert not xenia.set_console_language(odd, "1")
+    assert not xenia.set_console_language(tmp_path / "absent", "1")
+    assert not xenia.set_console_language(odd, "99")
