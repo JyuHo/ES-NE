@@ -41,6 +41,8 @@ AUR = {
 
 POLKIT_ACTION = "org.esne.install-core"
 HELPER = "/usr/lib/esne/install-core"
+AUR_HELPER = "/usr/lib/esne/install-aur-core"
+AUR_GIT = "https://aur.archlinux.org/{package}.git"
 
 
 def hint_file() -> Path:

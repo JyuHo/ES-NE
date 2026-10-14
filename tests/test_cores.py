@@ -23,10 +23,37 @@ def test_install_official_calls_helper():
     assert calls == [["pkexec", cores.HELPER, "mgba"]]
 
 
-def test_install_refuses_aur_and_unknown():
+def test_install_refuses_unknown():
     never = lambda argv: (_ for _ in ()).throw(AssertionError("ne doit rien lancer"))
-    assert install_core.run(["fceumm"], call=never) == install_core.EXIT_AUR
     assert install_core.run(["x; rm -rf /"], call=never) == install_core.EXIT_UNKNOWN
+
+
+def test_install_aur_builds_then_installs(tmp_path):
+    calls = []
+    pkg = tmp_path / "libretro-fceumm-1-1-x86_64.pkg.tar.zst"
+    assert install_core.run(["fceumm"], call=lambda argv: calls.append(argv) or 0, build=lambda p: pkg if p == "libretro-fceumm" else None) == 0
+    assert calls == [["pkexec", cores.AUR_HELPER, str(pkg)]]
+
+
+def test_install_aur_build_failure_skips_install():
+    never = lambda argv: (_ for _ in ()).throw(AssertionError("ne doit rien installer"))
+    assert install_core.run(["fceumm"], call=never, build=lambda p: None) == install_core.EXIT_AUR
+
+
+def test_build_aur_clone_make_and_pick_package(tmp_path):
+    calls = []
+
+    def fake(argv, cwd=None):
+        calls.append(argv[0])
+        if argv[0] == "makepkg":
+            (tmp_path / "libretro-stella" / "libretro-stella-1-1-x86_64.pkg.tar.zst").write_text("")
+            (tmp_path / "libretro-stella" / "libretro-stella-debug-1-1-x86_64.pkg.tar.zst").write_text("")
+        elif argv[0] == "git":
+            (tmp_path / "libretro-stella").mkdir()
+        return 0
+
+    built = install_core.build_aur("libretro-stella", call=fake, base=tmp_path)
+    assert built.name == "libretro-stella-1-1-x86_64.pkg.tar.zst" and calls == ["git", "makepkg"]
 
 
 def test_every_catalog_core_is_known():

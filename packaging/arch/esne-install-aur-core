@@ -1,0 +1,37 @@
+#!/usr/bin/python -I
+# SPDX-License-Identifier: GPL-3.0-or-later
+"""Aide exécutée en root par pkexec (org.esne.install-aur-core, mot de passe exigé): installe un paquet d'un core de
+l'AUR que l'utilisateur vient de construire avec makepkg dans ~/.cache/esne/aur/<paquet>/.
+
+Le fichier doit être dans ce dossier de l'utilisateur appelant (PKEXEC_UID), porter le nom d'un paquet de la liste
+d'ES-NE et ne pas être un lien symbolique.
+"""
+import os
+import pwd
+import re
+import subprocess
+import sys
+
+from esne import cores
+
+
+def main(argv):
+    if len(argv) != 2 or not os.environ.get("PKEXEC_UID", "").isdigit():
+        print("usage: install-aur-core <fichier.pkg.tar.zst> (via pkexec)", file=sys.stderr)
+        return 2
+    home = pwd.getpwuid(int(os.environ["PKEXEC_UID"])).pw_dir
+    path = argv[1]
+    parent, name = os.path.split(path)
+    package = os.path.basename(parent)
+    match = re.fullmatch(r"(libretro-[a-z0-9-]+?)-[^/]*\.pkg\.tar\.(zst|xz)", name)
+    expected = os.path.join(home, ".cache", "esne", "aur", package)
+    if (package not in cores.AUR.values() or not match or match.group(1) != package
+            or os.path.realpath(parent) != os.path.realpath(expected)
+            or os.path.islink(path) or not os.path.isfile(path)):
+        print("fichier refusé", file=sys.stderr)
+        return 2
+    return subprocess.call(["/usr/bin/pacman", "-U", "--noconfirm", path])
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))
