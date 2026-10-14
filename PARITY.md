@@ -38,7 +38,7 @@ Les menus liés à `esctl` apparaissent seulement si `esctl has <commande>` réu
 | Thèmes (téléchargement) | — | inchangé | ✅ code d'ES |
 | Raccourcis en jeu | `batocera-hotkeys` | `hotkey.py` + options RetroArch (Select+Start quitte, Select+R3 menu) | ✅ validé |
 | Session de connexion ES-NE (Plasma Login Manager, gamescope) | — | `es-ne-session` (gamescope sans `-e`, journal `~/.local/state/esne/session.log`) | ✅ validé (BC-250) |
-| Disposition du clavier (menu) | `batocera-keyboard` | `esctl keyboard` (`localectl`, règle polkit), appliquée à la prochaine session | ✅ menu et listes validés; changement à confirmer |
+| Disposition du clavier (menu) | `batocera-keyboard` | `esctl keyboard` (`localectl`, règle polkit), appliquée à la prochaine session | ✅ validé (listes et changement, règle polkit) |
 | Manette → clavier | `evmapy` | `esne-padkeys` (ports PortMaster) | ✅ validé |
 | Installation d'un core manquant | — | dialogue d'ES, `esctl install-core` (pacman, paru/yay) | ✅ validé |
 | Arrêt / redémarrage système | `batocera-shutdown` | `systemctl poweroff/reboot` (fork) | ✅ validé en session ES-NE (sans mot de passe) |
