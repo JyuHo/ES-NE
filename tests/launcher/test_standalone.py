@@ -34,7 +34,7 @@ def test_steam_uses_file_content(esne_env, fake_which, tmp_path):
     rom = tmp_path / "Half-Life.steam"
     rom.write_text("70\n")
     command = standalone.Standalone().generate(ctx("steam", rom, "steam"))
-    assert command.argv == ["/usr/bin/steam", "steam://rungameid/70"]
+    assert command.argv == ["esne-steam-run", "70", "--", "/usr/bin/steam", "-silent", "steam://rungameid/70"]
 
 
 def test_wine_runs_from_rom_dir(esne_env, fake_which, tmp_path):

@@ -9,6 +9,7 @@ Tout est décrit dans ``emulators.yml``::
       package: dolphin-emu          # indice affiché si le programme est introuvable
       env: {KEY: value}             # facultatif
       cwd: rom_dir                  # facultatif: lancer depuis le dossier de la rom
+      prefix: [wrapper, "{rom}", --] # facultatif: programme intercalé avant la commande (ex. esne-steam-run)
 
 Variables d'``args`` et d'``env``: ``{rom}``, ``{rom_dir}``, ``{rom_name}``, ``{rom_text}`` (contenu du
 fichier, ex. l'identifiant d'un jeu Steam), ``{system}``.
@@ -94,7 +95,8 @@ class Standalone(Generator):
             raise LaunchError(EMULATOR_MISSING, f"{ctx.emulator} est introuvable{hint}")
 
         variables = _variables(ctx)
-        argv = [*binary, *(_expand(arg, variables) for arg in spec.get("args") or [])]
+        prefix = [_expand(arg, variables) for arg in spec.get("prefix") or []]
+        argv = [*prefix, *binary, *(_expand(arg, variables) for arg in spec.get("args") or [])]
         env = {str(k): _expand(v, variables) for k, v in (spec.get("env") or {}).items()}
         cwd = variables["rom_dir"] if spec.get("cwd") == "rom_dir" else None
         return Command(argv=argv, env=env, cwd=cwd)

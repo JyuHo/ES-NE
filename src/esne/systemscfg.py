@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 from xml.sax.saxutils import escape, quoteattr
 
-from . import catalog, featurescfg, paths, portmaster
+from . import catalog, featurescfg, paths, portmaster, steam
 from .generators import standalone
 from .generators.retroarch import find_binary, find_core
 
@@ -220,6 +220,8 @@ def main(argv: list[str] | None = None) -> int:
     if not args.no_mkdir:
         for name in seed_ports(roms):
             print(f"port ajouté: {name}")
+        for name in steam.seed(roms):
+            print(f"jeu Steam ajouté: {name}")
 
     if seed_keys(target.parent):
         print(f"modèle créé: {target.parent / 'keys.conf'} (clés de scraping, mode 600)")

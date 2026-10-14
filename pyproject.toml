@@ -19,6 +19,7 @@ es-launcher = "esne.cli:main"
 esctl = "esne.esctl.cli:main"
 es-genconfig = "esne.systemscfg:main"
 esne-padkeys = "esne.padkeys:main"
+esne-steam-run = "esne.steamrun:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

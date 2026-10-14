@@ -34,7 +34,9 @@ ryujinx:
   package: ryujinx
 steam:
   binary: [steam, "flatpak run com.valvesoftware.Steam"]
-  args: ["steam://rungameid/{rom_text}"]   # le fichier .steam contient l'identifiant (appid) du jeu
+  # le fichier .steam contient l'identifiant (appid) du jeu; esne-steam-run attend la fin de la partie (Steam rend la main tout de suite)
+  prefix: [esne-steam-run, "{rom_text}", --]
+  args: [-silent, "steam://rungameid/{rom_text}"]
   package: steam
 wine:
   binary: [wine]
