@@ -44,10 +44,12 @@ def test_has(fake):
 
 
 def test_commands_lists_only_usable(fake, capsys, monkeypatch):
-    from esne.esctl.commands import padsinfo, timezone
+    from esne.esctl.commands import install_core, keyboard, padsinfo, timezone
     # ces commandes dépendent de la machine (sysfs, timedatectl): on les neutralise pour ce test
     monkeypatch.setattr(padsinfo, "available", lambda: False)
     monkeypatch.setattr(timezone, "available", lambda: False)
+    monkeypatch.setattr(keyboard, "available", lambda: False)
+    monkeypatch.setattr(install_core, "available", lambda: False)
     assert main(["commands"]) == 0
     assert capsys.readouterr().out.splitlines() == ["info", "preupdate-gamelists-hook", "swissknife", "systems", "thebezelproject", "version"]
     fake.tools.update({"pactl", "xrandr"})

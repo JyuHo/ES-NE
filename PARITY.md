@@ -37,7 +37,9 @@ Les menus liés à `esctl` apparaissent seulement si `esctl has <commande>` réu
 | Manuel PDF | `pdftoppm`, `pdfinfo` | cherchés dans le `PATH` | ✅ |
 | Thèmes (téléchargement) | — | inchangé | ✅ code d'ES |
 | Raccourcis en jeu | `batocera-hotkeys` | `hotkey.py` + options RetroArch (Select+Start quitte, Select+R3 menu) | ✅ validé |
-| Clavier → manette | `batocera-keyboard`, `evmapy` | — | ❌ |
+| Disposition du clavier (menu) | `batocera-keyboard` | `esctl keyboard` (`localectl`, règle polkit), appliquée à la prochaine session | ✅ code, non testé |
+| Manette → clavier | `evmapy` | `esne-padkeys` (ports PortMaster) | ✅ validé |
+| Installation d'un core manquant | — | dialogue d'ES, `esctl install-core` (pacman, paru/yay) | ✅ validé |
 | Arrêt / redémarrage système | `batocera-shutdown` | `systemctl poweroff/reboot` (fork) | ✅ code (à essayer sur machine) |
 | Redémarrage d'ES | drapeaux `/tmp` | `execv` + invite après changement de langue/thème | ✅ validé |
 | Options par système/jeu | `features.yml` | `es_features.cfg` généré (ratio, lissage, rewind, autosave, pixel perfect, shaders, pilote vidéo) | ✅ validé |
