@@ -86,6 +86,7 @@ Hashes de la branche `esne` du fork.
 | `4e803a0` | scrapers | repli sur le premier scraper disponible si celui qui est configuré n'a pas de clé (évitait un SIGSEGV au scrape) |
 | `b567ac1`, `0d9de3f` | lancement | code de sortie 205 (core manquant): lit `/tmp/esne-missing-core` (core, paquet, source), propose l'installation (`GuiLoading` puis `ApiSystem::installLibretroCore` → `esctl install-core`); variante AUR |
 | `88507e6` | menus | disposition du clavier via `esctl keyboard get/list/set` (menu affiché si `esctl has keyboard`) |
+| `9902d9a` | menus | Kodi retiré: `isScriptingSupported(KODI)` renvoie faux, entrées « KODI » masquées même si `kodi` est installé |
 | `b271b59`, `f4b04f2` | i18n | traductions françaises complètes (`.po` + `.pot`, 1282 chaînes) |
 
 ## Ce qui reste de Batocera dans le frontend (état actuel)
