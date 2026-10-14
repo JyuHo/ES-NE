@@ -176,3 +176,24 @@ def test_generator_adds_close_unless_kept_open(tmp_path, monkeypatch, esne_env):
         return steam_generator.Steam().generate(Context(system="steam", rom=str(rom), config=Cfg(**settings), emulator="steam")).argv
     assert argv()[:3] == ["esne-steam-run", "--close", "620"]
     assert argv(steam_keep_open="1")[:2] == ["esne-steam-run", "620"]
+
+
+def test_run_survives_a_gap_between_reapers(tmp_path):
+    """Steam enchaîne plusieurs ``reaper``: un trou de quelques secondes ne signifie pas que le jeu est fini."""
+    proc = fake_proc(tmp_path, {10: ["reaper", "SteamLaunch", "AppId=620"]})
+    ticks = []
+
+    def sleep(_):
+        ticks.append(1)
+        n = len(ticks)
+        if n == 1:  # premier reaper disparaît
+            (proc / "10" / "cmdline").unlink()
+            (proc / "10").rmdir()
+        if n == 6:  # le deuxième apparaît
+            fake_proc(tmp_path, {11: ["reaper", "SteamLaunch", "AppId=620"]})
+        if n == 9:  # fin de partie
+            (proc / "11" / "cmdline").unlink()
+            (proc / "11").rmdir()
+
+    assert steamrun.run("620", ["steam"], proc, popen=lambda *a, **k: None, sleep=sleep) == 0
+    assert len(ticks) > 9 + steamrun.GRACE_POLLS - 1

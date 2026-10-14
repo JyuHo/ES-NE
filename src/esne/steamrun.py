@@ -3,7 +3,7 @@
 
 Steam rend la main dès qu'il a transmis le jeu à son client: ES reprendrait donc tout de suite la main pendant la partie.
 Cet utilitaire lance la commande (détachée de ce processus), attend que le jeu démarre (processus ``reaper`` de Steam portant
-``AppId=<appid>``), puis attend sa fin. Un SIGTERM (raccourci de sortie d'ES-NE) ferme le jeu.
+``AppId=<appid>``), puis attend sa fin (absence du processus pendant une vingtaine de secondes: Steam en enchaîne plusieurs). Un SIGTERM (raccourci de sortie d'ES-NE) ferme le jeu.
 
 Avec ``--close``, le client Steam est fermé (``steam -shutdown``) à la fin de la partie s'il n'était pas déjà ouvert quand
 le jeu a été lancé: Steam ne reste pas en arrière-plan et ne peut pas repasser au premier plan.
@@ -19,6 +19,7 @@ from pathlib import Path
 
 START_TIMEOUT = 240.0  # Steam peut devoir démarrer et mettre le jeu à jour
 POLL = 1.0
+GRACE_POLLS = 20  # attentes sans processus de jeu avant de le croire terminé (Steam enchaîne plusieurs ``reaper``)
 CLOSE_TIMEOUT = 30.0  # attente de la fermeture du client Steam
 
 
@@ -81,10 +82,15 @@ def run(appid: str, command: list[str], proc: Path = Path("/proc"), popen=subpro
             print(f"esne-steam-run: le jeu {appid} ne s'est pas lancé", file=sys.stderr)
             return 1
         sleep(POLL)
-    while game_pids(appid, proc):
+    missing = 0
+    while missing <= GRACE_POLLS:
         sleep(POLL)
-        if stopping and not game_pids(appid, proc):
+        if game_pids(appid, proc):
+            missing = 0
+        elif stopping:
             break
+        else:
+            missing += 1
     if close and not already_open:
         popen(shutdown_command(command), start_new_session=True)
         deadline = clock() + CLOSE_TIMEOUT
