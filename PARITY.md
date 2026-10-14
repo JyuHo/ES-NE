@@ -24,7 +24,7 @@ Les menus liés à `esctl` apparaissent seulement si `esctl has <commande>` réu
 |---|---|---|---|
 | Résolution | `batocera-resolution` | `esctl resolution` (xrandr, wlr-randr, kscreen-doctor) | ✅ code + tests; format kscreen-doctor -j capturé sur KDE réel; ❌ GNOME Wayland; setMode non essayé sur machine |
 | Sortie audio | `batocera-audio` | `esctl audio` (pactl) | ✅ code + tests; non essayé sur machine |
-| Fuseau horaire | `batocera-timezone` | `esctl timezone` (`timedatectl`) | ✅ code + tests; `set` demande peut-être une règle polkit |
+| Fuseau horaire | `batocera-timezone` | `esctl timezone` (`timedatectl`) | ✅ validé en session ES-NE (règle polkit) |
 | BIOS / systèmes | `batocera-systems` | `esctl systems` | ✅ |
 | Infos manettes | `batocera-padsinfo` | `esctl padsinfo` (evdev + batterie sysfs) | ✅ sortie réelle vérifiée (PS4) |
 | The Bezel Project | `batocera-es-thebezelproject` | `esctl thebezelproject` (téléchargement GitHub, images seules) | ✅ installation, suppression et aperçu validés dans ES |
@@ -37,10 +37,11 @@ Les menus liés à `esctl` apparaissent seulement si `esctl has <commande>` réu
 | Manuel PDF | `pdftoppm`, `pdfinfo` | cherchés dans le `PATH` | ✅ |
 | Thèmes (téléchargement) | — | inchangé | ✅ code d'ES |
 | Raccourcis en jeu | `batocera-hotkeys` | `hotkey.py` + options RetroArch (Select+Start quitte, Select+R3 menu) | ✅ validé |
+| Session de connexion ES-NE (Plasma Login Manager, gamescope) | — | `es-ne-session` (gamescope sans `-e`, journal `~/.local/state/esne/session.log`) | ✅ validé (BC-250) |
 | Disposition du clavier (menu) | `batocera-keyboard` | `esctl keyboard` (`localectl`, règle polkit), appliquée à la prochaine session | ✅ code, non testé |
 | Manette → clavier | `evmapy` | `esne-padkeys` (ports PortMaster) | ✅ validé |
 | Installation d'un core manquant | — | dialogue d'ES, `esctl install-core` (pacman, paru/yay) | ✅ validé |
-| Arrêt / redémarrage système | `batocera-shutdown` | `systemctl poweroff/reboot` (fork) | ✅ code (à essayer sur machine) |
+| Arrêt / redémarrage système | `batocera-shutdown` | `systemctl poweroff/reboot` (fork) | ✅ validé en session ES-NE (sans mot de passe) |
 | Redémarrage d'ES | drapeaux `/tmp` | `execv` + invite après changement de langue/thème | ✅ validé |
 | Options par système/jeu | `features.yml` | `es_features.cfg` généré (ratio, lissage, rewind, autosave, pixel perfect, shaders, pilote vidéo) | ✅ validé |
 | Ports (jeux natifs), manette → clavier | scripts `.sh` + `gptokeyb` (PortMaster) | `es-genconfig --install-port` (catalogue PortMaster, sans PortMaster) + `esne-padkeys` (evdev → uinput, fichiers `.gptk`) | ✅ Digger validé: lancement et manette |
