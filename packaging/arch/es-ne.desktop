@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=ES-NE
 Comment=EmulationStation (ES-NE)
+Icon=es-ne
 Exec=es-ne-session
 TryExec=emulationstation
 Type=Application

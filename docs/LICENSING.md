@@ -23,3 +23,10 @@ Dans ce dépôt (Python, scripts, docs):
     # SPDX-License-Identifier: GPL-3.0-or-later
 
 Dans le fork d'ES (C++): `// SPDX-License-Identifier: MIT`.
+
+## Logo et visuels
+Le logo d'ES-NE (manette avec « ES », mot-symbole « ES-NE », écran de démarrage, icônes) est une création originale, dessinée pour
+le projet à partir de formes géométriques simples (voir `assets/src/gen.py`). Il ne reprend aucun logo existant. Il suit la licence
+du projet (GPL-3.0-or-later). Les marques « EmulationStation » et « Batocera » appartiennent à leurs auteurs: leurs visuels
+(logo et écran de démarrage Batocera, icône « ES » d'EmulationStation) ont été retirés des ressources du fork et remplacés par
+ceux d'ES-NE.

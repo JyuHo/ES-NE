@@ -74,7 +74,11 @@ package() {
   install -Dm755 packaging/arch/es-ne-session "$pkgdir/usr/bin/es-ne-session"
   install -Dm644 packaging/arch/es-ne.desktop "$pkgdir/usr/share/wayland-sessions/es-ne.desktop"
   install -Dm644 packaging/arch/es-ne-app.desktop "$pkgdir/usr/share/applications/es-ne.desktop"
-  install -Dm644 third_party/emulationstation/resources/window_icon_256.png "$pkgdir/usr/share/icons/hicolor/256x256/apps/es-ne.png"
+  local size
+  for size in 48 64 128 256 512; do
+    install -Dm644 "assets/es-ne-icon-$size.png" "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/es-ne.png"
+  done
+  install -Dm644 assets/es-ne-icon.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/es-ne.svg"
   install -Dm755 packaging/arch/esne-install-core "$pkgdir/usr/lib/esne/install-core"
   install -Dm755 packaging/arch/esne-install-aur-core "$pkgdir/usr/lib/esne/install-aur-core"
   install -Dm644 packaging/arch/org.esne.install-core.policy "$pkgdir/usr/share/polkit-1/actions/org.esne.install-core.policy"

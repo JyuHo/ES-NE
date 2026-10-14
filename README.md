@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/es-ne-banner.png" alt="ES-NE" width="720">
+</p>
+
 # ES-NE
 
 Version standalone de [batocera-emulationstation](https://github.com/batocera-linux/batocera-emulationstation)
