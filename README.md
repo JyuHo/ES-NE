@@ -68,7 +68,9 @@ Un core par système, en dépendance **optionnelle** du paquet (`pacman -Qi es-n
 - **Écran** (`-monitor`): ES-NE transmet l'écran choisi dans ES à RetroArch (`video_monitor_index`). Non validé (un seul écran sur la machine de test).
 
 ## Clés de scraping
-Rien n'est compilé ni empaqueté. `es-genconfig` crée `~/.config/esne/keys.conf` (mode 600) avec un modèle commenté: décommente et remplis `SCREENSCRAPER_DEV_LOGIN`, `GAMESDB_APIKEY`, `CHEEVOS_DEV_LOGIN`..., puis redémarre ES. Un scraper dont la clé manque n'apparaît pas dans le menu. Ce fichier ne doit jamais être commité. Tes identifiants personnels (compte ScreenScraper, RetroAchievements) se saisissent dans les menus d'ES.
+Par défaut, rien n'est compilé ni empaqueté. `es-genconfig` crée `~/.config/esne/keys.conf` (mode 600) avec un modèle commenté: décommente et remplis `SCREENSCRAPER_DEV_LOGIN`, `GAMESDB_APIKEY`, `CHEEVOS_DEV_LOGIN`..., puis redémarre ES. Un scraper dont la clé manque n'apparaît pas dans le menu. Ce fichier ne doit jamais être commité. Tes identifiants personnels (compte ScreenScraper, RetroAchievements) se saisissent dans les menus d'ES.
+
+**Paquet de release avec clés intégrées** (mainteneur): `tools/build-release.sh /chemin/vers/keys.conf` construit le paquet Arch en compilant les clés dans `/usr/bin/emulationstation` (option CMake `ESNE_KEYS_FILE`, générateur `tools/esne_embed_keys.py` dans le fork). Les valeurs sont masquées par un XOR (un `strings` ne les affiche pas), mais **elles restent retrouvables par analyse du binaire**: n'intègre que des clés que tu acceptes de rendre publiques (identifiants développeur ScreenScraper, clé TheGamesDB). La clé API RetroAchievements est liée à un compte personnel: ne l'intègre pas. Le `keys.conf` de l'utilisateur reste prioritaire sur les clés intégrées. Le paquet est produit dans `dist/release/` (ignoré par git) et se joint à la release GitHub; il s'installe avec `sudo pacman -U`. Non testé de bout en bout (compilation du paquet complet à faire sur CachyOS).
 
 ## Thème et jeu libre
 Le paquet ajoute **ES-NE** au menu des applications (catégorie Jeux, icône ES), en plus de l'entrée de session de connexion.
