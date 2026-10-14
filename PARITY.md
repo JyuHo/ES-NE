@@ -41,6 +41,7 @@ Les menus liés à `esctl` apparaissent seulement si `esctl has <commande>` réu
 | Arrêt / redémarrage système | `batocera-shutdown` | `systemctl poweroff/reboot` (fork) | ✅ code (à essayer sur machine) |
 | Redémarrage d'ES | drapeaux `/tmp` | `execv` + invite après changement de langue/thème | ✅ validé |
 | Options par système/jeu | `features.yml` | `es_features.cfg` généré (ratio, lissage, rewind, autosave, pixel perfect, shaders, pilote vidéo) | ✅ validé |
+| Ports (jeux natifs), manette → clavier | scripts `.sh` + `gptokeyb` (PortMaster) | `es-genconfig --install-port` (catalogue PortMaster, sans PortMaster) + `esne-padkeys` (evdev → uinput, fichiers `.gptk`) | ✅ Digger validé: lancement et manette |
 | Wi-Fi, Bluetooth | `batocera-wifi`, `batocera-bluetooth` | NetworkManager, BlueZ | ⛔ |
 | Mises à jour, installation, formatage, overclock, sauvegarde | `batocera-upgrade`, `-install`, `-format`, `-overclock`, `-sync` | gestionnaire de paquets | ⛔ |
 | Store, services, mode avion, backglass, NFC | `batocera-store`, `-services`, `-planemode`, `-backglass`, `-nfc` | — | ⛔ |
