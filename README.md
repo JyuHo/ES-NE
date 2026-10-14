@@ -14,11 +14,11 @@ pour Arch Linux / CachyOS, avec les options de RetroBat, **sans aucune dépendan
 ## Statut
 | Composant | État |
 |---|---|
-| Frontend ES (fork `emulationstation-esne`, branche `esne`) | ✅ compile et tourne sur CachyOS (KDE Wayland). Patchs: option `-DESNE=ON`, chemins (config XDG, données dans `~/esne`), `LinuxApiSystem`, arrêt/redémarrage système, redémarrage d'ES, menu QUIT simplifié, Zaparoo désactivé par défaut |
-| `es-launcher` | ✅ lancement validé sur une vraie machine (SNES, N64, GameCube, Wii): RetroArch (manette `sdl2`, raccourcis, ratio, shaders, rewind...) et émulateurs autonomes; 172 tests |
+| Frontend ES (fork `emulationstation-esne`, branche `esne`) | ✅ compile et tourne sur CachyOS (KDE Wayland). Interface en français complète. Patchs: option `-DESNE=ON`, chemins (config XDG, données dans `~/esne`), `LinuxApiSystem`, arrêt/redémarrage système, redémarrage d'ES, menu QUIT simplifié, Zaparoo désactivé par défaut |
+| `es-launcher` | ✅ lancement validé sur une vraie machine (SNES, N64, GameCube, Wii): RetroArch (manette `sdl2`, raccourcis, ratio, shaders, rewind...) et émulateurs autonomes; 258 tests |
 | `es-genconfig` | ✅ génère `es_systems.cfg`, `es_features.cfg` et les jeux de shaders depuis le catalogue (25 systèmes) |
 | `esctl` | ✅ `has`, `version`, `resolution`, `audio`, `config`, `info`, `timezone`, `keyboard`, `install-core`, `padsinfo`, `thebezelproject`, `systems` (état des BIOS), `swissknife --emukill`, `preupdate-gamelists-hook`. Contrat dans `docs/ESCTL_CONTRACT.md` |
-| Paquet Arch (`packaging/arch/PKGBUILD`), session `ES-NE`, règle polkit | 🚧 le paquet se construit (`makepkg -fs`); installation et session de connexion à valider. Compiler dans une copie hors du dépôt: `makepkg` réécrit `pkgver` |
+| Paquet Arch (`packaging/arch/PKGBUILD`), session `ES-NE`, règles polkit | ✅ paquet installé et session de connexion validée (Plasma Login Manager, gamescope, BC-250): `es-ne-session` lance `gamescope -f -- emulationstation` (sans `-e`, qui donnait un écran noir) et journalise dans `~/.local/state/esne/session.log`. Compiler dans une copie hors du dépôt: `makepkg` réécrit `pkgver` |
 
 Détails: `docs/ROADMAP.md` (jalons), `PARITY.md` (parité avec RetroBat), `docs/UPSTREAM.md` (patchs d'ES).
 
@@ -84,7 +84,7 @@ shaders) et crée les jeux de shaders dans `~/esne/shaders/configs/` pour les pr
 24 systèmes: consoles 8/16 bits à la GameCube, PSP, PS2/PS3, Wii/Wii U, Switch, Xbox, plus `steam` et `windows`.
 - **libretro** (NES à PS1, N64, PSP, arcade...): cores choisis dans `systems.yml`.
 - **Autonomes** (décrits dans `emulators.yml`, lancés par `generators/standalone.py`): Dolphin (GameCube, Wii), PCSX2 (PS2),
-  RPCS3 (PS3), Cemu (Wii U), Eden ou Ryujinx (Switch), xemu (Xbox), Steam (fichiers `.steam` contenant l'appid, créés par `es-genconfig` pour chaque jeu installé: bibliothèques de Steam et `libraryfolders.vdf` lus, Proton et outils écartés; `esne-steam-run` attend la fin de la partie, car Steam rend la main tout de suite, et le raccourci de sortie ferme le jeu; le client Steam ouvert par ES-NE est refermé à la fin de la partie, option KEEP STEAM OPEN pour le garder),
+  RPCS3 (PS3), Cemu (Wii U), Eden ou Ryujinx (Switch), xemu (Xbox), Steam (lancement et manette validés; fichiers `.steam` contenant l'appid, créés par `es-genconfig` pour chaque jeu installé: bibliothèques de Steam et `libraryfolders.vdf` lus, Proton et outils écartés; `esne-steam-run` attend la fin de la partie, car Steam rend la main tout de suite, et le raccourci Select+Start ne ferme pas encore les jeux Steam (en cours); le client Steam ouvert par ES-NE est refermé à la fin de la partie, option KEEP STEAM OPEN pour le garder),
   Wine ou umu-run (`windows`). Ils se lancent en plein écran sans interface; leurs réglages se font encore dans leur propre configuration.
   **PCSX2** (manette et réglages d'ES validés en jeu avec Final Fantasy XII, AppImage; après une mise à jour du paquet, relancer `es-genconfig` pour voir les nouvelles options, ce que fait déjà la session ES-NE): ES-NE réécrit les sections `[Pad1]`/`[Pad2]` de `~/.config/PCSX2/inis/PCSX2.ini` (manettes désignées par numéro SDL, pas de GUID) et applique API graphique, résolution, ratio, vsync et FXAA. Lancer PCSX2 une fois à la main avant (assistant, BIOS dans `~/esne/bios/ps2`).
   **RPCS3** (manettes validées en jeu): ES-NE écrit `input_configs/global/Default.yml` (gestionnaire SDL, une entrée par manette) et applique API graphique, résolution, ratio et vsync à `config.yml`. Lancer RPCS3 une fois à la main avant (firmware, configuration). Un dossier `Nom.ps3` est lancé par son `EBOOT.BIN`.
@@ -112,6 +112,8 @@ esctl has audio           # code 0 si disponible
 esctl resolution listModes
 esctl audio list
 esctl timezone get          # set peut demander une règle polkit
+esctl keyboard list-layouts # dispositions du clavier (localectl); set <disposition> [variante]
+esctl install-core fceumm   # installe un core libretro (pacman, paru/yay pour l'AUR)
 esctl padsinfo              # manettes et batteries, au format lu par ES
 ```
 Sans installation: `PYTHONPATH=src python -m esne.esctl commands`.

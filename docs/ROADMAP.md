@@ -30,18 +30,25 @@ Légende: ✅ fait · 🚧 en cours · ❌ à faire. Un ✅ côté ES = code en 
 ## M3 — manettes (es_input, SDL DB, multi-joueurs) 🚧
 Pad 1 via `sdl2` et raccourcis OK; multi-joueurs et configuration par jeu non faits.
 ## M4 — émulateurs standalone 🚧
-Dolphin validé; PCSX2, RPCS3, Cemu, Eden/Ryujinx, xemu, Steam, Wine/umu décrits dans `emulators.yml` mais non essayés. Réglages internes: Cemu (profils de manette SDL + API graphique) validé en jeu avec 2 manettes; PCSX2 (manettes SDL + résolution) validé en jeu; RPCS3 (manettes SDL + vidéo) validé en jeu avec 2 manettes; Eden (recopie du mappage joueur 1) validé en jeu avec 2 manettes; xemu: validé en jeu (fichiers BIOS reconnus à leur taille dans `bios/xbox`, manettes dans `xemu.toml`, AppImage); les autres émulateurs restent à faire.
+Dolphin validé; Wine/umu décrits dans `emulators.yml` mais non essayés; Steam: lancement et manette validés (`esne-steam-run`, fermeture du client), raccourci Select+Start sans effet sur les jeux Steam (en cours: sans doute la manette virtuelle de Steam Input). Réglages internes: Cemu (profils de manette SDL + API graphique) validé en jeu avec 2 manettes; PCSX2 (manettes SDL + résolution) validé en jeu; RPCS3 (manettes SDL + vidéo) validé en jeu avec 2 manettes; Eden (recopie du mappage joueur 1) validé en jeu avec 2 manettes; xemu: validé en jeu (fichiers BIOS reconnus à leur taille dans `bios/xbox`, manettes dans `xemu.toml`, AppImage); les autres émulateurs restent à faire.
 ## M5 — bezels, shaders, scraper, RetroAchievements, netplay 🚧
 Shaders ✅. Bezels ✅ (un par système, The Bezel Project): installation, désinstallation, aperçu et affichage RetroArch validés en jeu sur SNES et N64; bezels par jeu (téléchargés à la demande, repli sur le système) validés sur SNES, N64, PSX et GBA; reste un écran 16:9. Scraper ScreenScraper ✅ (clés lues dans `keys.conf`, scrape validé). Reste: tatouages, RetroAchievements (clé à tester), netplay.
 ## M6 — PKGBUILD, session (Gamescope, Wayland/X11) 🚧
-Écrits dans `packaging/arch/` (PKGBUILD `es-ne-git`, `es-ne-session`, `es-ne.desktop`, règle polkit `50-es-ne.rules`), pas encore testés: `makepkg` et la session de connexion restent à valider sur CachyOS.
+Dans `packaging/arch/` (PKGBUILD `es-ne-git`, `es-ne-session`, `es-ne.desktop`, règles polkit `50-es-ne.rules` et `org.esne.install-core.policy`, aides root `esne-install-core` / `esne-install-aur-core`). ✅ `makepkg`, installation et session de connexion (Plasma Login Manager, `gamescope -f` sans `-e`, journal `~/.local/state/esne/session.log`) validés sur CachyOS (BC-250). Reste: SDDM/autres gestionnaires, session X11.
 
 ## Chantiers ES hors jalons (voir `docs/AUDIT_ANALYSIS.md` §5)
 - 🚧 patch 6: appels `batocera-*` restants dans `GuiMenu.cpp` (stockage, overscan, LED...): voir « Ce qui reste de Batocera » dans `docs/UPSTREAM.md`
+- ✅ traductions françaises complètes; installation en un clic d'un core manquant (dépôts officiels et AUR, `esctl install-core`)
 - ✅ patch 7: arrêt / redémarrage via `systemctl`, redémarrage d'ES par `execv`
-- ❌ patch 8: `batocera-keyboard` via le `PATH`
+- ✅ patch 8: `batocera-keyboard` remplacé par `esctl keyboard` (`localectl`), validé
 - ✅ patch 9 sans objet: ES lance déjà la commande de `es_systems.cfg`; le travail est côté `es-launcher` et dans la génération de `es_systems.cfg` (M2)
 - ❌ patch 10: fonctions optionnelles (scraper, ports, LED...)
+
+## Prochaines étapes
+- Raccourci Select+Start pour les jeux Steam; tester KEEP STEAM OPEN / fermeture du client
+- Autres ports PortMaster (OpenTyrian, SDLPoP, OpenGGS), Wine/umu, Ryujinx
+- RetroArch: états de sauvegarde, netplay, RetroAchievements en jeu
+- Traductions dans d'autres langues; bezels sur écran 16:9; option pour garder le ratio du bezel avec bandes noires en 16:10
 
 ## Licence
 Le projet est en GPL-3.0-or-later (voir `docs/LICENSING.md`): du code de batocera-configgen (GPL-3) peut être repris.

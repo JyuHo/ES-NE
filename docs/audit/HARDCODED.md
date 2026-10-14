@@ -1,5 +1,7 @@
 # Audit des dépendances Batocera
 
+> Instantané de l'audit initial (avant les patchs). État actuel: voir `docs/AUDIT_ANALYSIS.md` et `docs/UPSTREAM.md` (par exemple `batocera-keyboard` est remplacé par `esctl keyboard`).
+
 - Source: `third_party/emulationstation`
 - Commit: `5b1764c9a`
 - Généré: 2026-10-08

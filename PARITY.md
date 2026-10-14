@@ -9,7 +9,7 @@ Légende: ❌ non fait · 🚧 en cours · ✅ fait · ⛔ masqué volontairemen
 | psp | libretro | 🚧 non testé (pas de roms) | ✅ | ✅ | ✅ | ❌ | ✅ |
 | gc, wii | Dolphin | ✅ validé en jeu | ⛔ réglages de l'émulateur | ⛔ | ⛔ | ❌ | ✅ quitter: Select+Start |
 | ps2, ps3, wiiu, switch, xbox | PCSX2, RPCS3, Cemu, Eden/Ryujinx, xemu | 🚧 arguments écrits de mémoire, non testés (Cemu ✅ validé: manettes + API graphique; Eden ✅ manettes validées; PCSX2 ✅ manette et réglages validés; RPCS3 ✅ manettes validées; xemu ✅ jeu lancé et manette détectée (`xemu.toml`: BIOS, manettes)) | ⛔ | ⛔ | ⛔ | ❌ | ✅ |
-| steam, windows | Steam, Wine/umu | 🚧 non testé: Steam détecte les jeux installés (`.steam` créés par es-genconfig) et `esne-steam-run` attend la fin de la partie et la ferme avec le raccourci | ⛔ | ⛔ | ⛔ | ❌ | ✅ |
+| steam, windows | Steam, Wine/umu | 🚧 Steam: lancement et manette validés (`.steam` créés par es-genconfig, `esne-steam-run` attend la fin de la partie, ferme le client ouvert par ES-NE sauf KEEP STEAM OPEN: non testé); Select+Start sans effet sur les jeux Steam (à corriger); Wine/umu non testé | ⛔ | ⛔ | ⛔ | ❌ | ✅ |
 | xbox 360 | — | ⛔ aucun émulateur Linux utilisable | | | | | |
 
 Bezels: un bezel par système (pas de bezel par jeu); le réglage du système prime sur le global; quand un bezel est actif, le ratio d'ES est ignoré (équivalent de « auto »): le jeu est cadré dans la zone transparente du bezel. AUTO utilise The Bezel Project s'il est installé pour le système; « NONE » désactive; ratio de l'image différent de l'écran → image étirée sur l'écran, jeu aux proportions de sa fenêtre (jusqu'à 25 % d'écart, ou toujours avec STRETCH BEZELS). RetroArch 1.22 ajoute la position de la zone personnalisée à celle de la zone centrée: on envoie l'écart (0 pour un bezel centré). Tatouages/overlays de manettes non gérés. Zone de jeu détectée par le décodeur PNG intégré (Pillow s'il est installé) ou fichier `.png.info`. Les bords noirs d'une ROM PAL (N64) ne sont pas rognés: réglage du cœur (`mupen64plus-Overscan*`) laissé à l'utilisateur.
@@ -39,6 +39,7 @@ Les menus liés à `esctl` apparaissent seulement si `esctl has <commande>` réu
 | Raccourcis en jeu | `batocera-hotkeys` | `hotkey.py` + options RetroArch (Select+Start quitte, Select+R3 menu) | ✅ validé |
 | Session de connexion ES-NE (Plasma Login Manager, gamescope) | — | `es-ne-session` (gamescope sans `-e`, journal `~/.local/state/esne/session.log`) | ✅ validé (BC-250) |
 | Disposition du clavier (menu) | `batocera-keyboard` | `esctl keyboard` (`localectl`, règle polkit), appliquée à la prochaine session | ✅ validé (listes et changement, règle polkit) |
+| Traductions | `.po` Batocera | français complet (1282 chaînes) | ✅ |
 | Manette → clavier | `evmapy` | `esne-padkeys` (ports PortMaster) | ✅ validé |
 | Installation d'un core manquant | — | dialogue d'ES, `esctl install-core` (pacman, paru/yay) | ✅ validé |
 | Arrêt / redémarrage système | `batocera-shutdown` | `systemctl poweroff/reboot` (fork) | ✅ validé en session ES-NE (sans mot de passe) |

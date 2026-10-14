@@ -84,11 +84,14 @@ Hashes de la branche `esne` du fork.
 | `0ef1c7c` | chemins | dossier de données par défaut `~/esne` (au lieu de `~/.local/share/esne`) |
 | `96f4090` | clés | clés de développeur lues à l'exécution dans `~/.config/esne/keys.conf` (`EsneKeys.h`); scrapers à clé et RetroAchievements proposés seulement si la clé est renseignée |
 | `4e803a0` | scrapers | repli sur le premier scraper disponible si celui qui est configuré n'a pas de clé (évitait un SIGSEGV au scrape) |
+| `b567ac1`, `0d9de3f` | lancement | code de sortie 205 (core manquant): lit `/tmp/esne-missing-core` (core, paquet, source), propose l'installation (`GuiLoading` puis `ApiSystem::installLibretroCore` → `esctl install-core`); variante AUR |
+| `88507e6` | menus | disposition du clavier via `esctl keyboard get/list/set` (menu affiché si `esctl has keyboard`) |
+| `b271b59`, `f4b04f2` | i18n | traductions françaises complètes (`.po` + `.pot`, 1282 chaînes) |
 
 ## Ce qui reste de Batocera dans le frontend (état actuel)
 - `updates.batocera.org`: sert seulement à la liste des thèmes téléchargeables (`themes.json`); surchargeable par `global.updates.url`.
   Les mises à jour du système (`UPGRADE`) et leur script GitHub ne sont jamais atteints: `LinuxApiSystem` désactive ce menu.
-- Appels `batocera-*` directs de `GuiMenu.cpp`: seuls `batocera-keyboard` (bloc masqué en `ESNE`). Les écrans de rotation et de splash sont
+- Appels `batocera-*` directs de `GuiMenu.cpp`: plus aucun pour le clavier (remplacé par `esctl keyboard`). Les écrans de rotation et de splash sont
   dans la branche `BATOCERA`, jamais compilée en `ESNE`.
 - Les autres commandes passent par `LinuxApiSystem::translateCommand` (`batocera-x` -> `esctl x`); les menus dont la commande `esctl` n'existe pas sont cachés.
 

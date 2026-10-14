@@ -38,6 +38,8 @@ Codes de sortie: `0` succès · `1` échec ou indisponible · `2` mauvais usage.
 | BIOS | `systems` | ✅ | `systems [--filter <système>]`: lignes `> <système>` puis `<statut> <md5> <chemin>` (`OK`, `MISSING`, `INVALID`). Catalogue `data/bios.yml` (complété par `<config>/bios.yml`), fichiers dans `<data>/bios` |
 | Manettes | `padsinfo` | ✅ | XML `<pads><pad device id name path battery status/></pads>` (batterie omise si absente) |
 | Fuseau horaire | `timezone` | ✅ | `get`, `detect`, `set "<tz>"` via `timedatectl` (`set` peut exiger polkit) |
+| Clavier | `keyboard` | ✅ | `get` (disposition X11 courante), `list-layouts`, `list-variants <disposition>` (`localectl list-x11-keymap-layouts/variants`), `set <disposition> [variante]` via `localectl set-x11-keymap` (règle polkit `org.freedesktop.locale1.set-keyboard`); s'applique à la prochaine session |
+| Core libretro | `install-core` | ✅ | `install-core <core>`: dépôts officiels par `pkexec /usr/lib/esne/install-core` (règle polkit `org.esne.install-core`, sans mot de passe en session locale active); cores AUR par `paru`/`yay` (`--sudo pkexec`), sinon makepkg dans `~/.cache/esne/aur` puis `pkexec /usr/lib/esne/install-aur-core` (`auth_admin_keep`). Listes blanches dans `esne/cores.py`. Codes: 0 installé, 1 échec, 3 AUR indisponible, 4 core inconnu. Appelé par ES après le code 205 du lanceur (indice `/tmp/esne-missing-core`: core, paquet, source) |
 | Bezels | `thebezelproject` | ✅ | `list` (`[I]`/`[A]` système URL), `install <x>`, `remove <x>`; x = nom de système ES-NE; une image par système dans `<data>/decorations/thebezelproject/systems/<x>.png` (API GitHub + raw, pas d'archive) |
 | Hook gamelists | `preupdate-gamelists-hook` | ✅ | exécute les scripts exécutables de `<config>/hooks/preupdate-gamelists/` (ordre alphabétique) |
 
@@ -67,7 +69,7 @@ Format des listes: **`ID<TAB>LIBELLÉ`**, une seule tabulation par ligne (le fro
 - Les flux déjà en lecture ne sont pas déplacés vers la nouvelle sortie.
 
 ## Vérification
-- Tests Python (134 pour tout le projet, dont `tests/esctl/`) (`pytest`) sur des sorties d'exemple de `xrandr`, `wlr-randr` et `pactl`, plus des sous-processus réels avec un faux `pactl`.
+- Tests Python (258 pour tout le projet, dont `tests/esctl/`) (`pytest`) sur des sorties d'exemple de `xrandr`, `wlr-randr` et `pactl`, plus des sous-processus réels avec un faux `pactl`.
 - Test C++ → `esctl` réel: le code de `LinuxApiSystem` affiche les menus résolution, audio et version, et masque les autres.
 - **Non validé sur machine réelle**: les formats de `wlr-randr` et du JSON de `pactl` sont reconstitués de mémoire, pas capturés
   sur un système. À confirmer au premier essai sur CachyOS.
