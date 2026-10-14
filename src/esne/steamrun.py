@@ -19,6 +19,7 @@ from pathlib import Path
 
 START_TIMEOUT = 240.0  # Steam peut devoir démarrer et mettre le jeu à jour
 POLL = 1.0
+KILL_DELAY = 5  # attentes avant SIGKILL sur ce qui a survécu au SIGTERM
 GRACE_POLLS = 20  # attentes sans processus de jeu avant de le croire terminé (Steam enchaîne plusieurs ``reaper``)
 CLOSE_TIMEOUT = 30.0  # attente de la fermeture du client Steam
 
@@ -36,6 +37,27 @@ def game_pids(appid: str, proc: Path = Path("/proc")) -> list[int]:
         if "SteamLaunch" in words and f"AppId={appid}" in words:
             pids.append(int(entry.name))
     return pids
+
+
+def descendants(roots: list[int], proc: Path = Path("/proc")) -> list[int]:
+    """Processus issus de ``roots`` (enfants, petits-enfants...): Proton/Wine survivent à la mort du ``reaper``."""
+    children: dict[int, list[int]] = {}
+    for entry in proc.iterdir():
+        if not entry.name.isdigit():
+            continue
+        try:
+            stat = (entry / "stat").read_text()
+            ppid = int(stat[stat.rindex(")") + 1:].split()[1])
+        except (OSError, ValueError, IndexError):
+            continue
+        children.setdefault(ppid, []).append(int(entry.name))
+    found, queue = [], list(roots)
+    while queue:
+        for child in children.get(queue.pop(), []):
+            if child not in found:
+                found.append(child)
+                queue.append(child)
+    return found
 
 
 def steam_running(proc: Path = Path("/proc")) -> bool:
@@ -60,11 +82,15 @@ def run(appid: str, command: list[str], proc: Path = Path("/proc"), popen=subpro
     stopping = False
     already_open = steam_running(proc) if close else True
 
+    victims: list[int] = []
+
     def stop(signum=None, *_):
         nonlocal stopping
         stopping = True
         print(f"esne-steam-run: signal {signum} reçu", file=sys.stderr, flush=True)
-        for pid in game_pids(appid, proc):
+        roots = game_pids(appid, proc)
+        victims.extend(pid for pid in roots + descendants(roots, proc) if pid not in victims)
+        for pid in reversed(victims):  # les descendants d'abord
             try:
                 kill(pid, signal.SIGTERM)
             except OSError:
@@ -91,6 +117,17 @@ def run(appid: str, command: list[str], proc: Path = Path("/proc"), popen=subpro
             break
         else:
             missing += 1
+    if stopping:
+        for _ in range(KILL_DELAY):
+            if not any((proc / str(pid)).exists() for pid in victims):
+                break
+            sleep(POLL)
+        for pid in victims:
+            if (proc / str(pid)).exists():
+                try:
+                    kill(pid, signal.SIGKILL)
+                except OSError:
+                    pass
     if close and not already_open:
         popen(shutdown_command(command), start_new_session=True)
         deadline = clock() + CLOSE_TIMEOUT

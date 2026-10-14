@@ -197,3 +197,40 @@ def test_run_survives_a_gap_between_reapers(tmp_path):
 
     assert steamrun.run("620", ["steam"], proc, popen=lambda *a, **k: None, sleep=sleep) == 0
     assert len(ticks) > 9 + steamrun.GRACE_POLLS - 1
+
+
+def stat(proc, pid, ppid):
+    (proc / str(pid)).mkdir(exist_ok=True)
+    (proc / str(pid) / "stat").write_text(f"{pid} (wine (x)) S {ppid} 1 1 0 -1\n")
+
+
+def test_descendants_walks_the_whole_tree(tmp_path):
+    proc = fake_proc(tmp_path, {})
+    stat(proc, 10, 1)
+    stat(proc, 20, 10)
+    stat(proc, 30, 20)
+    stat(proc, 40, 99)
+    assert sorted(steamrun.descendants([10], proc)) == [20, 30]
+
+
+def test_sigterm_also_closes_the_children_of_the_reaper_and_kills_survivors(tmp_path):
+    proc = fake_proc(tmp_path, {10: ["reaper", "SteamLaunch", "AppId=620"]})
+    stat(proc, 10, 1)
+    stat(proc, 20, 10)
+    sent = []
+
+    def kill(pid, sig):
+        sent.append((pid, sig))
+        if pid == 10:  # le reaper meurt, pas le jeu
+            (proc / "10" / "cmdline").unlink()
+            (proc / "10" / "stat").unlink()
+            (proc / "10").rmdir()
+
+    def sleep(_):
+        handler = signal.getsignal(signal.SIGTERM)
+        if not sent:
+            handler(signal.SIGTERM, None)
+
+    steamrun.run("620", ["steam"], proc, popen=lambda *a, **k: None, sleep=sleep, kill=kill)
+    assert (20, signal.SIGTERM) in sent and (10, signal.SIGTERM) in sent
+    assert (20, signal.SIGKILL) in sent and (10, signal.SIGKILL) not in sent
