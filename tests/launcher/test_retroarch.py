@@ -222,3 +222,9 @@ def test_archive_is_extracted_for_a_core_that_does_not_read_it(emulation, tmp_pa
     ctx.core = "snes9x"
     rom = ra.GENERATOR().generate(ctx).argv[-1]
     assert rom.endswith("Mario World (USA).sfc") and open(rom).read() == "DATA"  # renommé comme l'archive
+
+
+def test_states_not_sorted_in_subfolders(esne_env):
+    settings = ra.build_settings(ctx_for())
+    assert settings["sort_savestates_enable"] == "false"
+    assert settings["sort_savestates_by_content_enable"] == "false"

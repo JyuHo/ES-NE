@@ -142,6 +142,9 @@ def build_settings(ctx: Context) -> dict[str, str]:
         "system_directory": str(paths.bios_dir()),
         "savefile_directory": str(saves),
         "savestate_directory": str(saves),
+        # ES cherche les états directement dans saves/<système>/: pas de sous-dossier par core ni par contenu
+        "sort_savestates_enable": "false",
+        "sort_savestates_by_content_enable": "false",
         "screenshot_directory": str(paths.data_dir() / "screenshots"),
     }
 
