@@ -51,6 +51,10 @@ Dans `packaging/arch/` (PKGBUILD `es-ne-git`, `es-ne-session`, `es-ne.desktop`, 
 - RetroArch: netplay, `-monitor`, RetroAchievements en jeu
 - Traductions dans d'autres langues; bezels sur écran 16:9; option pour garder le ratio du bezel avec bandes noires en 16:10
 
+## Versions
+
+Une release par avancée notable (nouvel émulateur, série d'options): 1.0.1 à 1.0.10, puis 1.1.0 et la suite 1.1.1 à 1.1.10, etc. 1.0.1: Xbox 360 (Xenia Canary) avec réglages vidéo dans ES, logo ES-NE.
+
 ## Licence
 Le projet est en GPL-3.0-or-later (voir `docs/LICENSING.md`): du code de batocera-configgen (GPL-3) peut être repris.
 Le fork d'EmulationStation reste sous MIT.
