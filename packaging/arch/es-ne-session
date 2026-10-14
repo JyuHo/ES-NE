@@ -3,10 +3,18 @@
 # Session ES-NE. Depuis un bureau déjà ouvert (WAYLAND_DISPLAY ou DISPLAY définis), ES se lance directement dans une fenêtre
 # plein écran. Depuis un gestionnaire de connexion (SDDM...), la session démarre gamescope comme compositeur (s'il est installé).
 # ES se relance lui-même (menu « redémarrer ES »): aucune boucle ici.
-mkdir -p "${XDG_STATE_HOME:-$HOME/.local/state}/esne"
+# Journal de session: ~/.local/state/esne/session.log (utile quand l'écran reste noir).
+state="${XDG_STATE_HOME:-$HOME/.local/state}/esne"
+mkdir -p "$state"
+log="$state/session.log"
+if [ -z "$WAYLAND_DISPLAY$DISPLAY" ]; then
+    exec >"$log" 2>&1
+    echo "ES-NE session $(date): XDG_SESSION_TYPE=$XDG_SESSION_TYPE XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR"
+fi
 # Met à jour menus et options après une mise à jour du paquet (idempotent, ne remplace jamais tes ports ni tes clés).
 command -v es-genconfig >/dev/null 2>&1 && es-genconfig >/dev/null 2>&1
 if [ -z "$WAYLAND_DISPLAY$DISPLAY" ] && [ -z "$ESNE_NO_GAMESCOPE" ] && command -v gamescope >/dev/null 2>&1; then
-    exec gamescope -e -f -- emulationstation "$@"
+    # pas d'option -e (intégration Steam): inutile ici et source d'écran noir sans Steam
+    exec gamescope -f -- emulationstation "$@"
 fi
 exec emulationstation "$@"
