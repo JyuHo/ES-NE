@@ -12,8 +12,9 @@ Il s'appuie sur ce que tu as configuré dans Eden pour le joueur 1 (Configurer >
 * ``eden_autoconfig=0`` désactive tout ça.
 
 Réglages choisis dans ES (``eden_*``), écrits dans ``qt-config.ini`` quand ils sont définis (un réglage non choisi garde la valeur
-d'Eden): mode docké ou portable, résolution, anti-crénelage, filtre de mise à l'échelle, format d'image, langue et région de
-la console. Les valeurs sont les index d'Eden (mêmes que dans l'interface); noms de clés relevés sur un ``qt-config.ini`` réel.
+d'Eden): mode docké ou portable, VSync, anti-crénelage, filtre de mise à l'échelle, format d'image, langue et région de
+la console. Les valeurs sont les index d'Eden (mêmes que dans l'interface); noms de clés et valeurs vérifiés sur un ``qt-config.ini`` réel et l'interface d'Eden. La
+résolution n'est pas proposée: ses index diffèrent de ceux de yuzu (1X = 3 dans Eden) et le reste de l'échelle n'est pas relevé.
 
 Le fichier n'est modifié que s'il existe déjà (Eden le crée à son premier lancement) et seules les lignes
 ``player_N_...`` de la section ``[Controls]`` sont réécrites; le reste est conservé tel quel.
@@ -101,7 +102,7 @@ def set_keys(lines: list[str], keys: dict[str, str]) -> list[str]:
 # clé ES -> (section, clé du qt-config.ini, valeurs permises)
 SETTINGS: dict[str, tuple[str, str, frozenset[str]]] = {
     "eden_docked": ("System", "use_docked_mode", frozenset({"0", "1"})),
-    "eden_resolution": ("Renderer", "resolution_setup", frozenset({"2", "3", "4", "5", "6"})),
+    "eden_vsync": ("Renderer", "use_vsync", frozenset({"0", "1", "2", "3"})),
     "eden_aa": ("Renderer", "anti_aliasing", frozenset({"0", "1", "2"})),
     "eden_filter": ("Renderer", "scaling_filter", frozenset({"0", "1", "2", "3", "4", "5"})),
     "eden_ratio": ("Renderer", "aspect_ratio", frozenset({"0", "1", "2", "3", "4"})),

@@ -100,8 +100,8 @@ def test_generate_integration(tmp_path, monkeypatch, esne_env, ini):
 
 REAL = """[Renderer]
 backend=1
-resolution_setup\\default=false
-resolution_setup=3
+use_vsync\\default=false
+use_vsync=1
 anti_aliasing=2
 
 [System]
@@ -117,9 +117,9 @@ fullscreen=true
 def test_settings_are_written_in_the_right_sections(tmp_path):
     ini = tmp_path / "qt-config.ini"
     ini.write_text(REAL)
-    assert eden.apply_settings(ini, ctx([], eden_resolution="4", eden_language="1", eden_docked="0", eden_filter="5"))
+    assert eden.apply_settings(ini, ctx([], eden_vsync="2", eden_language="1", eden_docked="0", eden_filter="5"))
     text = ini.read_text()
-    assert "resolution_setup\\default=false\nresolution_setup=4\n" in text
+    assert "use_vsync\\default=false\nuse_vsync=2\n" in text
     assert "language_index=1\n" in text and "use_docked_mode=0\n" in text
     assert "scaling_filter\\default=false\nscaling_filter=5\n" in text  # clé absente: créée
     assert "region_index=2\n" in text and "anti_aliasing=2\n" in text and "fullscreen=true\n" in text  # intacts
@@ -127,7 +127,7 @@ def test_settings_are_written_in_the_right_sections(tmp_path):
 
 def test_settings_unset_invalid_or_missing_file_change_nothing(tmp_path):
     ini = tmp_path / "qt-config.ini"
-    assert not eden.apply_settings(ini, ctx([], eden_resolution="4"))
+    assert not eden.apply_settings(ini, ctx([], eden_vsync="2"))
     ini.write_text(REAL)
-    assert not eden.apply_settings(ini, ctx([], eden_resolution="99", eden_language="6"))
+    assert not eden.apply_settings(ini, ctx([], eden_vsync="99", eden_language="6"))
     assert ini.read_text() == REAL
