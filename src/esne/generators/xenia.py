@@ -14,7 +14,7 @@ Langue de la console (``xenia_language``): Xenia la garde dans ``<données>/Xeni
 internes de la Xbox 360), pas dans le fichier de configuration. L'octet de la langue est au décalage 2325: comparer deux
 enregistrements (français puis anglais) montre ce seul octet qui change, de 4 à 1, sans somme de contrôle. Numéros des langues
 de la Xbox 360: 1 anglais, 2 japonais, 3 allemand, 4 français, 5 espagnol, 6 italien, 7 coréen, 8 chinois traditionnel,
-9 portugais, 10 chinois simplifié, 11 polonais, 12 russe (1 et 4 relevés sur le fichier, les autres suivent cet ordre).
+9 portugais, 10 chinois simplifié, 11 polonais, 12 russe (1, 2, 3 et 4 relevés sur le fichier, les autres suivent cet ordre).
 L'octet n'est écrit que s'il contient déjà un numéro de langue valide.
 """
 from __future__ import annotations
