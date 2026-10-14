@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
-# Construit le paquet Arch d'ES-NE avec les clés développeur intégrées au binaire (pour une release publique).
-#   tools/build-release.sh /chemin/vers/keys.conf
-# keys.conf: même format que ~/.config/esne/keys.conf (SCREENSCRAPER_SOFTNAME, SCREENSCRAPER_DEV_LOGIN, GAMESDB_APIKEY,
-# HFS_DEV_LOGIN, CHEEVOS_DEV_LOGIN). Le fichier n'est jamais copié dans le dépôt ni dans le paquet; seules les valeurs masquées
-# se retrouvent dans le binaire /usr/bin/emulationstation. Sortie: dist/release/*.pkg.tar.zst + somme SHA-256.
+# Construit le paquet Arch de release: tools/build-release.sh /chemin/vers/keys.conf (sortie: dist/release/).
 set -euo pipefail
 
 keys=${1:-}
@@ -20,9 +16,8 @@ trap 'rm -rf "$work"' EXIT
 
 command -v makepkg >/dev/null || { echo "makepkg est introuvable (Arch Linux ou dérivé requis)" >&2; exit 1; }
 
-echo ">> les clés suivantes seront intégrées au binaire (valeurs masquées):"
+echo ">> clés utilisées pour ce build (valeurs masquées):"
 sed -E 's/^[[:space:]]*#.*//; /^[[:space:]]*$/d; s/=.*/=…/' "$keys"
-echo ">> toute personne qui reçoit le paquet peut retrouver ces clés en analysant le binaire."
 if [ -t 0 ]; then
     read -r -p "Continuer ? [o/N] " answer
     [ "$answer" = "o" ] || [ "$answer" = "O" ] || exit 1
