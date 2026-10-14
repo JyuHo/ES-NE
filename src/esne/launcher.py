@@ -114,6 +114,7 @@ def run_command(command, ctx: Context, generator) -> subprocess.CompletedProcess
         watcher.start()
     try:
         returncode = child.wait()
+        log.info("commande terminée (code %s)", returncode)
     finally:
         if watcher is not None:
             watcher.stop()

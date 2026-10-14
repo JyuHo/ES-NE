@@ -59,9 +59,10 @@ def run(appid: str, command: list[str], proc: Path = Path("/proc"), popen=subpro
     stopping = False
     already_open = steam_running(proc) if close else True
 
-    def stop(*_):
+    def stop(signum=None, *_):
         nonlocal stopping
         stopping = True
+        print(f"esne-steam-run: signal {signum} reçu", file=sys.stderr, flush=True)
         for pid in game_pids(appid, proc):
             try:
                 kill(pid, signal.SIGTERM)
