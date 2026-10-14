@@ -87,6 +87,7 @@ Hashes de la branche `esne` du fork.
 | `b567ac1`, `0d9de3f` | lancement | code de sortie 205 (core manquant): lit `/tmp/esne-missing-core` (core, paquet, source), propose l'installation (`GuiLoading` puis `ApiSystem::installLibretroCore` → `esctl install-core`); variante AUR |
 | `88507e6` | menus | disposition du clavier via `esctl keyboard get/list/set` (menu affiché si `esctl has keyboard`) |
 | `9902d9a` | menus | Kodi retiré: `isScriptingSupported(KODI)` renvoie faux, entrées « KODI » masquées même si `kodi` est installé |
+| `bb89193` | ressources | écran de démarrage (`logo.png`), `splash.svg` et `window_icon_256.png` remplacés par ceux d'ES-NE; `splash_batocera.svg` supprimé (visuels Batocera et icône « ES » d'EmulationStation retirés) |
 | `b271b59`, `f4b04f2` | i18n | traductions françaises complètes (`.po` + `.pot`, 1282 chaînes) |
 
 ## Ce qui reste de Batocera dans le frontend (état actuel)
