@@ -54,11 +54,12 @@ def tbp_installed(system: str, directories=None) -> bool:
     return any((Path(d) / TBP_SET / "systems" / f"{system}.png").is_file() for d in directories or decoration_dirs())
 
 
-def find_image(set_name: str, system: str, directories=None) -> Path | None:
-    """Bezel du système dans le jeu de décorations (``systems/<système>.png``), sinon ``default.png``."""
+def find_image(set_name: str, system: str, directories=None, rom: str | None = None) -> Path | None:
+    """Bezel du jeu (``games/<système>/<rom>.png``) s'il existe, sinon celui du système (``systems/<système>.png``), sinon ``default.png``."""
     for directory in directories or decoration_dirs():
         base = Path(directory) / set_name
-        for candidate in (base / "systems" / f"{system}.png", base / "default.png"):
+        game = (base / "games" / system / f"{rom}.png",) if rom else ()
+        for candidate in (*game, base / "systems" / f"{system}.png", base / "default.png"):
             if candidate.is_file():
                 return candidate
     return None

@@ -11,7 +11,7 @@ import shlex
 import shutil
 from pathlib import Path
 
-from .. import bezels, catalog, paths
+from .. import bezels, catalog, paths, tbp
 from ..errors import CORE_MISSING, EMULATOR_MISSING, OTHER_ERROR, LaunchError
 from .base import Command, Context, Generator
 
@@ -222,7 +222,12 @@ def bezel_settings(ctx: Context) -> dict[str, str]:
         if not bezels.tbp_installed(ctx.system):
             return {}
         choice = bezels.TBP_SET
-    image = bezels.find_image(choice, ctx.system)
+    rom_stem = Path(ctx.rom).stem if ctx.rom else None
+    if str(ctx.setting("bezel_games", "1")).lower() in ("0", "false", "off", "none"):
+        rom_stem = None  # réglage « bezel_games = 0 »: bezel du système seulement
+    elif choice == bezels.TBP_SET and rom_stem:
+        tbp.ensure_game(ctx.system, rom_stem)  # bezel du jeu à la demande; sans réseau ni bezel, celui du système reste utilisé
+    image = bezels.find_image(choice, ctx.system, rom=rom_stem)
     if image is None:
         log.info("aucun bezel '%s' pour le système %s", choice, ctx.system)
         return {}

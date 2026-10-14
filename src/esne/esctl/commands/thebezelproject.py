@@ -1,9 +1,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""esctl thebezelproject list | install <système> | remove <système>
+"""esctl thebezelproject list | install <système> | remove <système> | games <système>
 
-Remplace ``batocera-es-thebezelproject``. Un seul bezel par système: l'image du système du dépôt GitHub de
-The Bezel Project (``bezelproject-<Système>``, dossier ``retroarch/overlay``), enregistrée dans
-``<data>/decorations/thebezelproject/systems/<système>.png``. Aucun bezel par jeu n'est téléchargé.
+Remplace ``batocera-es-thebezelproject``. ``install`` télécharge l'image du système du dépôt GitHub de The Bezel Project
+(``bezelproject-<Système>``, dossier ``retroarch/overlay``) dans ``<data>/decorations/thebezelproject/systems/<système>.png``:
+c'est le bezel de repli et ce qui active les bezels du système. Les bezels par jeu (``games/<système>/<ROM>.png``) sont
+téléchargés à la demande au lancement d'un jeu (voir ``tbp.py``); ``games`` les télécharge d'avance pour toutes les ROM du système.
 
 ``list`` écrit une ligne par système: ``[I]`` (installé) ou ``[A]`` (disponible), le nom du système ES et l'adresse du dépôt.
 """
@@ -17,7 +18,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-from ... import bezels, paths
+from ... import bezels, paths, tbp
 
 NAME = "thebezelproject"
 GITHUB = "https://github.com/thebezelproject"
@@ -38,13 +39,12 @@ def target(system: str, base: Path | None = None) -> Path:
 
 
 def cleanup(base: Path, system: str | None = None) -> None:
-    """Supprime les restes des versions précédentes (bezels par jeu, jeu « thebezelproject-system ») et les dossiers vides:
-    ES liste chaque dossier de ``decorations/`` comme un jeu de décorations."""
+    """Supprime les restes d'une ancienne version (jeu « thebezelproject-system »), les bezels des jeux du système si
+    ``system`` est donné, et les dossiers vides: ES liste chaque dossier de ``decorations/`` comme un jeu de décorations."""
     if system:
         shutil.rmtree(base / "games" / system, ignore_errors=True)
     shutil.rmtree(base.parent / "thebezelproject-system", ignore_errors=True)
-    shutil.rmtree(base / "games", ignore_errors=True)
-    for folder in (base / "systems", base):
+    for folder in (base / "games", base / "systems", base):
         try:
             folder.rmdir()  # seulement s'il est vide
         except OSError:
@@ -111,6 +111,43 @@ def remove(system: str, base: Path | None = None) -> int:
     return 0
 
 
+SKIP_SUFFIXES = {".xml", ".txt", ".png", ".jpg", ".jpeg", ".mp4", ".sav", ".srm", ".state", ".cfg", ".ini", ".db", ".bak", ".tmp"}
+
+
+def rom_stems(system: str, roms: Path | None = None) -> list[str]:
+    """Noms (sans extension) des ROM du système, sans doublons (un ``.cue`` et son ``.bin`` donnent un seul nom)."""
+    folder = (roms or paths.roms_dir()) / system
+    stems = set()
+    try:
+        entries = list(folder.iterdir())
+    except OSError:
+        return []
+    for entry in entries:
+        if entry.name.startswith(".") or entry.suffix.lower() in SKIP_SUFFIXES:
+            continue
+        stems.add(entry.stem if entry.is_file() else entry.name)
+    return sorted(stems)
+
+
+def games(system: str, get=None, roms: Path | None = None, base: Path | None = None) -> int:
+    if system not in bezels.TBP_REPOS:
+        print(f"esctl thebezelproject: système inconnu: {system}", file=sys.stderr)
+        return 1
+    stems = rom_stems(system, roms)
+    get = get or tbp.fetch
+    if tbp.load_index(system, get) is None:
+        print("esctl thebezelproject: liste des bezels indisponible (réseau ?)", file=sys.stderr)
+        return 1
+    done = missing = 0
+    for stem in stems:
+        if tbp.ensure_game(system, stem, get, base) is None:
+            missing += 1
+        else:
+            done += 1
+    print(f"{system}: {done} bezels de jeu en place, {missing} jeux sans bezel (le bezel du système sera utilisé)")
+    return 0
+
+
 def run(args: list[str]) -> int:
     action = args[0] if args else ""
     if action == "list" and len(args) == 1:
@@ -120,5 +157,7 @@ def run(args: list[str]) -> int:
         return install(args[1])
     if action == "remove" and len(args) == 2:
         return remove(args[1])
-    print("usage: esctl thebezelproject list | install <système> | remove <système>", file=sys.stderr)
+    if action == "games" and len(args) == 2:
+        return games(args[1])
+    print("usage: esctl thebezelproject list | install <système> | remove <système> | games <système>", file=sys.stderr)
     return 2
