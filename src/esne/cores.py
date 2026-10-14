@@ -10,6 +10,12 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+# cores déterministes avec états de sauvegarde: ES leur propose le netplay (<core netplay="true"> dans es_systems.cfg)
+NETPLAY = frozenset({
+    "nestopia", "fceumm", "snes9x", "bsnes", "gambatte", "mgba", "gpsp", "genesis_plus_gx", "picodrive",
+    "mednafen_pce_fast", "fbneo", "mame", "stella", "pcsx_rearmed",
+})
+
 # nom du core (fichier <core>_libretro.so) -> paquet des dépôts officiels
 OFFICIAL = {
     "nestopia": "libretro-nestopia",

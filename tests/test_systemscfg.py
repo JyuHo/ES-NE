@@ -151,10 +151,10 @@ def test_portmaster_rejects_bad_md5_wrong_arch_and_traversal(tmp_path, monkeypat
 def test_default_core_is_first_installed():
     systems = {"nes": {"name": "NES", "extensions": [".nes"], "emulators": {"libretro": {"fceumm": {"priority": 1}, "nestopia": {"priority": 2}}}}}
     xml = systemscfg.render(systems, Path("/roms"), is_installed=lambda e, c: c == "nestopia")
-    assert '<core>fceumm</core>' in xml and '<core default="true">nestopia</core>' in xml
+    assert '<core netplay="true">fceumm</core>' in xml and '<core default="true" netplay="true">nestopia</core>' in xml
 
 
 def test_default_core_kept_when_none_installed():
     systems = {"nes": {"name": "NES", "extensions": [".nes"], "emulators": {"libretro": {"fceumm": {"priority": 1}, "nestopia": {"priority": 2}}}}}
     xml = systemscfg.render(systems, Path("/roms"), is_installed=lambda e, c: False)
-    assert '<core default="true">fceumm</core>' in xml
+    assert '<core default="true" netplay="true">fceumm</core>' in xml

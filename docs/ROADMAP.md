@@ -21,7 +21,7 @@ Légende: ✅ fait · 🚧 en cours · ❌ à faire. Un ✅ côté ES = code en 
 - ✅ codes de sortie 200-205 et 299 vers ES, journal `<state>/logs/es-launcher.log`
 - 🚧 validé avec un vrai RetroArch: shaders, ratio 4/3, rewind; table des ratios (`aspect_ratio_index`) en partie non validée
 - ✅ manettes: pilote `sdl2` (pas d'autoconfig); raccourci pour quitter, aussi pour les émulateurs autonomes (`hotkey.py`)
-- ❌ netplay, états de sauvegarde (`-state_slot`), jeux compressés (zip/7z), `-monitor`
+- 🚧 écrits, tests unitaires, pas encore validés en jeu: états de sauvegarde (`-state_slot`, `-state_file`, `-autosave`), netplay (`--host`/`--connect`, réglages `netplay_*`, `netplay="true"` dans `es_systems.cfg`), jeux compressés (extraction zip/7z pour les cores qui ne lisent pas les archives), `-monitor` (`video_monitor_index`)
 
 ## M2 — config en couches + génération `es_systems.cfg` / `es_features.cfg` ✅
 - ✅ résolution en couches (`<système>["rom"].clé` > `<système>.clé` > `global.clé`)

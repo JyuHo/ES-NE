@@ -10,6 +10,7 @@ from pathlib import Path
 from xml.sax.saxutils import escape, quoteattr
 
 from . import catalog, featurescfg, paths, portmaster, steam
+from . import cores as cores_mod
 from .generators import standalone
 from .generators.retroarch import find_binary, find_core
 
@@ -80,7 +81,8 @@ def render(systems: dict, roms: Path, installed_only: bool = False, is_installed
             lines.append("        <cores>")
             for core in named:
                 default = ' default="true"' if (emulator, core) == (default_emulator, default_core) else ""
-                lines.append(f"          <core{default}>{escape(core)}</core>")
+                netplay = ' netplay="true"' if emulator == "libretro" and core in cores_mod.NETPLAY else ""
+                lines.append(f"          <core{default}{netplay}>{escape(core)}</core>")
             lines.append("        </cores>")
             lines.append("      </emulator>")
         lines += ["    </emulators>", "  </system>"]

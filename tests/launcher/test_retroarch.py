@@ -148,3 +148,77 @@ def test_generate_command_passes_shader_with_set_shader(emulation, tmp_path, mon
     ctx.config.get = lambda key, default=None: "crt-geom" if key == "shaderset" else default
     argv = ra.GENERATOR().generate(ctx).argv
     assert argv[argv.index("--set-shader") + 1] == str(preset) and argv[-1] == "/roms/snes/mario.sfc"
+
+
+def test_state_options_from_es(esne_env):
+    s = ra.build_settings(ctx_for(extra=["-state_slot", "3", "-autosave", "1"]))
+    assert s["state_slot"] == "3" and s["savestate_auto_load"] == "true" and s["savestate_auto_index"] == "true"
+    s = ra.build_settings(ctx_for({"global.incrementalsavestates": "0"}))
+    assert s["savestate_auto_index"] == "false" and s["savestate_max_keep"] == "50" and "state_slot" not in s
+    assert "state_slot" not in ra.build_settings(ctx_for(extra=["-state_slot", "abc"]))
+
+
+def test_state_file_auto_loads_and_slot_file_is_entry(emulation):
+    s = ra.build_settings(ctx_for(extra=["-state_file", "/s/mario.state.auto"]))
+    assert s["savestate_auto_load"] == "true"
+    ctx = ctx_for(extra=["-state_slot", "2", "-state_file", "/s/mario.state2"])
+    ctx.core = "snes9x"
+    argv = ra.GENERATOR().generate(ctx).argv
+    assert argv[argv.index("-e") + 1] == "2"
+    ctx = ctx_for(extra=["-state_slot", "2", "-state_file", "/s/mario.state.auto"])
+    ctx.core = "snes9x"
+    assert "-e" not in ra.GENERATOR().generate(ctx).argv
+
+
+def test_monitor_is_one_based_for_retroarch(esne_env):
+    assert ra.build_settings(ctx_for(extra=["-monitor", "1"]))["video_monitor_index"] == "2"
+    assert "video_monitor_index" not in ra.build_settings(ctx_for())
+    assert "video_monitor_index" not in ra.build_settings(ctx_for(extra=["-monitor", "x"]))
+
+
+def test_netplay_host(esne_env):
+    ctx = ctx_for({"global.netplay.nickname": "Moi", "global.netplay.port": "55435", "global.netplay.password": "pw"},
+                  extra=["-netplaymode", "host"])
+    assert ra.netplay_args(ctx) == ["--host", "--port", "55435", "--nick", "Moi"]
+    s = ra.netplay_settings(ctx)
+    assert s["netplay_ip_port"] == "55435" and s["netplay_password"] == "pw" and s["netplay_start_as_spectator"] == "false"
+    assert s["netplay_use_mitm_server"] == "false"
+
+
+def test_netplay_client_and_spectator_with_relay(esne_env):
+    extra = ["-netplaymode", "client", "-netplayip", "10.0.0.2", "-netplayport", "5000", "-netplaysession", "abc", "-netplaypass", "pw"]
+    ctx = ctx_for({"global.netplay.relay": "nyc"}, extra=extra)
+    assert ra.netplay_args(ctx) == ["--connect", "10.0.0.2", "--port", "5000", "--mitm-session", "abc"]
+    s = ra.netplay_settings(ctx)
+    assert s["netplay_ip_address"] == "10.0.0.2" and s["netplay_password"] == "pw"
+    assert s["netplay_use_mitm_server"] == "true" and s["netplay_mitm_server"] == "nyc"
+    spectator = ra.netplay_settings(ctx_for(extra=["-netplaymode", "spectator", "-netplayip", "h", "-netplaypass", "x"]))
+    assert spectator["netplay_start_as_spectator"] == "true" and spectator["netplay_spectate_password"] == "x"
+    assert "netplay_password" not in spectator
+
+
+def test_no_netplay_without_mode(esne_env):
+    assert ra.netplay_args(ctx_for()) == [] and ra.netplay_settings(ctx_for()) == {}
+    assert ra.netplay_args(ctx_for(extra=["-netplaymode", "bogus"])) == []
+
+
+def test_generate_command_netplay_before_rom(emulation):
+    ctx = ctx_for(extra=["-netplaymode", "host"])
+    ctx.core = "snes9x"
+    argv = ra.GENERATOR().generate(ctx).argv
+    assert "--host" in argv and argv[-1] == "/roms/snes/mario.sfc"
+
+
+def test_archive_is_extracted_for_a_core_that_does_not_read_it(emulation, tmp_path, monkeypatch):
+    import zipfile
+    zip_path = tmp_path / "Mario World (USA).zip"
+    with zipfile.ZipFile(zip_path, "w") as z:
+        z.writestr("rom.sfc", "DATA")
+    info = tmp_path / "info"
+    info.mkdir()
+    (info / "snes9x_libretro.info").write_text('supported_extensions = "smc|sfc|swc"\n')
+    monkeypatch.setattr(ra, "DEFAULT_INFO_DIRS", [str(info)])
+    ctx = ctx_for(rom=str(zip_path))
+    ctx.core = "snes9x"
+    rom = ra.GENERATOR().generate(ctx).argv[-1]
+    assert rom.endswith("Mario World (USA).sfc") and open(rom).read() == "DATA"  # renommé comme l'archive

@@ -1,6 +1,7 @@
 libretro:
   binary: [retroarch, "flatpak run org.libretro.RetroArch"]
   core_dirs: [/usr/lib/libretro, "~/.config/retroarch/cores"]
+  info_dirs: [/usr/share/libretro/info, "~/.config/retroarch/cores"]
 
 # Émulateurs autonomes (generators/standalone.py). Les arguments sont ceux du mode "plein écran, sans interface".
 # Réglages propres à chaque émulateur (résolution, contrôles...): voir sa propre configuration pour l'instant.

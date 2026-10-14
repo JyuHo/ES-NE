@@ -11,7 +11,7 @@ import shlex
 import shutil
 from pathlib import Path
 
-from .. import bezels, catalog, paths, tbp
+from .. import archives, bezels, catalog, paths, tbp
 from ..errors import CORE_MISSING, EMULATOR_MISSING, OTHER_ERROR, LaunchError
 from .base import Command, Context, Generator
 
@@ -19,6 +19,7 @@ log = logging.getLogger("es-launcher")
 
 DEFAULT_BINARIES = ["retroarch", "flatpak run org.libretro.RetroArch"]
 DEFAULT_CORE_DIRS = ["/usr/lib/libretro", "~/.config/retroarch/cores"]
+DEFAULT_INFO_DIRS = ["/usr/share/libretro/info", "~/.config/retroarch/cores"]
 
 # Ordre de l'énumération ASPECT_RATIO_* de RetroArch (valeur de aspect_ratio_index): « custom » vaut 23, comme dans Batocera.
 # Les indices sont repris de la source de RetroArch; ils ont déjà été confirmés pour 4/3, 16/9 et custom (bezels).
@@ -175,6 +176,32 @@ def build_settings(ctx: Context) -> dict[str, str]:
         settings["savestate_auto_save"] = enabled
         settings["savestate_auto_load"] = enabled
 
+    # États: ES choisit le slot (-state_slot) et copie l'état à charger en <jeu>.state.auto (chargé grâce à -autosave 1)
+    if truthy(ctx.setting("incrementalsavestates", "1")):
+        settings["savestate_auto_index"] = "true"
+        settings["savestate_max_keep"] = "0"
+    else:
+        settings["savestate_auto_index"] = "false"
+        settings["savestate_max_keep"] = "50"
+    slot = ctx.extras.get("state_slot")
+    if slot is not None:
+        if slot.lstrip("-").isdigit() and int(slot) >= 0:
+            settings["state_slot"] = slot
+        else:
+            log.warning("slot d'état invalide ignoré: %s", slot)
+    state_file = ctx.extras.get("state_file") or ctx.extras.get("state_filename") or ""
+    if state_file.endswith(".auto"):
+        settings["savestate_auto_load"] = "true"
+
+    monitor = ctx.extras.get("monitor")
+    if monitor is not None:
+        if monitor.isdigit():
+            settings["video_monitor_index"] = str(int(monitor) + 1)  # RetroArch: 0 = automatique, 1 = premier écran
+        else:
+            log.warning("écran invalide ignoré: %s", monitor)
+
+    settings.update(netplay_settings(ctx))
+
     integer = ctx.setting("integerscale")
     if integer is not None:
         settings["video_scale_integer"] = "true" if truthy(integer) else "false"
@@ -198,6 +225,69 @@ def build_settings(ctx: Context) -> dict[str, str]:
         settings["video_driver"] = str(video_driver)
 
     return settings
+
+
+NETPLAY_MODES = ("host", "client", "spectator")
+
+
+def netplay_settings(ctx: Context) -> dict[str, str]:
+    """Réglages RetroArch du netplay d'après les options d'ES (-netplaymode...) et ``netplay.*`` (menu NETPLAY SETTINGS)."""
+    mode = ctx.extras.get("netplaymode")
+    if mode not in NETPLAY_MODES:
+        return {}
+    result = {"netplay_start_as_spectator": "true" if mode == "spectator" else "false"}
+
+    def copy(key, name, source=None):
+        value = (ctx.extras.get(source) if source else None) or ctx.setting(name)
+        if value not in (None, ""):
+            result[key] = str(value)
+
+    copy("netplay_nickname", "netplay.nickname")
+    copy("netplay_input_latency_frames_min", "netplay.frames")
+    if mode == "host":
+        copy("netplay_ip_port", "netplay.port")
+        copy("netplay_password", "netplay.password")
+        copy("netplay_spectate_password", "netplay.spectatepassword")
+    else:
+        copy("netplay_ip_address", "", "netplayip")
+        copy("netplay_ip_port", "netplay.server.port", "netplayport")
+        copy("netplay_spectate_password" if mode == "spectator" else "netplay_password", "netplay.password", "netplaypass")
+    result["netplay_public_announce"] = "true" if truthy(ctx.setting("netplay_public_announce", "1")) else "false"
+    relay = ctx.setting("netplay.relay")
+    if relay and relay != "none":
+        result["netplay_use_mitm_server"] = "true"
+        result["netplay_mitm_server"] = str(relay)
+        custom = ctx.setting("netplay.customserver")
+        if relay == "custom" and custom:
+            result["netplay_custom_mitm_server"] = str(custom)
+    else:
+        result["netplay_use_mitm_server"] = "false"
+    return result
+
+
+def netplay_args(ctx: Context) -> list[str]:
+    """Arguments de ligne de commande RetroArch (--host, --connect...)."""
+    mode = ctx.extras.get("netplaymode")
+    if mode not in NETPLAY_MODES:
+        return []
+    args = ["--host"] if mode == "host" else ["--connect", ctx.extras.get("netplayip", "")]
+    port = ctx.extras.get("netplayport") if mode != "host" else ctx.setting("netplay.port")
+    if port:
+        args += ["--port", str(port)]
+    if ctx.extras.get("netplaysession"):
+        args += ["--mitm-session", ctx.extras["netplaysession"]]
+    nick = ctx.setting("netplay.nickname")
+    if nick:
+        args += ["--nick", str(nick)]
+    return args
+
+
+def find_core_info(core: str, directories=None) -> Path | None:
+    for directory in directories or DEFAULT_INFO_DIRS:
+        candidate = Path(directory).expanduser() / f"{core}_libretro.info"
+        if candidate.is_file():
+            return candidate
+    return None
 
 
 def screen_size() -> tuple[int, int] | None:
@@ -299,7 +389,12 @@ class RetroArch(Generator):
         if settings.get("video_shader_enable") == "true" and settings.get("video_shader"):
             # la clé video_shader du fichier n'est pas chargée au démarrage par RetroArch: --set-shader l'impose
             argv += ["--set-shader", settings["video_shader"]]
-        return Command(argv=[*argv, ctx.rom])
+        argv += netplay_args(ctx)
+        state_file = ctx.extras.get("state_file") or ctx.extras.get("state_filename") or ""
+        if state_file and not state_file.endswith(".auto") and ctx.extras.get("state_slot"):
+            argv += ["-e", ctx.extras["state_slot"]]  # charge cet état au démarrage
+        rom = archives.prepare(ctx.rom, ctx.system, find_core_info(ctx.core, info.get("info_dirs")))
+        return Command(argv=[*argv, rom])
 
 
 GENERATOR = RetroArch

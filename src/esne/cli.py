@@ -28,7 +28,7 @@ _INT_FIELDS = {"index", "nbbuttons", "nbhats", "nbaxes"}
 # Options d'ES acceptées mais pas encore interprétées: conservées dans Context.extras
 _EXTRA_OPTIONS = (
     "netplaymode", "netplayport", "netplayip", "netplaypass", "netplaysession",
-    "state_slot", "state_filename", "autosave", "monitor", "lightgun",
+    "state_slot", "state_filename", "state_file", "autosave", "monitor", "lightgun",
 )
 
 
