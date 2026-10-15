@@ -147,3 +147,12 @@ def test_anisotropic_filtering_indexes(tmp_path):
     assert eden.apply_settings(ini, ctx([], eden_af="3"))
     assert "max_anisotropy\\default=false\nmax_anisotropy=3\n" in ini.read_text()
     assert not eden.apply_settings(ini, ctx([], eden_af="6"))
+
+
+def test_anisotropic_filtering_auto_and_default(tmp_path):
+    ini = tmp_path / "qt-config.ini"
+    ini.write_text(REAL)
+    assert eden.apply_settings(ini, ctx([], eden_af="0"))
+    assert "max_anisotropy\\default=false\nmax_anisotropy=0\n" in ini.read_text()
+    assert eden.apply_settings(ini, ctx([], eden_af="1"))
+    assert "max_anisotropy=1\n" in ini.read_text()

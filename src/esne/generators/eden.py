@@ -104,7 +104,7 @@ def set_keys(lines: list[str], keys: dict[str, str]) -> list[str]:
 SETTINGS: dict[str, tuple[str, str, frozenset[str]]] = {
     "eden_docked": ("System", "use_docked_mode", frozenset({"0", "1"})),
     "eden_resolution": ("Renderer", "resolution_setup", frozenset({"3", "6", "7", "8"})),
-    "eden_af": ("Renderer", "max_anisotropy", frozenset({"2", "3", "4", "5"})),
+    "eden_af": ("Renderer", "max_anisotropy", frozenset({"0", "1", "2", "3", "4", "5"})),  # 0 auto, 1 défaut (désactivé), 2 = 2x ... 5 = 16x
     "eden_vsync": ("Renderer", "use_vsync", frozenset({"0", "1", "2", "3"})),
     "eden_aa": ("Renderer", "anti_aliasing", frozenset({"0", "1", "2"})),
     "eden_filter": ("Renderer", "scaling_filter", frozenset({"0", "1", "2", "3", "4", "5"})),
