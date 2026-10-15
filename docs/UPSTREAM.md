@@ -16,7 +16,7 @@ ES-NE embarque un fork d'EmulationStation comme sous-module git.
 | Branche upstream | `master` |
 | Commit de base | `5b1764c9a` (« Merge pull request #2239 from batocera-linux/fixfribidimultilines ») |
 | Date d'épinglage | 2026-10-12 |
-| Branche du fork | `esne` (11 commits au-dessus de la base) |
+| Branche du fork | `esne` (une trentaine de commits au-dessus de la base) |
 | Sous-modules d'ES | `external/pugixml` (initialisé avec `--recursive`) |
 
 Le sous-module d'ES-NE doit pointer vers un commit **présent sur GitHub**. Après chaque `git am` / rebase local dans
@@ -100,7 +100,7 @@ Hashes de la branche `esne` du fork.
 ## Vérifications faites sur ces patchs
 - Vérification de syntaxe (`g++ -fsyntax-only`) de `Paths.cpp`, `Platform.cpp`, `ThemeData.cpp`, `ApiSystem.cpp` et `LinuxApiSystem.cpp` en variantes `ESNE`, `BATOCERA` et par défaut.
 - Test d'exécution des chemins (`Paths`) et de la logique de `LinuxApiSystem` (traduction, recherche dans le `PATH`, affichage conditionnel des menus avec un faux `esctl`).
-- **Non fait**: build complet d'ES, lancement, test des menus dans l'interface.
+- Le build complet d'ES, son lancement et les menus ont ensuite été validés sur CachyOS (voir `README.md`, statut).
 
 ## Nettoyage des warnings (fork `esne`)
 

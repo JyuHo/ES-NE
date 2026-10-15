@@ -69,7 +69,7 @@ Format des listes: **`ID<TAB>LIBELLÉ`**, une seule tabulation par ligne (le fro
 - Les flux déjà en lecture ne sont pas déplacés vers la nouvelle sortie.
 
 ## Vérification
-- Tests Python (258 pour tout le projet, dont `tests/esctl/`) (`pytest`) sur des sorties d'exemple de `xrandr`, `wlr-randr` et `pactl`, plus des sous-processus réels avec un faux `pactl`.
+- Tests Python (314 pour tout le projet, dont `tests/esctl/`) (`pytest`) sur des sorties d'exemple de `xrandr`, `wlr-randr` et `pactl`, plus des sous-processus réels avec un faux `pactl`.
 - Test C++ → `esctl` réel: le code de `LinuxApiSystem` affiche les menus résolution, audio et version, et masque les autres.
 - **Non validé sur machine réelle**: les formats de `wlr-randr` et du JSON de `pactl` sont reconstitués de mémoire, pas capturés
   sur un système. À confirmer au premier essai sur CachyOS.

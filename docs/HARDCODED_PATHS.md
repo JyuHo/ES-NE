@@ -13,7 +13,7 @@ sont dans `docs/AUDIT_ANALYSIS.md`; le rapport brut dans `docs/audit/HARDCODED.m
 | `/usr/share/emulationstation/` | ressources copiées vers `/etc/` | `/usr/share/esne/resources/` |
 | `/userdata` | doit exister avec les données de `datainit` (`/usr/share/batocera/datainit/*`) | `~/esne/` |
 | `~/.emulationstation/` | présent dans le README (variante historique); option `--home` annoncée pour Windows | `~/.config/esne/` (option `--home` à étendre à Linux) |
-| `/tmp/es-restart`, `/tmp/es-sysrestart`, `/tmp/es-shutdown` | fichiers drapeaux lus par `emulationstation.sh`. **Doublon** avec `/tmp/restart.please`, `reboot.please`, `shutdown.please` créés par `Platform.cpp:262-273` | `$XDG_RUNTIME_DIR/esne/`, un seul mécanisme (patch 7, non fait) |
+| `/tmp/es-restart`, `/tmp/es-sysrestart`, `/tmp/es-shutdown` | fichiers drapeaux lus par `emulationstation.sh`. **Doublon** avec `/tmp/restart.please`, `reboot.please`, `shutdown.please` créés par `Platform.cpp:262-273` | `$XDG_RUNTIME_DIR/esne/`, un seul mécanisme (patch 7, fait: `systemctl` et `execv`) |
 | `sudo reboot` / `sudo poweroff` | dans `emulationstation.sh` | `systemctl reboot/poweroff` ou polkit |
 | Tags de `es_systems.cfg` | `%ROM%`, `%BASENAME%`, `%ROM_RAW%`, `%HOME%`, `%SYSTEM%`, `%EMULATOR%`, `%CORE%` | conservés tels quels |
 | Fonctions « hors Batocera » | README upstream: lancement d'émulateurs, musique de fond, webserver ne fonctionnent pas hors Batocera | à réimplémenter via `es-launcher` / `esctl` |

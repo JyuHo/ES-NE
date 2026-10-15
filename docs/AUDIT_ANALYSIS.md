@@ -4,7 +4,7 @@ Source: `docs/audit/HARDCODED.md`. Les hypothèses de `HARDCODED_PATHS.md` sont 
 
 **État au 2026-10-12** : les patchs 1 à 5 du fork sont poussés sur la branche `esne` (voir `docs/UPSTREAM.md`).
 Légende : ✅ fait · 🚧 partiel · ❌ à faire · ⛔ masqué volontairement.
-Un ✅ côté ES signifie « code en place et vérifié à la compilation (syntaxe) », pas « testé dans ES lancé » : aucun build complet n'a été fait.
+Un ✅ côté ES signifie « code en place et vérifié à la compilation (syntaxe) », pas « testé dans ES lancé ». Depuis, ES a été compilé et lancé sur CachyOS, et les menus principaux validés (voir `PARITY.md`).
 
 ## 1. Constats clés
 
