@@ -6,9 +6,9 @@ Manettes: PPSSPP reconnaît seul les manettes SDL (mappage par défaut de ``cont
 
 Réglages ES (``ppsspp_*``), écrits dans ``ppsspp.ini`` seulement quand ils sont choisis (un réglage non choisi garde la valeur de
 PPSSPP; le fichier n'est modifié que s'il existe, PPSSPP le crée à son premier lancement): moteur graphique, résolution
-interne, filtrage anisotrope, filtrage des textures, VSync, saut d'images, son coupé, langue de la console.
-Clés relevées sur un ``ppsspp.ini`` réel (PPSSPP 1.20.4); le moteur OpenGL (« 1 (OPENGL) ») et les langues autres que le
-français suivent l'ordre du système de la PSP, non vérifiés dans le fichier.
+interne, filtrage anisotrope, filtrage des textures, VSync, saut d'images, compteur d'images, son coupé, langue de la console.
+Clés et valeurs relevées sur des ``ppsspp.ini`` réels (PPSSPP 1.20.4): Vulkan « 3 (VULKAN) », OpenGL « 0 (OPENGL) », compteur
+d'images ``iShowStatusFlags = 2``. Les langues autres que le français (2) suivent l'ordre du système de la PSP, non vérifiées.
 """
 from __future__ import annotations
 
@@ -24,11 +24,12 @@ log = logging.getLogger(__name__)
 
 # clé ES -> (section, clé de ppsspp.ini, {valeur ES: valeur écrite})
 SETTINGS: dict[str, tuple[str, str, dict[str, str]]] = {
-    "ppsspp_backend": ("Graphics", "GraphicsBackend", {"vulkan": "3 (VULKAN)", "opengl": "1 (OPENGL)"}),
+    "ppsspp_backend": ("Graphics", "GraphicsBackend", {"vulkan": "3 (VULKAN)", "opengl": "0 (OPENGL)"}),
     "ppsspp_resolution": ("Graphics", "InternalResolution", {str(n): str(n) for n in range(0, 11)}),  # 0 auto, 1 = 1x...
     "ppsspp_af": ("Graphics", "AnisotropyLevel", {str(n): str(n) for n in range(0, 5)}),  # 0 off, 1 = 2x ... 4 = 16x
     "ppsspp_filter": ("Graphics", "TextureFiltering", {"1": "1", "2": "2", "3": "3", "4": "4"}),  # auto, nearest, linear, auto max
     "ppsspp_vsync": ("Graphics", "VerticalSync", {"0": "False", "1": "True"}),
+    "ppsspp_fps": ("Graphics", "iShowStatusFlags", {"0": "0", "1": "2"}),  # 2 = compteur d'images (champ de bits)
     "ppsspp_mute": ("Sound", "Enable", {"0": "True", "1": "False"}),  # la clé dit « son activé »
     "ppsspp_language": ("SystemParam", "GameLanguage", {str(n): str(n) for n in range(0, 12)}),
 }

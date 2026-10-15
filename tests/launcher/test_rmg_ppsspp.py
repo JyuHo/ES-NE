@@ -55,11 +55,11 @@ def test_ppsspp_command_and_settings(home):
     rom = home / "Jeu.iso"
     rom.write_bytes(b"x")
     command = ppsspp.Ppsspp().generate(ctx("psp", "ppsspp", rom, ppsspp_resolution="6", ppsspp_af="2", ppsspp_vsync="0",
-                                           ppsspp_mute="1", ppsspp_language="1", ppsspp_backend="opengl", ppsspp_frameskip="auto"))
+                                           ppsspp_mute="1", ppsspp_language="1", ppsspp_backend="opengl", ppsspp_frameskip="auto", ppsspp_fps="1"))
     assert command.argv == ["/usr/bin/PPSSPPSDL", "--fullscreen", "--pause-menu-exit", str(rom)]
     text = ini.read_text()
     for line in ("InternalResolution = 6", "AnisotropyLevel = 2", "VerticalSync = False", "Enable = False", "GameLanguage = 1",
-                 "GraphicsBackend = 1 (OPENGL)", "AutoFrameSkip = True", "FrameSkip = 0"):
+                 "GraphicsBackend = 0 (OPENGL)", "iShowStatusFlags = 2", "AutoFrameSkip = True", "FrameSkip = 0"):
         assert line in text
     assert "FullScreen = x" in text  # le reste est intact
 

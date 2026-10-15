@@ -47,7 +47,7 @@ Dans `packaging/arch/` (PKGBUILD `es-ne-git`, `es-ne-session`, `es-ne.desktop`, 
 
 ## Prochaines étapes
 - Steam: piste Batocera: fin de partie lue dans `console_log.txt` de Steam
-- Valider RMG et PPSSPP en jeu (compteur d'images PPSSPP: `iShowStatusFlags` à relever); autres émulateurs autonomes possibles: melonDS, DuckStation, Flycast
+- Valider RMG et PPSSPP en jeu; autres émulateurs autonomes possibles: melonDS, DuckStation, Flycast
 - Autres ports PortMaster (OpenTyrian, SDLPoP, OpenGGS), Wine/umu, Ryujinx
 - RetroArch: netplay, `-monitor`, RetroAchievements en jeu
 - Réglages dans ES: Dolphin et PCSX2 validés en jeu. RPCS3: pas d'autres options, les jeux se règlent au cas par cas dans RPCS3; Redream et Xenia: options principales faites, le reste volontairement laissé à la configuration de l'émulateur

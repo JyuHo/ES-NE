@@ -307,6 +307,8 @@ PPSSPP_FEATURES = (
     '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
     '<feature name="FRAME SKIP" value="ppsspp_frameskip" description="Skip frames to keep full speed on slow machines.">'
     '<choice name="OFF" value="0" /><choice name="AUTO" value="auto" /></feature>'
+    '<feature name="SHOW FPS" value="ppsspp_fps" description="Frame counter overlay.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
     '<feature name="MUTE AUDIO" value="ppsspp_mute" description="Turn the sound off.">'
     '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
     '<feature name="CONSOLE LANGUAGE" value="ppsspp_language" description="PSP system language used by games.">'
