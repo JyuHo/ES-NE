@@ -255,6 +255,11 @@ XENIA_FEATURES = (
     '<choice name="CZECH REPUBLIC" value="23" /></feature>'
     '<feature name="MUTE AUDIO" value="xenia_mute" description="Turn the sound off.">'
     '<choice name="OFF" value="false" /><choice name="ON" value="true" /></feature>'
+    '<feature name="VIDEO MODE" value="xenia_avpack" description="Xbox 360 video output the game sees. HDMI is the default.">'
+    '<choice name="HDMI (DEFAULT)" value="8" /><choice name="HDMI + AUDIO" value="4" /><choice name="VGA" value="6" />'
+    '<choice name="480P COMPONENT (HD)" value="3" /><choice name="PAL-60 COMPONENT (SD)" value="0" />'
+    '<choice name="PAL-60 SCART" value="2" /><choice name="PAL-60 COMPOSITE / S-VIDEO" value="5" />'
+    '<choice name="TV PAL-60" value="7" /></feature>'
     '<feature name="AUDIO SYSTEM" value="xenia_apu" description="Audio backend.">'
     '<choice name="AUTO" value="any" /><choice name="ALSA" value="alsa" /><choice name="SDL" value="sdl" /></feature>'
 )

@@ -42,6 +42,8 @@ CHOICES: dict[str, tuple[frozenset[str], tuple[str, ...]]] = {
     "xenia_fps": (frozenset({"0", "30", "60"}), ("framerate_limit",)),
     "xenia_mute": (frozenset({"true", "false"}), ("mute",)),
     "xenia_apu": (frozenset({"any", "alsa", "sdl"}), ("apu",)),
+    # modes vidéo de la console (liste du fichier de config de Xenia); 1 est « non utilisé »
+    "xenia_avpack": (frozenset({"0", "2", "3", "4", "5", "6", "7", "8"}), ("avpack",)),
 }
 
 

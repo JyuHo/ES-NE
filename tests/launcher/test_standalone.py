@@ -193,3 +193,10 @@ def test_xenia_region_accepts_netherlands_russia_and_czech_republic(tmp_path):
     for value in ("74", "88", "23"):
         assert xenia.set_console_region(xconfig, value)
         assert xconfig.read_bytes()[xenia.REGION_OFFSET] == int(value)
+
+
+def test_xenia_video_mode_avpack(esne_env, monkeypatch, tmp_path):
+    command, rom = _xenia(esne_env, monkeypatch, tmp_path, {"xenia_avpack": "6"})
+    assert "--avpack=6" in command.argv and command.argv[-1] == str(rom)
+    command, rom = _xenia(esne_env, monkeypatch, tmp_path, {"xenia_avpack": "1"})  # 1: non utilisé, ignoré
+    assert not any(arg.startswith("--avpack") for arg in command.argv)
