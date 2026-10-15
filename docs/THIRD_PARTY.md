@@ -7,6 +7,8 @@
 | thème Carbon (`/usr/share/esne/themes/es-theme-carbon`) | [RetroPie/es-theme-carbon](https://github.com/RetroPie/es-theme-carbon), téléchargé par le `PKGBUILD` à la construction | branche par défaut | aucun fichier de licence dans le dépôt: **non redistribué dans ce dépôt** |
 | Digger (jeu de démonstration du système ports, **téléchargé à la demande** par `es-genconfig --install-port digger`, jamais copié ni redistribué) | [catalogue PortMaster](https://github.com/PortsMaster/PortMaster-New), source du jeu: [sobomax/digger](https://github.com/sobomax/digger) | version du catalogue au moment du téléchargement | GPL-2.0 (le zip contient `LICENSE.GPL2.txt`) |
 
+Aucun émulateur n'est copié ni redistribué par ES-NE. Redream (Dreamcast, logiciel propriétaire gratuit, [redream.io](https://redream.io)) et Xenia Canary (Xbox 360, fork Linux natif [peerloomllc/xenia-canary](https://github.com/peerloomllc/xenia-canary)) sont installés par l'utilisateur; ES-NE ne fait que les lancer et écrire leurs réglages (`redream.cfg`; options de ligne de commande et `xconfig.settings` pour Xenia, octets relevés sur un fichier réel).
+
 Aucun code de `batocera-configgen` ni de `batocera.linux` n'a été copié à ce jour. Si ça arrive, ajouter ici une ligne par fichier
 (source, commit, licence exacte du fichier, voir `docs/LICENSING.md`).
 
