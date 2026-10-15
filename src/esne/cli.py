@@ -67,8 +67,8 @@ def parse_controllers(values: dict) -> list[Controller]:
             if field_name in _INT_FIELDS:
                 try:
                     value = int(value)
-                except ValueError:
-                    raise LaunchError(BAD_ARGUMENTS, f"-p{player}{field_name}: entier attendu, reçu '{value}'")
+                except ValueError as exc:
+                    raise LaunchError(BAD_ARGUMENTS, f"-p{player}{field_name}: entier attendu, reçu '{value}'") from exc
             data[field_name] = value
         controllers.append(Controller(player=player, **data))
     return controllers

@@ -31,7 +31,7 @@ REGION_ORDER = ("usa", "europe", "world", "japan")
 
 def fetch(url: str, timeout: float = TIMEOUT) -> bytes:
     request = urllib.request.Request(url, headers={"User-Agent": "es-ne"})
-    with urllib.request.urlopen(request, timeout=timeout) as response:  # noqa: S310 (adresses https fixes)
+    with urllib.request.urlopen(request, timeout=timeout) as response:
         return response.read()
 
 

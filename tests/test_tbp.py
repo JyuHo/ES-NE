@@ -2,7 +2,6 @@
 import json
 import urllib.error
 
-import pytest
 
 from esne import bezels, tbp
 from esne.esctl.commands import thebezelproject

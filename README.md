@@ -19,7 +19,7 @@ pour Arch Linux / CachyOS, avec les options de RetroBat, **sans aucune dépendan
 | Composant | État |
 |---|---|
 | Frontend ES (fork `emulationstation-esne`, branche `esne`) | ✅ compile et tourne sur CachyOS (KDE Wayland). Interface en français complète. Patchs: option `-DESNE=ON`, chemins (config XDG, données dans `~/esne`), `LinuxApiSystem`, arrêt/redémarrage système, redémarrage d'ES, menu QUIT simplifié, Zaparoo désactivé par défaut |
-| `es-launcher` | ✅ lancement validé sur une vraie machine (SNES, N64, GameCube, Wii): RetroArch (manette `sdl2`, raccourcis, ratio, shaders, rewind...) et émulateurs autonomes; 332 tests |
+| `es-launcher` | ✅ lancement validé sur une vraie machine (SNES, N64, GameCube, Wii): RetroArch (manette `sdl2`, raccourcis, ratio, shaders, rewind...) et émulateurs autonomes; 335 tests |
 | `es-genconfig` | ✅ génère `es_systems.cfg`, `es_features.cfg` et les jeux de shaders depuis le catalogue (27 systèmes) |
 | `esctl` | ✅ `has`, `version`, `resolution`, `audio`, `config`, `info`, `timezone`, `keyboard`, `install-core`, `padsinfo`, `thebezelproject`, `systems` (état des BIOS), `swissknife --emukill`, `preupdate-gamelists-hook`. Contrat dans `docs/ESCTL_CONTRACT.md` |
 | Paquet Arch (`packaging/arch/PKGBUILD`), session `ES-NE`, règles polkit | ✅ paquet installé et session de connexion validée (Plasma Login Manager, gamescope, BC-250): `es-ne-session` lance `gamescope -f -- emulationstation` (sans `-e`, qui donnait un écran noir) et journalise dans `~/.local/state/esne/session.log`. Compiler dans une copie hors du dépôt: `makepkg` réécrit `pkgver` |

@@ -26,7 +26,7 @@ _YamlLoader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)  # l'analyseur en C 
 def _parse(path: str, stamp: tuple[int, int]) -> object:
     """Contenu d'un fichier YAML; ``stamp`` (taille, date) invalide le cache quand le fichier change."""
     with open(path, encoding="utf-8") as handle:
-        return yaml.load(handle, Loader=_YamlLoader) or {}  # noqa: S506 (SafeLoader)
+        return yaml.load(handle, Loader=_YamlLoader) or {}
 
 
 def _read(path: Path) -> object:

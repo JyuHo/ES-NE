@@ -25,7 +25,7 @@ def entries(user_dir: Path | None = None) -> dict:
 
 
 def md5_of(path: Path) -> str:
-    digest = hashlib.md5()  # noqa: S324 (somme d'identification, pas de sécurité)
+    digest = hashlib.md5()
     with path.open("rb") as handle:
         for block in iter(lambda: handle.read(1 << 20), b""):
             digest.update(block)

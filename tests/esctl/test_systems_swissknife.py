@@ -1,10 +1,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 import hashlib
-import os
 import signal
 import subprocess
 import sys
-import time
 
 from esne import paths
 from esne.esctl.commands import preupdate_gamelists_hook, swissknife, systems

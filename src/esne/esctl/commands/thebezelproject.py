@@ -61,7 +61,7 @@ def list_lines() -> list[str]:
 
 def fetch(url: str) -> bytes:
     request = urllib.request.Request(url, headers={"User-Agent": "esctl (ES-NE)"})
-    with urllib.request.urlopen(request, timeout=60) as response:  # noqa: S310 (adresses https fixes)
+    with urllib.request.urlopen(request, timeout=60) as response:
         return response.read()
 
 

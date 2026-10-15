@@ -45,7 +45,6 @@ def test_default_hotkeys(esne_env):
 
 
 def test_hotkeys_need_enable_button(esne_env):
-    from esne.generators.base import Context
     ctx = ctx_for()
     ctx.config.get = lambda key, default=None: "none" if key == "hotkey_enable" else default
     s = ra.build_settings(ctx)

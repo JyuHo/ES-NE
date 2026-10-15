@@ -2,7 +2,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
 
 from esne import __version__
 from esne.esctl import runner
