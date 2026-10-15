@@ -48,6 +48,10 @@ def find_program(candidates, which=None) -> list[str] | None:
             found = sorted(f for f in glob.glob(os.path.expanduser(parts[0])) if os.access(f, os.X_OK))
             if found:
                 return [found[-1], *parts[1:]]
+        elif "/" in parts[0] or parts[0].startswith("~"):  # chemin direct vers un exécutable
+            path = os.path.expanduser(parts[0])
+            if os.path.isfile(path) and os.access(path, os.X_OK):
+                return [path, *parts[1:]]
         elif which(parts[0]):
             if os.path.basename(parts[0]) == "flatpak" and len(parts) >= 3 and parts[1] == "run":
                 app = next((p for p in parts[2:] if not p.startswith("-")), "")
