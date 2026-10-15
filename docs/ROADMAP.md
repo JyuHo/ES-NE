@@ -54,7 +54,7 @@ Dans `packaging/arch/` (PKGBUILD `es-ne-git`, `es-ne-session`, `es-ne.desktop`, 
 
 ## Versions
 
-Une release par avancée notable (nouvel émulateur, série d'options): 1.0.1 à 1.0.10, puis 1.1.0 et la suite 1.1.1 à 1.1.10, etc. 1.0.1: Xbox 360 (Xenia Canary) avec réglages vidéo dans ES, logo ES-NE. 1.0.2: réglages dans ES pour Eden, Cemu, xemu et Xenia (langue, région, son), validés en jeu. 1.0.3: Dreamcast (Redream), validée en jeu.
+Une release par avancée notable (nouvel émulateur, série d'options): 1.0.1 à 1.0.10, puis 1.1.0 et la suite 1.1.1 à 1.1.10, etc. 1.0.1: Xbox 360 (Xenia Canary) avec réglages vidéo dans ES, logo ES-NE. 1.0.2: réglages dans ES pour Eden, Cemu, xemu et Xenia (langue, région, son), validés en jeu. 1.0.3: Dreamcast (Redream), validée en jeu. 1.0.4: Dolphin (réglages ES, manettes GameCube et Wii, langues, barre capteur), options PCSX2 et options de rendu de Redream, validés en jeu.
 
 ## Licence
 Le projet est en GPL-3.0-or-later (voir `docs/LICENSING.md`): du code de batocera-configgen (GPL-3) peut être repris.
