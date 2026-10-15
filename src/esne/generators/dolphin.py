@@ -30,6 +30,7 @@ from .standalone import Standalone
 
 log = logging.getLogger(__name__)
 
+GAMECUBE_SYSTEMS = frozenset({"gc", "gamecube"})  # "gc" dans systems.yml d'ES-NE
 FLATPAK = "org.DolphinEmu.dolphin-emu"
 BOOL = frozenset({"true", "false"})
 
@@ -290,7 +291,7 @@ class Dolphin(Standalone):
         for name, sections in chosen(ctx).items():
             if not update_ini(folder / name, sections):
                 log.info("dolphin: %s introuvable, lance Dolphin une fois à la main pour le créer", name)
-        if ctx.system == "gamecube" and str(ctx.setting("dolphin_gc_pad", "") or "").strip().lower() == "sdl":
+        if ctx.system in GAMECUBE_SYSTEMS and str(ctx.setting("dolphin_gc_pad", "") or "").strip().lower() == "sdl":
             count = write_gcpads(folder / "GCPadNew.ini", ctx.controllers)
             log.info("dolphin: %d manette(s) GameCube configurée(s)", count)
             ports = {f"SIDevice{port}": "6" if port < count else "0" for port in range(4)}  # 6 = manette standard

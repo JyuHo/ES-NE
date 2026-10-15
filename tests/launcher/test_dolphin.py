@@ -24,7 +24,7 @@ def home(tmp_path, monkeypatch, esne_env):
 
 
 def context(rom, **settings):
-    return Context(system="gamecube", rom=str(rom), config=Cfg(**settings), emulator="dolphin")
+    return Context(system="gc", rom=str(rom), config=Cfg(**settings), emulator="dolphin")
 
 
 def read(path):
@@ -163,7 +163,7 @@ def test_gamecube_two_players_mapped_and_ports_set(home):
     rom = home / "Jeu.iso"
     rom.write_bytes(b"x")
     pads = [Controller(player=1, index=0, name="PS4 Controller"), Controller(player=2, index=1, name="PS4 Controller")]
-    dolphin.Dolphin().generate(Context(system="gamecube", rom=str(rom), config=Cfg(dolphin_gc_pad="sdl"),
+    dolphin.Dolphin().generate(Context(system="gc", rom=str(rom), config=Cfg(dolphin_gc_pad="sdl"),
                                        emulator="dolphin", controllers=pads))
     parser = read(folder / "GCPadNew.ini")
     assert parser["GCPad1"]["Device"] == "SDL/0/PS4 Controller" and parser["GCPad2"]["Device"] == "SDL/1/PS4 Controller"
