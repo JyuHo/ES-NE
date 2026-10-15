@@ -197,3 +197,18 @@ def test_path_prefers_hidraw_for_sony_and_known_path():
     pad = Controller(player=1, index=0, guid=guid)
     evdev.resolve_paths([pad], PROC, hid, known={"/dev/input/event14"})
     assert pad.path == "/dev/input/event14"
+
+
+def test_patch_ini_robust(tmp_path):
+    ini = tmp_path / "w.ini"
+    ini.write_bytes(b"[S]\r\nk = 1\r\nnom = caf\xe9\r\n")  # CRLF + octet non UTF-8
+    assert iniedit.patch_ini(ini, {"S": {"k": "2"}}, spaced=True)
+    assert ini.read_bytes() == b"[S]\r\nk = 2\r\nnom = caf\xe9\r\n"
+    ini.chmod(0o444)
+    tmp_path.chmod(0o555)
+    try:
+        import os
+        if os.geteuid() != 0:
+            assert not iniedit.patch_ini(ini, {"S": {"k": "3"}})
+    finally:
+        tmp_path.chmod(0o755)

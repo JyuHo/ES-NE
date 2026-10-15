@@ -200,3 +200,13 @@ def test_xenia_video_mode_avpack(esne_env, monkeypatch, tmp_path):
     assert "--avpack=6" in command.argv and command.argv[-1] == str(rom)
     command, rom = _xenia(esne_env, monkeypatch, tmp_path, {"xenia_avpack": "1"})  # 1: non utilisé, ignoré
     assert not any(arg.startswith("--avpack") for arg in command.argv)
+
+
+def test_versioned_appimage_sorted_naturally(tmp_path):
+    from esne.generators.standalone import find_program
+
+    for name in ("App-0.9.AppImage", "App-0.10.AppImage", "App-0.2.AppImage"):
+        file = tmp_path / name
+        file.write_text("#!/bin/sh\n")
+        file.chmod(0o755)
+    assert find_program([str(tmp_path / "App*.AppImage")])[0].endswith("App-0.10.AppImage")

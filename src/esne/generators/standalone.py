@@ -19,6 +19,7 @@ from __future__ import annotations
 import glob
 import logging
 import os
+import re
 import shlex
 import shutil
 import subprocess
@@ -38,6 +39,11 @@ def _flatpak_installed(flatpak: str, app: str) -> bool:
         return False
 
 
+def _natural(name: str) -> list:
+    """Clé de tri « humaine »: ``app-0.9`` avant ``app-0.10``."""
+    return [int(part) if part.isdigit() else part for part in re.split(r"(\d+)", name)]
+
+
 def find_program(candidates, which=None) -> list[str] | None:
     which = which or shutil.which
     for candidate in candidates or []:
@@ -45,7 +51,7 @@ def find_program(candidates, which=None) -> list[str] | None:
         if not parts:
             continue
         if any(c in parts[0] for c in "*?["):  # motif de fichier (AppImage versionné): le plus récent
-            found = sorted(f for f in glob.glob(os.path.expanduser(parts[0])) if os.access(f, os.X_OK))
+            found = sorted((f for f in glob.glob(os.path.expanduser(parts[0])) if os.access(f, os.X_OK)), key=_natural)
             if found:
                 return [found[-1], *parts[1:]]
         elif "/" in parts[0] or parts[0].startswith("~"):  # chemin direct vers un exécutable

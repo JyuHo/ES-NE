@@ -107,7 +107,9 @@ def run_command(command, ctx: Context, generator) -> subprocess.CompletedProcess
             os.killpg(child.pid, signal.SIGTERM)
         except OSError:
             return
-        threading.Timer(5.0, lambda: child.poll() is None and _kill(child)).start()
+        timer = threading.Timer(5.0, lambda: child.poll() is None and _kill(child))
+        timer.daemon = True  # ne retient pas es-launcher une fois l'émulateur fermé
+        timer.start()
 
     if codes is not None:
         watcher = hotkey.Watcher(codes, close_emulator)

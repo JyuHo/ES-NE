@@ -6,7 +6,8 @@ Les fichiers livrés avec le paquet sont complétés, système par système, par
 """
 from __future__ import annotations
 
-from importlib import resources
+import copy
+import functools
 from pathlib import Path
 
 import yaml
@@ -15,18 +16,36 @@ from . import paths
 from .errors import INVALID_CONFIG, LaunchError
 
 DEFAULT_PRIORITY = 100
+DATA_DIR = Path(__file__).resolve().parent / "data"
+
+
+_YamlLoader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)  # l'analyseur en C est ~10 fois plus rapide
+
+
+@functools.lru_cache(maxsize=16)
+def _parse(path: str, stamp: tuple[int, int]) -> object:
+    """Contenu d'un fichier YAML; ``stamp`` (taille, date) invalide le cache quand le fichier change."""
+    with open(path, encoding="utf-8") as handle:
+        return yaml.load(handle, Loader=_YamlLoader) or {}  # noqa: S506 (SafeLoader)
+
+
+def _read(path: Path) -> object:
+    info = path.stat()
+    return copy.deepcopy(_parse(str(path), (info.st_size, info.st_mtime_ns)))
 
 
 def _load(name: str, user_dir: Path | None = None) -> dict:
     try:
-        data = yaml.safe_load((resources.files("esne") / "data" / name).read_text(encoding="utf-8")) or {}
+        data = _read(DATA_DIR / name)
     except (OSError, ModuleNotFoundError, yaml.YAMLError):
+        data = {}
+    if not isinstance(data, dict):
         data = {}
 
     user = (user_dir or paths.config_dir()) / name
     if user.exists():
         try:
-            override = yaml.safe_load(user.read_text(encoding="utf-8")) or {}
+            override = _read(user)
         except (OSError, yaml.YAMLError) as exc:
             raise LaunchError(INVALID_CONFIG, f"{user}: {exc}") from exc
         if not isinstance(override, dict):

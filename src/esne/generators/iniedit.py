@@ -7,7 +7,16 @@ section; une section absente est ajoutée à la fin du fichier. Écriture atomiq
 """
 from __future__ import annotations
 
+import logging
 from pathlib import Path
+
+log = logging.getLogger(__name__)
+
+_ENCODING = {"encoding": "utf-8", "errors": "surrogateescape"}  # un octet illisible est conservé tel quel
+
+
+def _read(path: Path) -> str:
+    return path.read_bytes().decode(**_ENCODING)  # en octets: les fins de ligne \r\n restent intactes
 
 
 def _is_section(line: str) -> str | None:
@@ -25,7 +34,11 @@ def patch_ini(path: Path, values: dict[str, dict[str, str]], spaced: bool = Fals
     """
     if not values or not path.is_file():
         return False
-    lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
+    try:
+        lines = _read(path).splitlines(keepends=True)
+    except OSError as exc:
+        log.warning("%s illisible, réglages non appliqués: %s", path, exc)
+        return False
     if lines and not lines[-1].endswith("\n"):
         lines[-1] += "\n"
     separator = " = " if spaced else "="
@@ -45,7 +58,8 @@ def patch_ini(path: Path, values: dict[str, dict[str, str]], spaced: bool = Fals
                 name, sep, current = text.partition("=")
                 if sep and name.strip() == key:
                     if current.strip() != value:
-                        lines[i] = f"{name}={current[:len(current) - len(current.lstrip())]}{value}\n"
+                        eol = text[len(text.rstrip("\r\n")):] or "\n"  # garde les fins de ligne du fichier
+                        lines[i] = f"{name}={current[:len(current) - len(current.lstrip())]}{value}{eol}"
                         changed = True
                     break
             else:
@@ -57,8 +71,13 @@ def patch_ini(path: Path, values: dict[str, dict[str, str]], spaced: bool = Fals
                 changed = True
     if changed:
         temporary = path.with_name(path.name + ".esne-tmp")
-        temporary.write_text("".join(lines), encoding="utf-8")
-        temporary.replace(path)
+        try:
+            temporary.write_bytes("".join(lines).encode(**_ENCODING))
+            temporary.replace(path)
+        except OSError as exc:  # dossier ou fichier en lecture seule: le jeu doit se lancer quand même
+            log.warning("%s non modifiable, réglages non appliqués: %s", path, exc)
+            temporary.unlink(missing_ok=True)
+            return False
     return changed
 
 
@@ -68,7 +87,11 @@ def read_section(path: Path, section: str) -> dict[str, str]:
     if not path.is_file():
         return result
     inside = False
-    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+    try:
+        text = _read(path)
+    except OSError:
+        return result
+    for line in text.splitlines():
         name = _is_section(line)
         if name is not None:
             inside = name == section
