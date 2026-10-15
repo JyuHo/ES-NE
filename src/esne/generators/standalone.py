@@ -23,7 +23,12 @@ import re
 import shlex
 import shutil
 import subprocess
+import traceback
+import xml.etree.ElementTree as ET
+from functools import wraps
 from pathlib import Path
+
+import yaml
 
 from .. import catalog
 from ..errors import EMULATOR_MISSING, INVALID_CONFIG, UNKNOWN_EMULATOR, LaunchError
@@ -90,9 +95,32 @@ def _expand(value, variables: dict[str, str]) -> str:
         raise LaunchError(INVALID_CONFIG, f"variable inconnue dans emulators.yml: {exc}") from exc
 
 
+# Erreurs d'un fichier de réglages illisible, mal formé ou protégé en écriture: elles ne doivent pas empêcher le jeu de démarrer
+TOLERATED = (OSError, ValueError, ET.ParseError, yaml.YAMLError)
+
+
 class Standalone(Generator):
     name = "standalone"
     external_hotkey = True  # ces émulateurs n'ont pas de raccourci manette: es-launcher le fournit
+
+    def __init_subclass__(cls, **kwargs):
+        """Protège ``generate`` des sous-classes: si l'application des réglages échoue, on lance le jeu avec la commande de base."""
+        super().__init_subclass__(**kwargs)
+        generate = cls.__dict__.get("generate")
+        if generate is None:
+            return
+
+        @wraps(generate)
+        def safe(self, ctx):
+            try:
+                return generate(self, ctx)
+            except TOLERATED as exc:
+                log.warning("%s: réglages non appliqués (%s: %s), le jeu est lancé avec la configuration actuelle de l'émulateur",
+                            self.name, type(exc).__name__, exc)
+                log.debug("%s", traceback.format_exc())
+                return Standalone.generate(self, ctx)
+
+        cls.generate = safe
 
     def generate(self, ctx: Context) -> Command:
         spec = catalog.emulator_info(ctx.emulator)

@@ -7,13 +7,13 @@ lancement dans <cache>/retroarch/<système>.cfg: le retroarch.cfg de l'utilisate
 from __future__ import annotations
 
 import logging
-import shlex
 import shutil
 from pathlib import Path
 
 from .. import archives, bezels, catalog, paths, tbp
 from ..errors import CORE_MISSING, EMULATOR_MISSING, OTHER_ERROR, LaunchError
 from .base import Command, Context, Generator
+from .standalone import find_program
 
 log = logging.getLogger("es-launcher")
 
@@ -41,10 +41,9 @@ def quote(value) -> str:
 
 def find_binary(candidates=None, which=shutil.which) -> list[str]:
     """Préfixe de commande de RetroArch: le premier candidat dont le programme existe."""
-    for candidate in candidates or DEFAULT_BINARIES:
-        parts = shlex.split(candidate)
-        if parts and which(parts[0]):
-            return [which(parts[0]), *parts[1:]]
+    found = find_program(candidates or DEFAULT_BINARIES, which)  # vérifie aussi que le Flatpak est bien installé
+    if found:
+        return found
     raise LaunchError(EMULATOR_MISSING, "RetroArch est introuvable (installez le paquet retroarch)")
 
 

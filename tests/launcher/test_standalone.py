@@ -210,3 +210,22 @@ def test_versioned_appimage_sorted_naturally(tmp_path):
         file.write_text("#!/bin/sh\n")
         file.chmod(0o755)
     assert find_program([str(tmp_path / "App*.AppImage")])[0].endswith("App-0.10.AppImage")
+
+
+def test_unreadable_settings_do_not_block_the_game(tmp_path, monkeypatch, esne_env):
+    from esne.generators import duckstation
+    from esne.generators.base import Context
+
+    monkeypatch.setenv("XDG_DATA_HOME", str(tmp_path))
+    ini = tmp_path / "duckstation" / "settings.ini"
+    ini.parent.mkdir(parents=True)
+    ini.write_text("[GPU]\n")
+
+    class Cfg:
+        def get(self, key, system=None, rom=None, default=None):
+            return "4" if key == "duckstation_resolution" else default
+
+    monkeypatch.setattr(duckstation.iniedit, "patch_ini", lambda *a, **k: (_ for _ in ()).throw(PermissionError("lecture seule")))
+    monkeypatch.setattr("esne.generators.standalone.shutil.which", lambda n: "/usr/bin/duckstation-qt" if n == "duckstation-qt" else None)
+    command = duckstation.Duckstation().generate(Context(system="psx", rom=str(tmp_path / "g.cue"), config=Cfg(), emulator="duckstation"))
+    assert command.argv[0] == "/usr/bin/duckstation-qt" and command.argv[-1].endswith("g.cue")
