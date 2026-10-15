@@ -88,6 +88,7 @@ n64:
     libretro:
       mupen64plus_next: { priority: 1 }
       parallel_n64: {}
+    rmg: {}
 psx:
   name: Sony PlayStation
   manufacturer: Sony
@@ -146,6 +147,7 @@ psp:
   emulators:
     libretro:
       ppsspp: { priority: 1 }
+    ppsspp: {}
 
 ps2:
   name: Sony PlayStation 2

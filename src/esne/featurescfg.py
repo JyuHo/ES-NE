@@ -266,6 +266,57 @@ XENIA_FEATURES = (
 
 
 # Options Redream (ES enregistre <système>.<clé>); écrites dans redream.cfg quand elles sont choisies.
+RMG_FEATURES = (
+    '<feature name="RENDERING RESOLUTION" value="rmg_resolution" description="Internal resolution of the GLideN64 plugin. Applied to GLideN64.ini, which RMG creates at its first launch.">'
+    '<choice name="WINDOW SIZE" value="0" /><choice name="NATIVE (N64)" value="1" /><choice name="2X" value="2" />'
+    '<choice name="3X" value="3" /><choice name="4X" value="4" /><choice name="6X" value="6" /></feature>'
+    '<feature name="GAME ASPECT RATIO" value="rmg_aspect" description="Force the aspect ratio.">'
+    '<choice name="STRETCH" value="0" /><choice name="4:3" value="1" /><choice name="16:9" value="2" /><choice name="ADJUST" value="3" /></feature>'
+    '<feature name="ANTI-ALIASING (MSAA)" value="rmg_msaa" description="Multisample anti-aliasing.">'
+    '<choice name="OFF" value="0" /><choice name="2X" value="2" /><choice name="4X" value="4" /><choice name="8X" value="8" /></feature>'
+    '<feature name="FXAA" value="rmg_fxaa" description="FXAA anti-aliasing.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="ANISOTROPIC FILTERING" value="rmg_af" description="Texture sharpness at oblique angles.">'
+    '<choice name="OFF" value="0" /><choice name="2X" value="2" /><choice name="4X" value="4" />'
+    '<choice name="8X" value="8" /><choice name="16X" value="16" /></feature>'
+    '<feature name="TEXTURE FILTERING" value="rmg_filter" description="N64 texture filter.">'
+    '<choice name="STANDARD BILINEAR" value="0" /><choice name="3-POINT (N64 STYLE)" value="1" /></feature>'
+    '<feature name="HIRES TEXTURES" value="rmg_hires" description="Load high resolution texture packs from the RMG data folder.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="VSYNC" value="rmg_vsync" description="Fix screen tearing.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="SHOW FPS" value="rmg_fps" description="Frame counter overlay.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="AUTOCONFIGURE CONTROLLERS" value="rmg_autoconfig" '
+    'description="Map the pads ES sees to the N64 controller ports. Turn off to keep your own profiles.">'
+    '<choice name="ON" value="1" /><choice name="OFF" value="0" /></feature>'
+)
+
+PPSSPP_FEATURES = (
+    '<feature name="GRAPHICS API" value="ppsspp_backend" description="Renderer used by PPSSPP. Applied to ppsspp.ini, which PPSSPP creates at its first launch.">'
+    '<choice name="VULKAN" value="vulkan" /><choice name="OPENGL" value="opengl" /></feature>'
+    '<feature name="RENDERING RESOLUTION" value="ppsspp_resolution" description="Internal resolution (multiple of 480x272).">'
+    '<choice name="AUTOMATIC" value="0" /><choice name="NATIVE (PSP)" value="1" /><choice name="2X" value="2" /><choice name="3X" value="3" />'
+    '<choice name="4X" value="4" /><choice name="5X" value="5" /><choice name="6X" value="6" /><choice name="8X" value="8" /><choice name="10X" value="10" /></feature>'
+    '<feature name="ANISOTROPIC FILTERING" value="ppsspp_af" description="Texture sharpness at oblique angles.">'
+    '<choice name="OFF" value="0" /><choice name="2X" value="1" /><choice name="4X" value="2" />'
+    '<choice name="8X" value="3" /><choice name="16X" value="4" /></feature>'
+    '<feature name="TEXTURE FILTERING" value="ppsspp_filter" description="How textures are smoothed.">'
+    '<choice name="AUTO" value="1" /><choice name="NEAREST" value="2" /><choice name="LINEAR" value="3" /><choice name="AUTO (MAX QUALITY)" value="4" /></feature>'
+    '<feature name="VSYNC" value="ppsspp_vsync" description="Fix screen tearing.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="FRAME SKIP" value="ppsspp_frameskip" description="Skip frames to keep full speed on slow machines.">'
+    '<choice name="OFF" value="0" /><choice name="AUTO" value="auto" /></feature>'
+    '<feature name="MUTE AUDIO" value="ppsspp_mute" description="Turn the sound off.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="CONSOLE LANGUAGE" value="ppsspp_language" description="PSP system language used by games.">'
+    '<choice name="JAPANESE" value="0" /><choice name="ENGLISH" value="1" /><choice name="FRENCH" value="2" />'
+    '<choice name="SPANISH" value="3" /><choice name="GERMAN" value="4" /><choice name="ITALIAN" value="5" />'
+    '<choice name="DUTCH" value="6" /><choice name="PORTUGUESE" value="7" /><choice name="RUSSIAN" value="8" />'
+    '<choice name="KOREAN" value="9" /></feature>'
+)
+
+
 REDREAM_FEATURES = (
     '<feature name="REGION" value="redream_region" description="Dreamcast region. Applied to redream.cfg, which Redream creates at its first launch.">'
     '<choice name="EUROPE" value="europe" /><choice name="USA" value="usa" /><choice name="JAPAN" value="japan" /></feature>'
@@ -317,6 +368,8 @@ def render() -> str:
         f'  <emulator name="xemu" features="">{XEMU_FEATURES}</emulator>\n'
         f'  <emulator name="xenia" features="">{XENIA_FEATURES}</emulator>\n'
         f'  <emulator name="redream" features="">{REDREAM_FEATURES}</emulator>\n'
+        f'  <emulator name="rmg" features="">{RMG_FEATURES}</emulator>\n'
+        f'  <emulator name="ppsspp" features="">{PPSSPP_FEATURES}</emulator>\n'
         f'  <emulator name="steam" features="">{STEAM_FEATURES}</emulator>\n'
         "</features>\n"
     )

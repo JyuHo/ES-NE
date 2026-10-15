@@ -25,6 +25,17 @@ xemu:
   binary: [xemu, "~/.local/bin/[Xx]emu*.AppImage", "~/Applications/[Xx]emu*.AppImage", "flatpak run app.xemu.xemu"]
   args: [-full-screen, -dvd_path, "{rom}"]
   package: xemu
+rmg:
+  # RMG (Rosalie's Mupen GUI, N64): AppImage de github.com/Rosalie241/RMG/releases, paquet AUR `rmg` ou Flatpak.
+  # -f plein écran, -n sans barre de menus, -q quitte RMG à la fin de la partie.
+  binary: ["~/.local/bin/[Rr][Mm][Gg]*.AppImage", "~/Applications/[Rr][Mm][Gg]*.AppImage", rmg, "flatpak run com.github.Rosalie241.RMG"]
+  args: [-f, -n, -q, "{rom}"]
+  package: "RMG (AppImage dans ~/.local/bin, AUR rmg ou Flatpak)"
+ppsspp:
+  # PPSSPP (PSP): AppImage de ppsspp.org, paquet ppsspp ou Flatpak. --pause-menu-exit: « Quitter » dans le menu pause.
+  binary: ["~/.local/bin/[Pp][Pp][Ss][Ss][Pp][Pp]*.AppImage", "~/Applications/[Pp][Pp][Ss][Ss][Pp][Pp]*.AppImage", PPSSPPSDL, ppsspp, "flatpak run org.ppsspp.PPSSPP"]
+  args: [--fullscreen, --pause-menu-exit, "{rom}"]
+  package: "PPSSPP (AppImage dans ~/.local/bin, paquet ppsspp ou Flatpak)"
 xenia:
   # Xenia Canary (Xbox 360): pas de paquet officiel, AppImage du fork Linux natif (github.com/peerloomllc/xenia-canary/releases).
   # Les options de ligne de commande portent le nom de celles de ~/.local/share/Xenia/xenia-canary.config.toml (ex. [Display] fullscreen).
