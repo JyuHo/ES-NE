@@ -153,3 +153,18 @@ def test_xenia_console_language_rejects_unexpected_files(tmp_path):
     assert not xenia.set_console_language(odd, "1")
     assert not xenia.set_console_language(tmp_path / "absent", "1")
     assert not xenia.set_console_language(odd, "99")
+
+
+def test_xenia_console_region_patches_its_own_byte(esne_env, monkeypatch, tmp_path):
+    from esne.generators import xenia
+    xconfig = tmp_path / "xconfig.settings"
+    data = bytearray(6912)
+    data[xenia.LANGUAGE_OFFSET], data[xenia.REGION_OFFSET] = 4, 103
+    xconfig.write_bytes(bytes(data))
+    assert xenia.set_console_region(xconfig, "34")
+    new = xconfig.read_bytes()
+    assert new[xenia.REGION_OFFSET] == 34 and new[xenia.LANGUAGE_OFFSET] == 4
+    assert not xenia.set_console_region(xconfig, "34")      # déjà appliqué
+    assert not xenia.set_console_region(xconfig, "7")        # valeur non relevée
+    xconfig.write_bytes(bytes(6912))                         # octet à zéro: fichier non reconnu
+    assert not xenia.set_console_region(xconfig, "34")

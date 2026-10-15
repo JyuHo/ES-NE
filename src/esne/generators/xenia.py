@@ -16,6 +16,10 @@ enregistrements (français puis anglais) montre ce seul octet qui change, de 4 �
 de la Xbox 360: 1 anglais, 2 japonais, 3 allemand, 4 français, 5 espagnol, 6 italien, 7 coréen, 8 chinois traditionnel,
 9 portugais, 10 chinois simplifié, 11 polonais, 12 russe (1, 2, 3 et 4 relevés sur le fichier, les autres suivent cet ordre).
 L'octet n'est écrit que s'il contient déjà un numéro de langue valide.
+
+Région de la console (``xenia_region``): un second octet du même fichier, au décalage 2342. Valeurs relevées une à une en
+changeant la région dans les préférences de Xenia: Allemagne 24, Espagne 31, France 34, Royaume-Uni 35, Italie 50, Japon 53,
+États-Unis 103. L'octet n'est écrit que s'il contient déjà une valeur non nulle.
 """
 from __future__ import annotations
 
@@ -49,17 +53,30 @@ def xconfig_file() -> Path:
     return Path(os.environ.get("XDG_DATA_HOME") or Path.home() / ".local/share") / "Xenia" / "xconfig.settings"
 
 
+REGION_OFFSET = 2342
+REGIONS = frozenset({"24", "31", "34", "35", "50", "53", "103"})
+
+
 def set_console_language(path: Path, language: str) -> bool:
     """Écrit la langue dans ``xconfig.settings``; False quand le fichier ne convient pas ou que rien ne change."""
-    if language not in LANGUAGES or not path.is_file():
+    return _patch_byte(path, LANGUAGE_OFFSET, language, LANGUAGES, lambda current: 1 <= current <= 12, "langue")
+
+
+def set_console_region(path: Path, region: str) -> bool:
+    """Écrit la région dans ``xconfig.settings`` (même fichier que la langue)."""
+    return _patch_byte(path, REGION_OFFSET, region, REGIONS, lambda current: current != 0, "région")
+
+
+def _patch_byte(path: Path, offset: int, value: str, allowed: frozenset[str], plausible, label: str) -> bool:
+    if value not in allowed or not path.is_file():
         return False
     data = bytearray(path.read_bytes())
-    if len(data) <= LANGUAGE_OFFSET or not 1 <= data[LANGUAGE_OFFSET] <= 12:
-        log.warning("xenia: %s n'a pas la forme attendue, langue inchangée", path)
+    if len(data) <= offset or not plausible(data[offset]):
+        log.warning("xenia: %s n'a pas la forme attendue, %s inchangée", path, label)
         return False
-    if data[LANGUAGE_OFFSET] == int(language):
+    if data[offset] == int(value):
         return False
-    data[LANGUAGE_OFFSET] = int(language)
+    data[offset] = int(value)
     temporary = path.with_name(path.name + ".esne-tmp")
     temporary.write_bytes(bytes(data))
     temporary.chmod(path.stat().st_mode & 0o777)
@@ -88,6 +105,9 @@ class Xenia(Standalone):
         language = str(ctx.setting("xenia_language", "") or "").strip()
         if language and set_console_language(xconfig_file(), language):
             log.info("xenia: langue de la console %s", language)
+        region = str(ctx.setting("xenia_region", "") or "").strip()
+        if region and set_console_region(xconfig_file(), region):
+            log.info("xenia: région de la console %s", region)
         options = video_options(ctx)
         if options and command.argv:
             # le chemin du jeu reste le dernier argument
