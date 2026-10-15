@@ -106,6 +106,9 @@ DOLPHIN_FEATURES = (
     '<choice name="KOREAN" value="9" /></feature>'
     '<feature name="WII TV MODE" value="dolphin_wii_tv" description="Wii NAND aspect ratio setting.">'
     '<choice name="4:3" value="0" /><choice name="16:9" value="1" /></feature>'
+    '<feature name="WII CONTROLLERS" value="dolphin_wii_pad" description="Map your pad to an emulated Wiimote, or use real Wiimotes. Rewrites WiimoteNew.ini when set.">'
+    '<choice name="CLASSIC CONTROLLER" value="classic" /><choice name="WIIMOTE + NUNCHUK (EMULATED)" value="nunchuk" />'
+    '<choice name="REAL WIIMOTES" value="real" /></feature>'
     '<feature name="SENSOR BAR POSITION" value="dolphin_sensorbar" description="Position of the Wii sensor bar relative to the display (written to the Wii SYSCONF).">'
     '<choice name="BOTTOM" value="0" /><choice name="TOP" value="1" /></feature>'
 )

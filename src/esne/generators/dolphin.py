@@ -10,6 +10,8 @@ Chaque réglage n'est écrit que s'il est choisi dans ES (sinon Dolphin garde sa
 * ``GFX.ini``: ``dolphin_resolution`` (1 à 8), ``dolphin_msaa`` (0, 2, 4, 8), ``dolphin_af`` (-1 à 4), ``dolphin_ratio``
   (0 auto, 1 16:9, 2 4:3, 3 étiré), ``dolphin_vsync``, ``dolphin_fps``, ``dolphin_widescreen`` (hack 16:9),
   ``dolphin_hires``, ``dolphin_shaders`` (ubershaders 0 à 3), ``dolphin_waitshaders``.
+* ``WiimoteNew.ini`` (Wii seulement): ``dolphin_wii_pad`` = ``classic`` (Classic Controller émulé), ``nunchuk`` (Wiimote + Nunchuk
+  émulés, pointeur au stick droit) ou ``real`` (vraies Wiimotes). Sans ce réglage le fichier n'est pas touché.
 * ``SYSCONF`` (NAND de la Wii, binaire): ``dolphin_wii_language`` (0 à 9), ``dolphin_wii_tv`` (0 4:3, 1 16:9),
   ``dolphin_sensorbar`` (position de la barre capteur: 0 en bas, 1 en haut).
 """
@@ -50,6 +52,76 @@ SETTINGS = {
 }
 # Dolphin écrit les booléens en « True/False » (initiale majuscule)
 BOOL_KEYS = {key for key, (_, _, _, allowed) in SETTINGS.items() if allowed is BOOL}
+
+# Mappages SDL de Dolphin (noms de ``SDL/<n>/<manette>``), alignés sur la disposition « Nintendo » comme Batocera:
+# les boutons suivent la position (A à droite, B en bas, X en haut, Y à gauche), pas l'étiquette de la manette.
+SDL_STICKS = {
+    "Left Stick": ("Left Y+", "Left Y-", "Left X-", "Left X+"),
+    "Right Stick": ("Right Y+", "Right Y-", "Right X-", "Right X+"),
+}
+SDL_DPAD = ("Pad N", "Pad S", "Pad W", "Pad E")
+WII_PAD_MODES = frozenset({"classic", "nunchuk", "real"})
+
+
+def _four(prefix: str, names: tuple[str, str, str, str]) -> dict[str, str]:
+    return {f"{prefix}/{way}": f"`{name}`" for way, name in zip(("Up", "Down", "Left", "Right"), names)}
+
+
+def wiimote_mapping(mode: str) -> dict[str, str]:
+    """Clés de ``[WiimoteN]`` pour la manette SDL, selon le mode (classic ou nunchuk)."""
+    if mode == "classic":
+        mapping = {
+            "Extension": "Classic",
+            "Classic/Buttons/A": "`Button B`", "Classic/Buttons/B": "`Button A`",
+            "Classic/Buttons/X": "`Button Y`", "Classic/Buttons/Y": "`Button X`",
+            "Classic/Buttons/ZL": "`Shoulder L`", "Classic/Buttons/ZR": "`Shoulder R`",
+            "Classic/Buttons/-": "`Back`", "Classic/Buttons/+": "`Start`", "Classic/Buttons/Home": "`Guide`",
+            "Classic/Triggers/L": "`Trigger L`", "Classic/Triggers/R": "`Trigger R`",
+            "Classic/Triggers/L-Analog": "`Trigger L`", "Classic/Triggers/R-Analog": "`Trigger R`",
+        }
+        mapping.update(_four("Classic/D-Pad", SDL_DPAD))
+        mapping.update(_four("Classic/Left Stick", SDL_STICKS["Left Stick"]))
+        mapping.update(_four("Classic/Right Stick", SDL_STICKS["Right Stick"]))
+        return mapping
+    mapping = {
+        "Extension": "Nunchuk",
+        "Buttons/A": "`Button A`", "Buttons/B": "`Button B`",
+        "Buttons/1": "`Button X`", "Buttons/2": "`Button Y`",
+        "Buttons/-": "`Shoulder L`", "Buttons/+": "`Shoulder R`", "Buttons/Home": "`Back`",
+        "Nunchuk/Buttons/C": "`Trigger L`", "Nunchuk/Buttons/Z": "`Trigger R`",
+    }
+    mapping.update(_four("D-Pad", SDL_DPAD))
+    mapping.update(_four("Nunchuk/Stick", SDL_STICKS["Left Stick"]))
+    mapping.update(_four("IR", SDL_STICKS["Right Stick"]))  # pointeur: stick droit
+    return mapping
+
+
+def write_wiimotes(path: Path, mode: str, pads: list) -> int:
+    """Réécrit ``WiimoteNew.ini``. ``real``: vraies Wiimotes (Source = 2). Renvoie le nombre de manettes mappées."""
+    lines: list[str] = []
+    done = 0
+    if mode == "real":
+        for number in range(1, 5):
+            lines += [f"[Wiimote{number}]", "Source = 2"]
+        lines += ["[BalanceBoard]", "Source = 2"]
+    else:
+        mapping = wiimote_mapping(mode)
+        seen: dict[str, int] = {}
+        for number, pad in enumerate(pads[:4], start=1):
+            name = (pad.name or "").strip() or "Controller"
+            same = seen.get(name, 0)
+            seen[name] = same + 1
+            lines += [f"[Wiimote{number}]", f"Device = SDL/{same}/{name}", "Source = 1"]
+            lines += [f"{key} = {value}" for key, value in mapping.items()]
+            done += 1
+        for number in range(len(pads[:4]) + 1, 5):
+            lines += [f"[Wiimote{number}]", "Source = 0"]
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(path.name + ".esne-tmp")
+    temporary.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    temporary.replace(path)
+    return done
+
 
 SYSCONF_LANGUAGE = frozenset(range(10))
 SYSCONF_TV = frozenset({0, 1})
@@ -181,6 +253,12 @@ class Dolphin(Standalone):
         for name, sections in chosen(ctx).items():
             if not update_ini(folder / name, sections):
                 log.info("dolphin: %s introuvable, lance Dolphin une fois à la main pour le créer", name)
+        mode = str(ctx.setting("dolphin_wii_pad", "") or "").strip().lower()
+        if ctx.system == "wii" and mode:
+            if mode in WII_PAD_MODES:
+                log.info("dolphin: %d manette(s) configurée(s) pour la Wii (%s)", write_wiimotes(folder / "WiimoteNew.ini", mode, ctx.controllers), mode)
+            else:
+                log.warning("valeur inconnue pour dolphin_wii_pad ignorée: %s", mode)
         values = sysconf_values(ctx)
         if values:
             patch_sysconf(data_dir(command.argv) / "Wii/shared2/sys/SYSCONF", values)

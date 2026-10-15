@@ -4,7 +4,7 @@ import struct
 import pytest
 
 from esne.generators import dolphin, standalone
-from esne.generators.base import Context
+from esne.generators.base import Context, Controller
 
 
 class Cfg:
@@ -108,3 +108,49 @@ def test_sensor_bar_position_patched(home):
     data = sysconf.read_bytes()
     assert data.endswith(b"BT.BAR" + bytes([1]))
     assert data.count(b"IPL.LNG" + bytes([1])) == 1  # le reste est intact
+
+
+def wii_context(rom, pads, mode):
+    return Context(system="wii", rom=str(rom), config=Cfg(dolphin_wii_pad=mode), emulator="dolphin", controllers=pads)
+
+
+def test_wii_classic_controller_mapped_to_sdl_pad(home):
+    rom = home / "Jeu.rvz"
+    rom.write_bytes(b"x")
+    pads = [Controller(player=1, index=0, name="PS4 Controller"), Controller(player=2, index=1, name="PS4 Controller")]
+    dolphin.Dolphin().generate(wii_context(rom, pads, "classic"))
+    parser = read(home / "cfg" / "dolphin-emu" / "WiimoteNew.ini")
+    first, second = parser["Wiimote1"], parser["Wiimote2"]
+    assert first["Device"] == "SDL/0/PS4 Controller" and second["Device"] == "SDL/1/PS4 Controller"
+    assert first["Source"] == "1" and first["Extension"] == "Classic"
+    assert first["Classic/Buttons/A"] == "`Button B`" and first["Classic/Left Stick/Up"] == "`Left Y+`"
+    assert parser["Wiimote3"]["Source"] == "0"
+
+
+def test_wii_nunchuk_mode_uses_right_stick_for_pointer(home):
+    rom = home / "Jeu.rvz"
+    rom.write_bytes(b"x")
+    dolphin.Dolphin().generate(wii_context(rom, [Controller(player=1, index=0, name="PS4 Controller")], "nunchuk"))
+    first = read(home / "cfg" / "dolphin-emu" / "WiimoteNew.ini")["Wiimote1"]
+    assert first["Extension"] == "Nunchuk" and first["Buttons/A"] == "`Button A`"
+    assert first["Nunchuk/Stick/Left"] == "`Left X-`" and first["IR/Right"] == "`Right X+`"
+
+
+def test_wii_real_wiimotes_and_untouched_without_setting(home):
+    rom = home / "Jeu.rvz"
+    rom.write_bytes(b"x")
+    dolphin.Dolphin().generate(wii_context(rom, [], "real"))
+    parser = read(home / "cfg" / "dolphin-emu" / "WiimoteNew.ini")
+    assert parser["Wiimote1"]["Source"] == "2" and parser["BalanceBoard"]["Source"] == "2"
+    ini = home / "cfg" / "dolphin-emu" / "WiimoteNew.ini"
+    ini.write_text("[Wiimote1]\nSource = 1\n")
+    dolphin.Dolphin().generate(wii_context(rom, [], ""))
+    assert ini.read_text() == "[Wiimote1]\nSource = 1\n"
+
+
+def test_wii_pad_ignored_for_gamecube(home):
+    rom = home / "Jeu.iso"
+    rom.write_bytes(b"x")
+    ctx = Context(system="gamecube", rom=str(rom), config=Cfg(dolphin_wii_pad="classic"), emulator="dolphin")
+    dolphin.Dolphin().generate(ctx)
+    assert not (home / "cfg" / "dolphin-emu" / "WiimoteNew.ini").exists()
