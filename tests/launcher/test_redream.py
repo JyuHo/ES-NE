@@ -49,3 +49,8 @@ def test_renderer_and_pal_variants_are_accepted_and_unknown_ones_ignored(tmp_pat
     values = redream.chosen(ctx(redream_renderer="gl_hle_perstrip", redream_broadcast="pal_n"))
     assert values == {"renderer": "gl_hle_perstrip", "broadcast": "pal_n"}
     assert redream.chosen(ctx(redream_renderer="metal")) == {}
+
+
+def test_resolution_up_to_6_and_rgb_cable(tmp_path):
+    assert redream.chosen(ctx(redream_res="6", redream_cable="rgb")) == {"res": "6", "cable": "rgb"}
+    assert redream.chosen(ctx(redream_res="7")) == {}

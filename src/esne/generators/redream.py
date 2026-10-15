@@ -24,9 +24,9 @@ SETTINGS: dict[str, tuple[str, frozenset[str]]] = {
     "redream_language": ("language", frozenset({"japanese", "english", "german", "french", "spanish", "italian"})),
     "redream_broadcast": ("broadcast", frozenset({"ntsc", "pal", "pal_m", "pal_n"})),
     "redream_renderer": ("renderer", frozenset({"vk_lle", "gl_lle", "gl_hle_perpixel", "gl_hle_perstrip"})),
-    "redream_cable": ("cable", frozenset({"composite", "vga"})),
+    "redream_cable": ("cable", frozenset({"composite", "rgb", "vga"})),
     "redream_aspect": ("aspect", frozenset({"4:3", "16:9", "stretch"})),
-    "redream_res": ("res", frozenset({"1", "2", "3", "4"})),
+    "redream_res": ("res", frozenset({"1", "2", "3", "4", "5", "6"})),
     "redream_vsync": ("vsync", frozenset({"0", "1"})),
 }
 
