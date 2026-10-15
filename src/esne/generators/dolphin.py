@@ -10,7 +10,8 @@ Chaque réglage n'est écrit que s'il est choisi dans ES (sinon Dolphin garde sa
 * ``GFX.ini``: ``dolphin_resolution`` (1 à 8), ``dolphin_msaa`` (0, 2, 4, 8), ``dolphin_af`` (-1 à 4), ``dolphin_ratio``
   (0 auto, 1 16:9, 2 4:3, 3 étiré), ``dolphin_vsync``, ``dolphin_fps``, ``dolphin_widescreen`` (hack 16:9),
   ``dolphin_hires``, ``dolphin_shaders`` (ubershaders 0 à 3), ``dolphin_waitshaders``.
-* ``SYSCONF`` (NAND de la Wii, binaire): ``dolphin_wii_language`` (0 à 9), ``dolphin_wii_tv`` (0 4:3, 1 16:9).
+* ``SYSCONF`` (NAND de la Wii, binaire): ``dolphin_wii_language`` (0 à 9), ``dolphin_wii_tv`` (0 4:3, 1 16:9),
+  ``dolphin_sensorbar`` (position de la barre capteur: 0 en bas, 1 en haut).
 """
 from __future__ import annotations
 
@@ -159,7 +160,8 @@ def patch_sysconf(path: Path, values: dict[str, int]) -> bool:
 
 def sysconf_values(ctx: Context) -> dict[str, int]:
     result: dict[str, int] = {}
-    for setting, key, allowed in (("dolphin_wii_language", "IPL.LNG", SYSCONF_LANGUAGE), ("dolphin_wii_tv", "IPL.AR", SYSCONF_TV)):
+    for setting, key, allowed in (("dolphin_wii_language", "IPL.LNG", SYSCONF_LANGUAGE), ("dolphin_wii_tv", "IPL.AR", SYSCONF_TV),
+                                 ("dolphin_sensorbar", "BT.BAR", SYSCONF_TV)):
         raw = str(ctx.setting(setting, "") or "").strip()
         if not raw:
             continue

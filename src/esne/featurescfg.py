@@ -106,6 +106,8 @@ DOLPHIN_FEATURES = (
     '<choice name="KOREAN" value="9" /></feature>'
     '<feature name="WII TV MODE" value="dolphin_wii_tv" description="Wii NAND aspect ratio setting.">'
     '<choice name="4:3" value="0" /><choice name="16:9" value="1" /></feature>'
+    '<feature name="SENSOR BAR POSITION" value="dolphin_sensorbar" description="Position of the Wii sensor bar relative to the display (written to the Wii SYSCONF).">'
+    '<choice name="BOTTOM" value="0" /><choice name="TOP" value="1" /></feature>'
 )
 
 

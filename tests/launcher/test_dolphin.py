@@ -97,3 +97,14 @@ def test_invalid_wii_values_ignored(home):
     rom.write_bytes(b"x")
     dolphin.Dolphin().generate(Context(system="wii", rom=str(rom), config=Cfg(dolphin_wii_language="42"), emulator="dolphin"))
     assert sysconf.read_bytes() == before
+
+
+def test_sensor_bar_position_patched(home):
+    sysconf = home / "data" / "dolphin-emu" / "Wii/shared2/sys/SYSCONF"
+    make_sysconf(sysconf)
+    rom = home / "Jeu.rvz"
+    rom.write_bytes(b"x")
+    dolphin.Dolphin().generate(Context(system="wii", rom=str(rom), config=Cfg(dolphin_sensorbar="1"), emulator="dolphin"))
+    data = sysconf.read_bytes()
+    assert data.endswith(b"BT.BAR" + bytes([1]))
+    assert data.count(b"IPL.LNG" + bytes([1])) == 1  # le reste est intact
