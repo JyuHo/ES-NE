@@ -19,7 +19,7 @@ sont dans `docs/AUDIT_ANALYSIS.md`; le rapport brut dans `docs/audit/HARDCODED.m
 | Fonctions « hors Batocera » | README upstream: lancement d'émulateurs, musique de fond, webserver ne fonctionnent pas hors Batocera | à réimplémenter via `es-launcher` / `esctl` |
 | Thème par défaut | ES-Carbon, dans `/etc/emulationstation/themes` | paquet de thème séparé |
 | Options CLI | `--resolution`, `--windowed`, `--fullscreen-borderless`, `--gamelist-only`, `--no-splash`, `--vsync`, `--max-vram`, `--force-kiosk`... | inchangées |
-| Dépendances de build | CMake, SDL2, SDL2_mixer, FreeImage, FreeType, cURL, RapidJSON, LibVLC, Boost, gettext; `-DGLES2/-DGLES3` pour Raspberry Pi | paquets Arch équivalents |
+| Dépendances de build | CMake, SDL2, SDL2_mixer, FreeImage, FreeType, cURL, RapidJSON, LibVLC, Boost, gettext | paquets Arch équivalents |
 
 ## Hypothèses de départ, vérifiées par l'audit
 | Hypothèse | Résultat |

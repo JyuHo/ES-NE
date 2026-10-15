@@ -50,7 +50,7 @@ Côté ES: ⛔ masqués par `LinuxApiSystem` pour Wi-Fi, Bluetooth, store, servi
 Wi-Fi et Bluetooth: sur un poste Arch, ils sont gérés par NetworkManager/BlueZ. Mieux vaut **masquer** ces menus que les réimplémenter.
 
 ### C. À supprimer / masquer (sans objet hors de l'OS Batocera)
-Côté ES: ✅ menus protégés par `isScriptingSupported` masqués (upgrade, install, format, overclock, sync/backup, support). ✅ `canUpdate`, `canLocalUpdate`, `canArchitectureUpdate`, `updateSystem` désactivées. ❌ À vérifier dans `GuiMenu.cpp`: les entrées qui appellent directement `batocera-config`, `batocera-storage-manager`, `batocera-support` sans passer par `isScriptingSupported` (patch 6).
+Côté ES: ✅ menus protégés par `isScriptingSupported` masqués (upgrade, install, format, sync/backup, support). ✅ `canUpdate`, `canLocalUpdate`, `canArchitectureUpdate`, `updateSystem` désactivées. ✅ Vérifié (patch 6, voir `docs/ROADMAP.md`): aucun appel direct atteignable dans `GuiMenu.cpp` pour les entrées qui appellent directement `batocera-config`, `batocera-storage-manager`, `batocera-support` sans passer par `isScriptingSupported` (patch 6).
 `batocera-upgrade` (17), `-upgrade-torrent` (5), `-install` (6), `-format` (5), `-storage-manager` (5), `-config` (8), `-sync` (6), `-overclock` (4), `-mitigations` (2), `-support` (3), `-shutdown` (1), `-architecture-compatibility` (1), `-controlcenter` (1), `-linux`, `-scripts`.
 Remplacements: `systemctl reboot/poweroff` pour l'arrêt, le gestionnaire de paquets pour les mises à jour.
 

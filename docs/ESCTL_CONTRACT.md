@@ -75,4 +75,4 @@ Format des listes: **`ID<TAB>LIBELLÉ`**, une seule tabulation par ligne (le fro
   sur un système. À confirmer au premier essai sur CachyOS.
 
 ## Menus masqués sur ES-NE (gérés par la distribution)
-Wi-Fi, Bluetooth, mises à jour, installation, formatage, overclock, store, services, sauvegarde, mode avion, backglass, NFC.
+Wi-Fi, Bluetooth, mises à jour, installation, formatage, store, services, sauvegarde, mode avion, backglass, NFC.

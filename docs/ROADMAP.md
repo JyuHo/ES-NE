@@ -38,12 +38,12 @@ Shaders ✅. Bezels ✅ (un par système, The Bezel Project): installation, dés
 Dans `packaging/arch/` (PKGBUILD `es-ne-git`, `es-ne-session`, `es-ne.desktop`, règles polkit `50-es-ne.rules` et `org.esne.install-core.policy`, aides root `esne-install-core` / `esne-install-aur-core`). ✅ `makepkg`, installation et session de connexion (Plasma Login Manager, `gamescope -f` sans `-e`, journal `~/.local/state/esne/session.log`) validés sur CachyOS (BC-250). Reste: SDDM/autres gestionnaires, session X11.
 
 ## Chantiers ES hors jalons (voir `docs/AUDIT_ANALYSIS.md` §5)
-- ✅ patch 6 sans objet: `GuiMenu.cpp` n'appelle plus aucun `batocera-*` directement. Overscan est dans un `#ifdef BATOCERA` (non compilé en `ESNE`), la luminosité lit `/sys/class/backlight` sans script, stockage, mises à jour, services et le reste sont masqués par `isScriptingSupported` (faux dans `LinuxApiSystem`); les `popen` restants d'`ApiSystem.cpp` (mises à jour, scraper Batocera, contrôle center) ne sont atteints que par ces menus masqués
+- ✅ patch 6 sans objet: `GuiMenu.cpp` n'appelle plus aucun `batocera-*` directement. Le code propre aux consoles portables (overscan, LED, GameForce, RK3326, RPi) est derrière des drapeaux de compilation absents d'`ESNE`, la luminosité (écran de Steam Deck, portables x86) lit `/sys/class/backlight` sans script, stockage, mises à jour, services et le reste sont masqués par `isScriptingSupported` (faux dans `LinuxApiSystem`); les `popen` restants d'`ApiSystem.cpp` (mises à jour, scraper Batocera, contrôle center) ne sont atteints que par ces menus masqués
 - ✅ traductions françaises complètes; installation en un clic d'un core manquant (dépôts officiels et AUR, `esctl install-core`)
 - ✅ patch 7: arrêt / redémarrage via `systemctl`, redémarrage d'ES par `execv`
 - ✅ patch 8: `batocera-keyboard` remplacé par `esctl keyboard` (`localectl`), validé
 - ✅ patch 9 sans objet: ES lance déjà la commande de `es_systems.cfg`; le travail est côté `es-launcher` et dans la génération de `es_systems.cfg` (M2)
-- ❌ patch 10: fonctions optionnelles (scraper, ports, LED...)
+- ❌ patch 10: fonctions optionnelles (scraper, ports...)
 
 ## Prochaines étapes
 - Steam: piste Batocera: fin de partie lue dans `console_log.txt` de Steam
