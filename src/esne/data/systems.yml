@@ -20,6 +20,7 @@ snes:
     libretro:
       snes9x: { priority: 1 }
       bsnes: {}
+    snes9x: {}
 gb:
   name: Game Boy
   manufacturer: Nintendo

@@ -42,6 +42,11 @@ duckstation:
   binary: ["~/.local/bin/[Dd]uck[Ss]tation*.AppImage", "~/Applications/[Dd]uck[Ss]tation*.AppImage", duckstation-qt, duckstation, "flatpak run org.duckstation.DuckStation"]
   args: [-batch, -fullscreen, --, "{rom}"]
   package: "DuckStation (AppImage dans ~/.local/bin, AUR duckstation-qt ou Flatpak)"
+snes9x:
+  # Snes9x autonome (SNES): AppImage de github.com/snes9xgit/snes9x/releases, paquet snes9x-gtk ou Flatpak.
+  binary: ["~/.local/bin/[Ss]nes9x*.AppImage", "~/Applications/[Ss]nes9x*.AppImage", snes9x-gtk, snes9x, "flatpak run com.snes9x.Snes9x"]
+  args: ["{rom}"]
+  package: "Snes9x (AppImage dans ~/.local/bin, paquet snes9x-gtk ou Flatpak)"
 xenia:
   # Xenia Canary (Xbox 360): pas de paquet officiel, AppImage du fork Linux natif (github.com/peerloomllc/xenia-canary/releases).
   # Les options de ligne de commande portent le nom de celles de ~/.local/share/Xenia/xenia-canary.config.toml (ex. [Display] fullscreen).

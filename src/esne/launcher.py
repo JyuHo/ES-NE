@@ -20,7 +20,7 @@ from .generators.base import Context
 log = logging.getLogger("es-launcher")
 
 # Nom d'émulateur (ES, catalogue) -> module de génération
-GENERATORS = {"libretro": "retroarch", "cemu": "cemu", "pcsx2": "pcsx2", "dolphin": "dolphin", "eden": "eden", "rpcs3": "rpcs3", "xemu": "xemu", "xenia": "xenia", "redream": "redream", "rmg": "rmg", "ppsspp": "ppsspp", "duckstation": "duckstation", "steam": "steam"}
+GENERATORS = {"libretro": "retroarch", "cemu": "cemu", "pcsx2": "pcsx2", "dolphin": "dolphin", "eden": "eden", "rpcs3": "rpcs3", "xemu": "xemu", "xenia": "xenia", "redream": "redream", "rmg": "rmg", "ppsspp": "ppsspp", "duckstation": "duckstation", "snes9x": "snes9x", "steam": "steam"}
 
 
 def setup_logging() -> None:

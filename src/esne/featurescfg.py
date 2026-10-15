@@ -319,6 +319,33 @@ PPSSPP_FEATURES = (
 )
 
 
+SNES9X_FEATURES = (
+    '<feature name="GRAPHICS API" value="snes9x_renderer" description="Display driver of Snes9x. Applied to snes9x.conf, which Snes9x creates at its first launch.">'
+    '<choice name="VULKAN" value="vulkan" /><choice name="OPENGL" value="opengl" /><choice name="SOFTWARE" value="none" /></feature>'
+    '<feature name="ASPECT RATIO" value="snes9x_aspect" description="Display ratio of the image.">'
+    '<choice name="4:3" value="2" /><choice name="4:3 INTEGER SCALE" value="3" /><choice name="NTSC/PAL" value="4" />'
+    '<choice name="NTSC/PAL INTEGER SCALE" value="5" /><choice name="UNCORRECTED (PIXELS)" value="0" /><choice name="UNCORRECTED INTEGER SCALE" value="1" /></feature>'
+    '<feature name="SMOOTH VIDEO" value="snes9x_bilinear" description="Bilinear filter on the scaled image.">'
+    '<choice name="ON" value="1" /><choice name="OFF" value="0" /></feature>'
+    '<feature name="VSYNC" value="snes9x_vsync" description="Fix screen tearing.">'
+    '<choice name="ON" value="1" /><choice name="OFF" value="0" /></feature>'
+    '<feature name="HIGH-RESOLUTION SCREENS" value="snes9x_hires" description="Treatment of the SNES high-resolution (512 px) screens.">'
+    '<choice name="LEAVE AS-IS" value="1" /><choice name="DOWNSCALE TO LOW-RES" value="0" /><choice name="UPSCALE LOW-RES SCREENS" value="2" /></feature>'
+    '<feature name="SCANLINES" value="snes9x_scanlines" description="Scanline filter intensity.">'
+    '<choice name="OFF" value="0" /><choice name="12.5%" value="1" /><choice name="25%" value="2" /><choice name="50%" value="3" /><choice name="100%" value="4" /></feature>'
+    '<feature name="SHOW FPS" value="snes9x_fps" description="Frame counter overlay.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="MUTE AUDIO" value="snes9x_mute" description="Turn the sound off.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="REWIND" value="snes9x_rewind" description="Memory (MB) used by the rewind buffer; the rewind key is set in Snes9x.">'
+    '<choice name="OFF" value="0" /><choice name="10 MB" value="10" /><choice name="20 MB" value="20" /><choice name="50 MB" value="50" /><choice name="100 MB" value="100" /><choice name="200 MB" value="200" /></feature>'
+    '<feature name="REMOVE SPRITE LIMIT" value="snes9x_sprites" description="Removes the per-line sprite limit (less flicker; may break some games).">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="OVERCLOCK CPU" value="snes9x_overclock" description="Reduces slowdowns in some games.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+)
+
+
 DUCKSTATION_FEATURES = (
     '<feature name="GRAPHICS API" value="duckstation_renderer" description="Renderer used by DuckStation. Applied to settings.ini, which DuckStation creates at its first launch.">'
     '<choice name="AUTOMATIC" value="Automatic" /><choice name="VULKAN" value="Vulkan" /><choice name="OPENGL" value="OpenGL" /><choice name="SOFTWARE" value="Software" /></feature>'
@@ -406,6 +433,7 @@ def render() -> str:
         f'  <emulator name="rmg" features="">{RMG_FEATURES}</emulator>\n'
         f'  <emulator name="ppsspp" features="">{PPSSPP_FEATURES}</emulator>\n'
         f'  <emulator name="duckstation" features="">{DUCKSTATION_FEATURES}</emulator>\n'
+        f'  <emulator name="snes9x" features="">{SNES9X_FEATURES}</emulator>\n'
         f'  <emulator name="steam" features="">{STEAM_FEATURES}</emulator>\n'
         "</features>\n"
     )
