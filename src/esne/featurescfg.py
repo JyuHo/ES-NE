@@ -280,6 +280,10 @@ REDREAM_FEATURES = (
     '<choice name="2560X1920 (4X)" value="4" /><choice name="3200X2400 (5X)" value="5" /><choice name="3840X2880 (6X)" value="6" /></feature>'
     '<feature name="VSYNC" value="redream_vsync" description="Fix screen tearing.">'
     '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="FRAME SKIP" value="redream_frameskip" description="Skip frames automatically when the game runs too slowly.">'
+    '<choice name="OFF" value="0" /><choice name="AUTO" value="1" /></feature>'
+    '<feature name="FRAME RATE COUNTER" value="redream_framerate" description="Show the speed of the game on screen.">'
+    '<choice name="OFF" value="0" /><choice name="VBLANKS PER SECOND" value="1" /></feature>'
 )
 
 

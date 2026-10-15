@@ -28,6 +28,8 @@ SETTINGS: dict[str, tuple[str, frozenset[str]]] = {
     "redream_aspect": ("aspect", frozenset({"4:3", "16:9", "stretch"})),
     "redream_res": ("res", frozenset({"1", "2", "3", "4", "5", "6"})),
     "redream_vsync": ("vsync", frozenset({"0", "1"})),
+    "redream_frameskip": ("frameskip", frozenset({"0", "1"})),  # 0 off, 1 auto
+    "redream_framerate": ("framerate", frozenset({"0", "1"})),  # compteur: 0 off, 1 vblanks par seconde
 }
 
 

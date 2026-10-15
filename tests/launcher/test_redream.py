@@ -54,3 +54,8 @@ def test_renderer_and_pal_variants_are_accepted_and_unknown_ones_ignored(tmp_pat
 def test_resolution_up_to_6_and_rgb_cable(tmp_path):
     assert redream.chosen(ctx(redream_res="6", redream_cable="rgb")) == {"res": "6", "cable": "rgb"}
     assert redream.chosen(ctx(redream_res="7")) == {}
+
+
+def test_frameskip_and_framerate_counter(tmp_path):
+    assert redream.chosen(ctx(redream_frameskip="0", redream_framerate="1")) == {"frameskip": "0", "framerate": "1"}
+    assert redream.chosen(ctx(redream_frameskip="2")) == {}
