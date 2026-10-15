@@ -18,7 +18,7 @@ import logging
 import os
 from pathlib import Path
 
-from . import iniedit
+from . import evdev, iniedit
 from .base import Command, Context, Controller
 from .standalone import Standalone
 
@@ -118,6 +118,8 @@ class Rmg(Standalone):
         if str(ctx.setting("rmg_autoconfig", "1")) != "0" and ctx.controllers:
             cfg = folder / "mupen64plus.cfg"
             if cfg.is_file():
+                known = {iniedit.read_section(cfg, PROFILE.format(n)).get("DevicePath", "") for n in range(MAX_PLAYERS)}
+                evdev.resolve_paths(ctx.controllers, known=known - {""})  # ES ne donne pas le chemin sous Linux
                 log.info("rmg: %d manette(s) configurée(s)", apply_pads(cfg, ctx.controllers))
             else:
                 log.info("rmg: mupen64plus.cfg introuvable, lance RMG une fois à la main pour le créer")

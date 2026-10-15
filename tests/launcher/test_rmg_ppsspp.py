@@ -150,3 +150,50 @@ def test_rmg_autoconfig_off_and_pad_without_path(home):
 
 def iniedit_read(cfg, number):
     return iniedit.read_section(cfg, rmg.PROFILE.format(number))
+
+
+PROC = """I: Bus=0003 Vendor=054c Product=09cc Version=8111
+N: Name="Wireless Controller"
+H: Handlers=event14 js0
+
+I: Bus=0003 Vendor=054c Product=09cc Version=8111
+N: Name="Wireless Controller Touchpad"
+H: Handlers=mouse2 event15
+
+I: Bus=0003 Vendor=054c Product=09cc Version=8111
+N: Name="Wireless Controller"
+H: Handlers=event20 js1
+"""
+
+
+def test_evdev_path_from_guid():
+    from esne.generators import evdev
+    from esne.generators.base import Controller
+
+    guid = "030000004c050000cc09000011810000"
+    pads = [Controller(player=1, index=0, guid=guid), Controller(player=2, index=1, guid=guid)]
+    evdev.resolve_paths(pads, PROC, [])
+    assert [p.path for p in pads] == ["/dev/input/event14", "/dev/input/event20"]
+
+
+def test_evdev_path_unknown_guid_untouched():
+    from esne.generators import evdev
+    from esne.generators.base import Controller
+
+    pad = Controller(player=1, index=0, guid="0000000000000000")
+    evdev.resolve_paths([pad], PROC, [])
+    assert pad.path == ""
+
+
+def test_path_prefers_hidraw_for_sony_and_known_path():
+    from esne.generators import evdev
+    from esne.generators.base import Controller
+
+    guid = "030000004c050000cc09000011810000"
+    hid = [(0x054C, 0x09CC, "/dev/hidraw3")]
+    pad = Controller(player=1, index=0, guid=guid)
+    evdev.resolve_paths([pad], PROC, hid)
+    assert pad.path == "/dev/hidraw3"
+    pad = Controller(player=1, index=0, guid=guid)
+    evdev.resolve_paths([pad], PROC, hid, known={"/dev/input/event14"})
+    assert pad.path == "/dev/input/event14"
