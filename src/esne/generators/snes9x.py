@@ -8,11 +8,10 @@ Réglages ES (``snes9x_*``), écrits seulement quand ils sont choisis: moteur gr
 VSync, effet haute résolution, lignes de balayage, compteur d'images, son coupé, rewind (Mo), suppression de la limite de
 sprites, surcadençage du CPU. Clés et valeurs relevées sur un ``snes9x.conf`` réel (version 1.63).
 
-Manettes: Snes9x enregistre ``Bouton = Joystick <n> Button <b>`` ou ``Joystick <n> Axis <a> +/- 40%`` (``n`` commence à 1). Les
-numéros de boutons dépendent du modèle de manette, ES-NE ne les devine donc pas: configure la manette du joueur 1 une fois dans
-Snes9x (``[Joypad 0]``), puis ES-NE recopie ce mappage pour chaque manette donnée par ES (``Joystick <index SDL + 1>``), comme
-pour Eden. Même modèle de manette supposé; option ``AUTOCONFIGURE CONTROLLERS`` pour garder son propre mappage. Le modèle
-a été relevé sur une manette PS4 (``Button 0``/``1``/``2``/``3`` = croix/rond/carré/triangle, croix directionnelle en axes 6 et 7).
+Manettes: Snes9x enregistre ``Bouton = Joystick <n> Button <b>`` ou ``Joystick <n> Axis <a> +/- 40%`` (``n`` commence à 1,
+``n = index SDL + 1``). Les numéros dépendent du modèle: ES-NE a un profil intégré pour les manettes Sony (relevé sur une
+PS4); pour un autre modèle il recopie le mappage fait une fois dans Snes9x pour le joueur 1 (``[Joypad 0]`` complet).
+Option ``AUTOCONFIGURE CONTROLLERS`` pour garder son propre mappage.
 """
 from __future__ import annotations
 
@@ -21,7 +20,7 @@ import os
 import re
 from pathlib import Path
 
-from . import iniedit
+from . import evdev, iniedit
 from .base import Command, Context, Controller
 from .standalone import Standalone
 
@@ -61,9 +60,32 @@ def template(path: Path) -> dict[str, str] | None:
     return binding
 
 
-def pad_sections(binding: dict[str, str], pads: list[Controller]) -> dict[str, dict[str, str]]:
-    return {f"Joypad {n}": {button: f"Joystick {pad.index + 1} {value}" for button, value in binding.items()}
-            for n, pad in enumerate(pads[:MAX_PADS]) if pad.index is not None}
+# Manettes Sony (PS4 « Wireless Controller », relevé sur un snes9x.conf réel; DualSense a les mêmes numéros, non vérifié):
+# disposition SNES (A à droite = rond, B en bas = croix), croix directionnelle vue comme les axes 6 et 7.
+SONY = {
+    "A": "Button 1", "B": "Button 0", "X": "Button 3", "Y": "Button 2", "L": "Button 4", "R": "Button 5",
+    "Select": "Button 8", "Start": "Button 9",
+    "Up": "Axis 6 + 40%", "Down": "Axis 6 - 40%", "Left": "Axis 7 - 40%", "Right": "Axis 7 + 40%",
+}
+SONY_VENDOR = 0x054C
+
+
+def builtin(pad: Controller) -> dict[str, str] | None:
+    ids = evdev.guid_ids(pad.guid)
+    sony = (ids is not None and ids[0] == SONY_VENDOR) or any(word in pad.name.lower() for word in ("wireless controller", "dualshock", "dualsense", "playstation"))
+    return SONY if sony else None
+
+
+def pad_sections(binding: dict[str, str] | None, pads: list[Controller]) -> dict[str, dict[str, str]]:
+    """Profil intégré du modèle de chaque manette; à défaut, ``binding`` (mappage fait dans Snes9x pour le joueur 1)."""
+    sections = {}
+    for n, pad in enumerate(pads[:MAX_PADS]):
+        own = builtin(pad) or binding
+        if pad.index is None or own is None:
+            log.info("snes9x: modèle de manette inconnu (%s), configure-la dans Snes9x", pad.name or pad.guid)
+            continue
+        sections[f"Joypad {n}"] = {button: f"Joystick {pad.index + 1} {value}" for button, value in own.items()}
+    return sections
 
 
 def config_candidates(argv: list[str] | None = None) -> list[Path]:
@@ -101,12 +123,9 @@ class Snes9x(Standalone):
             values = chosen(ctx)
             shown = ", ".join(f"{k}={v}" for d in values.values() for k, v in d.items())
             if str(ctx.setting("snes9x_autoconfig", "1")) != "0" and ctx.controllers:
-                binding = template(conf)
-                if binding is None:
-                    log.info("snes9x: manette du joueur 1 non configurée dans Snes9x (Préférences), mappage non copié")
-                else:
-                    values.update(pad_sections(binding, ctx.controllers))
-                    shown += f"; {min(len(ctx.controllers), MAX_PADS)} manette(s)"
+                pads = pad_sections(template(conf), ctx.controllers)
+                values.update(pads)
+                shown += f"; {len(pads)} manette(s)"
             if iniedit.patch_ini(conf, values, spaced=True):
                 log.info("snes9x: %s", shown)
         return command

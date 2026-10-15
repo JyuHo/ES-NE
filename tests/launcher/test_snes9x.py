@@ -63,12 +63,12 @@ PADS = ("[Joypad 0]\nA        = Joystick 1 Button 1\nB        = Joystick 1 Butto
         "[Joypad 1]\nA        = Unset\n")
 
 
-def test_pads_copied(home):
+def test_pads_copied_for_unknown_model(home):
     from esne.generators.base import Controller
     conf = write(home)
     conf.write_text(CONF + PADS)
     snes9x.Snes9x().generate(Context(system="snes", rom="g.sfc", config=Cfg(), emulator="snes9x",
-                                     controllers=[Controller(player=1, index=2), Controller(player=2, index=0)]))
+                                     controllers=[Controller(player=1, index=2, name="Pad X"), Controller(player=2, index=0, name="Pad X")]))
     text = conf.read_text()
     assert "[Joypad 0]\nA        = Joystick 3 Button 1" in text and "Up       = Joystick 3 Axis 6 + 40%" in text
     assert "[Joypad 1]\nA        = Joystick 1 Button 1" in text and "Right = Joystick 1 Axis 7 + 40%" in text
@@ -78,6 +78,7 @@ def test_pads_not_configured_or_disabled(home):
     from esne.generators.base import Controller
     conf = write(home)
     pad = [Controller(player=1, index=0)]
+    pad = [Controller(player=1, index=0, name="Pad X")]
     snes9x.Snes9x().generate(Context(system="snes", rom="g.sfc", config=Cfg(), emulator="snes9x", controllers=pad))
     assert "Joypad" not in conf.read_text()
     conf.write_text(CONF + PADS)
@@ -85,3 +86,15 @@ def test_pads_not_configured_or_disabled(home):
     snes9x.Snes9x().generate(Context(system="snes", rom="g.sfc", config=Cfg(snes9x_autoconfig="0"), emulator="snes9x",
                                      controllers=[Controller(player=1, index=3)]))
     assert "Joystick 4" not in conf.read_text() and "Joystick 1 Button 1" in conf.read_text()
+
+
+def test_builtin_sony_profile(home):
+    from esne.generators.base import Controller
+    conf = write(home)
+    sony = "030000004c050000cc09000011810000"  # vendeur 054c
+    snes9x.Snes9x().generate(Context(system="snes", rom="g.sfc", config=Cfg(), emulator="snes9x",
+                                     controllers=[Controller(player=1, index=0, guid=sony, name="Wireless Controller"),
+                                                  Controller(player=2, index=1, name="Wireless Controller")]))
+    text = conf.read_text()
+    assert "[Joypad 0]\nA = Joystick 1 Button 1\nB = Joystick 1 Button 0" in text
+    assert "Up = Joystick 1 Axis 6 + 40%" in text and "Joystick 2 Button 9" in text
