@@ -2,7 +2,7 @@
   <img src="assets/es-ne-banner.png" alt="ES-NE" width="720">
 </p>
 
-<p align="center"><b>Français</b> | <a href="README.en.md">English</a> | <a href="README.de.md">Deutsch</a></p>
+<p align="center"><b>🇫🇷 Français</b> &nbsp;·&nbsp; <a href="README.en.md">🇬🇧 English</a> &nbsp;·&nbsp; <a href="README.de.md">🇩🇪 Deutsch</a></p>
 
 # ES-NE
 
