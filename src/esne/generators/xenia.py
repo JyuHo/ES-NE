@@ -54,7 +54,7 @@ def xconfig_file() -> Path:
 
 
 REGION_OFFSET = 2342
-REGIONS = frozenset({"24", "31", "34", "35", "50", "53", "103"})
+REGIONS = frozenset({"23", "24", "31", "34", "35", "50", "53", "74", "88", "103"})
 
 
 def set_console_language(path: Path, language: str) -> bool:

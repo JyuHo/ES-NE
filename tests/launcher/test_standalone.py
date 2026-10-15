@@ -182,3 +182,14 @@ def test_redream_is_found_and_gets_the_game(esne_env, monkeypatch, tmp_path):
     rom.write_bytes(b"x")
     command = standalone.Standalone().generate(ctx("redream", rom, "dreamcast"))
     assert command.argv == [str(exe), str(rom)]
+
+
+def test_xenia_region_accepts_netherlands_russia_and_czech_republic(tmp_path):
+    from esne.generators import xenia
+    xconfig = tmp_path / "xconfig.settings"
+    data = bytearray(6912)
+    data[xenia.REGION_OFFSET] = 34
+    xconfig.write_bytes(bytes(data))
+    for value in ("74", "88", "23"):
+        assert xenia.set_console_region(xconfig, value)
+        assert xconfig.read_bytes()[xenia.REGION_OFFSET] == int(value)
