@@ -34,7 +34,7 @@ CHECKED_SETTINGS = {
     "pcsx2_af": ("EmuCore/GS", "MaxAnisotropy", frozenset({"0", "2", "4", "8", "16"})),
     "pcsx2_filter": ("EmuCore/GS", "filter", frozenset({"0", "1", "2", "3"})),
     "pcsx2_cas": ("EmuCore/GS", "CASMode", frozenset({"0", "1", "2"})),
-    "pcsx2_dither": ("EmuCore/GS", "dithering_ps2", frozenset({"0", "1", "2"})),
+    "pcsx2_dither": ("EmuCore/GS", "dithering_ps2", frozenset({"0", "1", "2", "3"})),
     "pcsx2_widescreen": ("EmuCore", "EnableWideScreenPatches", frozenset({"true", "false"})),
     "pcsx2_nointerlace": ("EmuCore", "EnableNoInterlacingPatches", frozenset({"true", "false"})),
     "pcsx2_fps": ("EmuCore/GS", "OsdShowFPS", frozenset({"true", "false"})),
