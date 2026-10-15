@@ -49,12 +49,12 @@ Dans `packaging/arch/` (PKGBUILD `es-ne-git`, `es-ne-session`, `es-ne.desktop`, 
 - Steam: piste Batocera: fin de partie lue dans `console_log.txt` de Steam
 - Autres ports PortMaster (OpenTyrian, SDLPoP, OpenGGS), Wine/umu, Ryujinx
 - RetroArch: netplay, `-monitor`, RetroAchievements en jeu
-- Réglages dans ES: Dolphin et PCSX2 validés en jeu. RPCS3: pas d'autres options, les jeux se règlent au cas par cas dans RPCS3; Xenia: autres langues et régions de la console, mode vidéo (`avpack`); Redream: autres options de `redream.cfg` (volume, latence, tri automatique)
+- Réglages dans ES: Dolphin et PCSX2 validés en jeu. RPCS3: pas d'autres options, les jeux se règlent au cas par cas dans RPCS3; Redream: autres options de `redream.cfg` (volume, latence, tri automatique)
 - Traductions dans d'autres langues; bezels sur écran 16:9; option pour garder le ratio du bezel avec bandes noires en 16:10
 
 ## Versions
 
-Une release par avancée notable (nouvel émulateur, série d'options): 1.0.1 à 1.0.10, puis 1.1.0 et la suite 1.1.1 à 1.1.10, etc. 1.0.1: Xbox 360 (Xenia Canary) avec réglages vidéo dans ES, logo ES-NE. 1.0.2: réglages dans ES pour Eden, Cemu, xemu et Xenia (langue, région, son), validés en jeu. 1.0.3: Dreamcast (Redream), validée en jeu. 1.0.4: Dolphin (réglages ES, manettes GameCube et Wii, langues, barre capteur), options PCSX2 et options de rendu de Redream, validés en jeu.
+Une release par avancée notable (nouvel émulateur, série d'options): 1.0.1 à 1.0.10, puis 1.1.0 et la suite 1.1.1 à 1.1.10, etc. 1.0.1: Xbox 360 (Xenia Canary) avec réglages vidéo dans ES, logo ES-NE. 1.0.2: réglages dans ES pour Eden, Cemu, xemu et Xenia (langue, région, son), validés en jeu. 1.0.3: Dreamcast (Redream), validée en jeu. 1.0.4: Dolphin (réglages ES, manettes GameCube et Wii, langues, barre capteur), options PCSX2 et options de rendu de Redream, validés en jeu. 1.0.5: Xenia (langues coréen/russe/chinois, régions NL/RU/CZ, mode vidéo `avpack`) et anisotrope automatique/défaut d'Eden, validés en jeu.
 
 ## Licence
 Le projet est en GPL-3.0-or-later (voir `docs/LICENSING.md`): du code de batocera-configgen (GPL-3) peut être repris.
