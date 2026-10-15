@@ -131,3 +131,11 @@ def test_settings_unset_invalid_or_missing_file_change_nothing(tmp_path):
     ini.write_text(REAL)
     assert not eden.apply_settings(ini, ctx([], eden_vsync="99", eden_language="6"))
     assert ini.read_text() == REAL
+
+
+def test_resolution_uses_edens_own_indexes(tmp_path):
+    ini = tmp_path / "qt-config.ini"
+    ini.write_text(REAL)
+    assert eden.apply_settings(ini, ctx([], eden_resolution="6"))
+    assert "resolution_setup\\default=false\nresolution_setup=6\n" in ini.read_text()
+    assert not eden.apply_settings(ini, ctx([], eden_resolution="4"))   # index de yuzu, pas d'Eden

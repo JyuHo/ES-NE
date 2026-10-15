@@ -85,6 +85,8 @@ EDEN_FEATURES = (
     '<choice name="ON" value="1" /><choice name="OFF" value="0" /></feature>'
     '<feature name="CONSOLE MODE" value="eden_docked" description="Docked uses the TV resolution, handheld is lighter. Applied to qt-config.ini.">'
     '<choice name="DOCKED" value="1" /><choice name="HANDHELD" value="0" /></feature>'
+    '<feature name="RESOLUTION" value="eden_resolution" description="Internal resolution scale.">'
+    '<choice name="1X (720P/1080P)" value="3" /><choice name="2X (1440P/2160P)" value="6" /></feature>'
     '<feature name="VSYNC MODE" value="eden_vsync" description="Synchronization with the screen.">'
     '<choice name="MAILBOX (RECOMMENDED)" value="1" /><choice name="FIFO" value="2" />'
     '<choice name="FIFO RELAXED" value="3" /><choice name="IMMEDIATE (NO VSYNC)" value="0" /></feature>'
