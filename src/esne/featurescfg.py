@@ -343,6 +343,10 @@ DUCKSTATION_FEATURES = (
     '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
     '<feature name="MUTE AUDIO" value="duckstation_mute" description="Turn the sound off.">'
     '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="ASK TO SAVE ON EXIT" value="duckstation_confirm_exit" description="Ask about saving a state when DuckStation closes.">'
+    '<choice name="NO" value="0" /><choice name="YES" value="1" /></feature>'
+    '<feature name="AUTO-SAVE ON EXIT" value="duckstation_save_on_exit" description="Save a resume state when DuckStation closes.">'
+    '<choice name="YES" value="1" /><choice name="NO" value="0" /></feature>'
     '<feature name="AUTOCONFIGURE CONTROLLERS" value="duckstation_autoconfig" description="Let ES-NE write the controllers (players 1 and 2) in settings.ini. Disable to keep your own mapping.">'
     '<choice name="ON" value="1" /><choice name="OFF" value="0" /></feature>'
 )

@@ -4,7 +4,7 @@
 # Clés de scraping (ScreenScraper, TheGamesDB...): aucune n'est compilée ni empaquetée; ES les lit dans ~/.config/esne/keys.conf
 # (modèle créé par es-genconfig).
 pkgname=es-ne-git
-pkgver=1.0.6
+pkgver=1.0.7
 pkgrel=1
 install=es-ne.install
 pkgdesc='EmulationStation front-end and RetroArch launcher for Linux, with no Batocera dependency (ES-NE)'

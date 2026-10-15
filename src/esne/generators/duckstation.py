@@ -5,7 +5,8 @@ Lancement: ``-batch`` (DuckStation se ferme avec le jeu), ``-fullscreen``, puis 
 
 Réglages ES (``duckstation_*``), écrits dans ``settings.ini`` seulement quand ils sont choisis; le fichier n'est modifié que
 s'il existe (DuckStation le crée à son premier lancement): moteur graphique, résolution interne, MSAA, filtrage des textures,
-PGXP, hack écran large, format d'image, VSync, compteur d'images, son coupé. Clés et valeurs relevées sur un ``settings.ini`` réel;
+PGXP, hack écran large, format d'image, VSync, compteur d'images, son coupé, question et sauvegarde automatique à la fermeture
+(``ConfirmPowerOff``, ``SaveStateOnExit``). Clés et valeurs relevées sur un ``settings.ini`` réel;
 seuls le moteur « Automatic », le filtre « MMPXAdvanced » et le format « 16:9 » y figuraient: les autres noms (Vulkan, OpenGL,
 Nearest, Bilinear, JINC2, xBR, 4:3) sont ceux de DuckStation, non revérifiés.
 
@@ -38,8 +39,10 @@ SETTINGS: dict[str, tuple[str, str, frozenset[str]]] = {
     "duckstation_vsync": ("Display", "VSync", frozenset({"0", "1"})),
     "duckstation_fps": ("Display", "ShowFPS", frozenset({"0", "1"})),
     "duckstation_mute": ("Audio", "OutputMuted", frozenset({"0", "1"})),
+    "duckstation_confirm_exit": ("Main", "ConfirmPowerOff", frozenset({"0", "1"})),  # question à la fermeture
+    "duckstation_save_on_exit": ("Main", "SaveStateOnExit", frozenset({"0", "1"})),  # sauvegarde automatique à la fermeture
 }
-BOOLEAN = {"duckstation_pgxp", "duckstation_widescreen", "duckstation_vsync", "duckstation_fps", "duckstation_mute"}
+BOOLEAN = {"duckstation_confirm_exit", "duckstation_save_on_exit", "duckstation_pgxp", "duckstation_widescreen", "duckstation_vsync", "duckstation_fps", "duckstation_mute"}
 
 # bouton de la PS1 -> entrée SDL (relevé sur le fichier réel)
 MAPPING = {

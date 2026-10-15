@@ -43,6 +43,14 @@ def test_command_settings_and_pads(home):
     assert "Cross = SDL-3/A" in text and "[Pad2]\nType = AnalogController" in text and "Cross = SDL-1/A" in text
 
 
+def test_exit_options(home):
+    ini = home / "data" / "duckstation" / "settings.ini"
+    ini.parent.mkdir(parents=True)
+    ini.write_text("[Main]\nConfirmPowerOff = true\nSaveStateOnExit = true\n")
+    duckstation.Duckstation().generate(ctx(home / "g.cue", duckstation_confirm_exit="0", duckstation_save_on_exit="1"))
+    assert ini.read_text() == "[Main]\nConfirmPowerOff = false\nSaveStateOnExit = true\n"
+
+
 def test_one_pad_disables_pad2_and_invalid_ignored(home):
     ini = home / "data" / "duckstation" / "settings.ini"
     ini.parent.mkdir(parents=True)

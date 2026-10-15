@@ -47,7 +47,7 @@ Dans `packaging/arch/` (PKGBUILD `es-ne-git`, `es-ne-session`, `es-ne.desktop`, 
 
 ## Prochaines étapes
 - Steam: piste Batocera: fin de partie lue dans `console_log.txt` de Steam
-- Valider DuckStation en jeu (écrit d'après un `settings.ini` réel); autres émulateurs autonomes possibles: melonDS, Flycast
+- Autres émulateurs autonomes possibles: melonDS, Flycast
 - Autres ports PortMaster (OpenTyrian, SDLPoP, OpenGGS), Wine/umu, Ryujinx
 - RetroArch: netplay, `-monitor`, RetroAchievements en jeu
 - Réglages dans ES: Dolphin et PCSX2 validés en jeu. RPCS3: pas d'autres options, les jeux se règlent au cas par cas dans RPCS3; Redream et Xenia: options principales faites, le reste volontairement laissé à la configuration de l'émulateur
@@ -55,7 +55,7 @@ Dans `packaging/arch/` (PKGBUILD `es-ne-git`, `es-ne-session`, `es-ne.desktop`, 
 
 ## Versions
 
-Une release par avancée notable (nouvel émulateur, série d'options): 1.0.1 à 1.0.10, puis 1.1.0 et la suite 1.1.1 à 1.1.10, etc. 1.0.1: Xbox 360 (Xenia Canary) avec réglages vidéo dans ES, logo ES-NE. 1.0.2: réglages dans ES pour Eden, Cemu, xemu et Xenia (langue, région, son), validés en jeu. 1.0.3: Dreamcast (Redream), validée en jeu. 1.0.4: Dolphin (réglages ES, manettes GameCube et Wii, langues, barre capteur), options PCSX2 et options de rendu de Redream, validés en jeu. 1.0.5: Xenia (langues coréen/russe/chinois, régions NL/RU/CZ, mode vidéo `avpack`) et anisotrope automatique/défaut d'Eden, validés en jeu. 1.0.6: RMG (N64) et PPSSPP (PSP) en standalone, réglages vidéo dans ES, manettes RMG configurées automatiquement (chemin hidraw/evdev retrouvé par le lanceur), validés en jeu.
+Une release par avancée notable (nouvel émulateur, série d'options): 1.0.1 à 1.0.10, puis 1.1.0 et la suite 1.1.1 à 1.1.10, etc. 1.0.1: Xbox 360 (Xenia Canary) avec réglages vidéo dans ES, logo ES-NE. 1.0.2: réglages dans ES pour Eden, Cemu, xemu et Xenia (langue, région, son), validés en jeu. 1.0.3: Dreamcast (Redream), validée en jeu. 1.0.4: Dolphin (réglages ES, manettes GameCube et Wii, langues, barre capteur), options PCSX2 et options de rendu de Redream, validés en jeu. 1.0.5: Xenia (langues coréen/russe/chinois, régions NL/RU/CZ, mode vidéo `avpack`) et anisotrope automatique/défaut d'Eden, validés en jeu. 1.0.6: RMG (N64) et PPSSPP (PSP) en standalone, réglages vidéo dans ES, manettes RMG configurées automatiquement (chemin hidraw/evdev retrouvé par le lanceur), validés en jeu. 1.0.7: DuckStation (PS1) en standalone, réglages vidéo et manettes dans `settings.ini`, validé en jeu.
 
 ## Licence
 Le projet est en GPL-3.0-or-later (voir `docs/LICENSING.md`): du code de batocera-configgen (GPL-3) peut être repris.
