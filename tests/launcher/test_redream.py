@@ -43,3 +43,9 @@ def test_config_is_found_next_to_the_binary(tmp_path, monkeypatch):
     (bin_dir / "redream.cfg").write_text(CFG)
     assert redream.find_config(str(bin_dir / "redream")) == bin_dir / "redream.cfg"
     assert redream.find_config() is None
+
+
+def test_renderer_and_pal_variants_are_accepted_and_unknown_ones_ignored(tmp_path):
+    values = redream.chosen(ctx(redream_renderer="gl_hle_perstrip", redream_broadcast="pal_n"))
+    assert values == {"renderer": "gl_hle_perstrip", "broadcast": "pal_n"}
+    assert redream.chosen(ctx(redream_renderer="metal")) == {}
