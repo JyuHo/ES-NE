@@ -55,3 +55,33 @@ def test_invalid_ignored_and_missing_file(home):
     assert "AspectRatio             = 2" in conf.read_text()
     conf.unlink()
     assert snes9x.Snes9x().generate(ctx(home / "g.sfc")).argv[-1] == str(home / "g.sfc")
+
+
+PADS = ("[Joypad 0]\nA        = Joystick 1 Button 1\nB        = Joystick 1 Button 0\nX        = Joystick 1 Button 3\nY        = Joystick 1 Button 2\n"
+        "L        = Joystick 1 Button 4\nR        = Joystick 1 Button 5\nSelect   = Joystick 1 Button 8\nStart    = Joystick 1 Button 9\n"
+        "Up       = Joystick 1 Axis 6 + 40%\nDown     = Joystick 1 Axis 6 - 40%\nLeft     = Joystick 1 Axis 7 - 40%\nRight    = Joystick 1 Axis 7 + 40%\n"
+        "[Joypad 1]\nA        = Unset\n")
+
+
+def test_pads_copied(home):
+    from esne.generators.base import Controller
+    conf = write(home)
+    conf.write_text(CONF + PADS)
+    snes9x.Snes9x().generate(Context(system="snes", rom="g.sfc", config=Cfg(), emulator="snes9x",
+                                     controllers=[Controller(player=1, index=2), Controller(player=2, index=0)]))
+    text = conf.read_text()
+    assert "[Joypad 0]\nA        = Joystick 3 Button 1" in text and "Up       = Joystick 3 Axis 6 + 40%" in text
+    assert "[Joypad 1]\nA        = Joystick 1 Button 1" in text and "Right = Joystick 1 Axis 7 + 40%" in text
+
+
+def test_pads_not_configured_or_disabled(home):
+    from esne.generators.base import Controller
+    conf = write(home)
+    pad = [Controller(player=1, index=0)]
+    snes9x.Snes9x().generate(Context(system="snes", rom="g.sfc", config=Cfg(), emulator="snes9x", controllers=pad))
+    assert "Joypad" not in conf.read_text()
+    conf.write_text(CONF + PADS)
+    before = conf.read_text()
+    snes9x.Snes9x().generate(Context(system="snes", rom="g.sfc", config=Cfg(snes9x_autoconfig="0"), emulator="snes9x",
+                                     controllers=[Controller(player=1, index=3)]))
+    assert "Joystick 4" not in conf.read_text() and "Joystick 1 Button 1" in conf.read_text()
