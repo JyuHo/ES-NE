@@ -1,8 +1,8 @@
 # Code et données tierces
 | Fichier ES-NE | Source | Commit | Licence |
 |---|---|---|---|
-| `third_party/emulationstation` (sous-module) | [batocera-linux/batocera-emulationstation](https://github.com/batocera-linux/batocera-emulationstation), via le fork `JyuHo/emulationstation-esne` | base `5b1764c9a`, branche `esne` | MIT (© 2014 Alec Lofquist) |
-| `es-app/src/LinuxApiSystem.{h,cpp}` (dans le fork) | écrits pour ES-NE; règle d'affichage des menus décorations/shaders reprise de `Win32ApiSystem` (même dépôt) | `b935f4c` | MIT (licence du fork) |
+| `third_party/emulationstation` (sous-module) | [batocera-linux/batocera-emulationstation](https://github.com/batocera-linux/batocera-emulationstation), via le fork `JyuHo/emulationstation-esne` | base `8d2b39446`, branche `esne` | MIT (© 2014 Alec Lofquist) |
+| `es-app/src/LinuxApiSystem.{h,cpp}` (dans le fork) | écrits pour ES-NE; règle d'affichage des menus décorations/shaders reprise de `Win32ApiSystem` (même dépôt) | `6e72066` | MIT (licence du fork) |
 | `external/pugixml` (sous-module d'ES) | [zeux/pugixml](https://github.com/zeux/pugixml) | épinglé par le fork | MIT |
 | thème Carbon (`/usr/share/esne/themes/es-theme-carbon`) | [RetroPie/es-theme-carbon](https://github.com/RetroPie/es-theme-carbon), téléchargé par le `PKGBUILD` à la construction | branche par défaut | aucun fichier de licence dans le dépôt: **non redistribué dans ce dépôt** |
 | Digger (jeu de démonstration du système ports, **téléchargé à la demande** par `es-genconfig --install-port digger`, jamais copié ni redistribué) | [catalogue PortMaster](https://github.com/PortsMaster/PortMaster-New), source du jeu: [sobomax/digger](https://github.com/sobomax/digger) | version du catalogue au moment du téléchargement | GPL-2.0 (le zip contient `LICENSE.GPL2.txt`) |

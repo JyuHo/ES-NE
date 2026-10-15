@@ -18,7 +18,7 @@ Un ✅ côté ES signifie « code en place et vérifié à la compilation (synta
 | Les appels système sont centralisés | `ApiSystem.cpp` contient 168 des ~191 occurrences `batocera-*` | Un seul fichier de logique à adapter |
 | **ES a déjà une sous-classe pour un autre OS** | `Win32ApiSystem.cpp` (15 occurrences) est ce que RetroBat utilise | On crée `LinuxApiSystem` (ou `EsneApiSystem`) sur ce modèle, sans toucher `ApiSystem.cpp` |
 | Les menus dépendent des exécutables présents | `ApiSystem::isScriptingSupported()` pousse `batocera-wifi`, `-bluetooth`, `-resolution`... dans une liste `executables`, **testée en chemin absolu `/usr/bin/<nom>`** (pas dans le `PATH`). ✅ lu. Les `ScriptId` absents du `switch` (GAMESETTINGS, DECORATIONS, SHADERS, VIDEOFILTERS...) renvoient `true` par défaut | `LinuxApiSystem` surcharge la fonction: menus `esctl` conditionnés à `esctl has <cmd>`, menus Batocera masqués (patch 5) |
-| Des appels contournent les méthodes virtuelles | 22 appels `popen`/`system` directs dans `ApiSystem.cpp` (dont `canUpdate`, torrent, `launchKodi`) | La traduction `batocera-*` → `esctl` ne les couvre pas. ✅ surchargés (patch 5): `canUpdate`, `launchKodi`... ✅ corrigés (`3bdea9b`): les 4 fonctions audio, sans quoi le menu audio s'affichait mais échouait. ❌ restent directs: `getCurrentStorage`, `getRootPassword`, scraper, `batocera-upgrade*`, `batocera-controlcenter` (menus masqués ou code sous `BATOCERA`), à confirmer dans `GuiMenu.cpp` |
+| Des appels contournent les méthodes virtuelles | 22 appels `popen`/`system` directs dans `ApiSystem.cpp` (dont `canUpdate`, torrent, `launchKodi`) | La traduction `batocera-*` → `esctl` ne les couvre pas. ✅ surchargés (patch 5): `canUpdate`, `launchKodi`... ✅ corrigés (`9bc4a88`): les 4 fonctions audio, sans quoi le menu audio s'affichait mais échouait. ❌ restent directs: `getCurrentStorage`, `getRootPassword`, scraper, `batocera-upgrade*`, `batocera-controlcenter` (menus masqués ou code sous `BATOCERA`), à confirmer dans `GuiMenu.cpp` |
 | Lancement des jeux | `FileData.cpp:578` écrit `/tmp/game.xml` (donné au lanceur via `-gameinfoxml`), `:675` lit `/tmp/launch_error.log` | Contrat avec `es-launcher`: à relire (voir §4) |
 | Redémarrage / arrêt | `Platform.cpp:262-273` crée `/tmp/restart.please`, `reboot.please`, `shutdown.please`; `emulationstation.sh` utilise `es-restart`, `es-sysrestart`, `es-shutdown` | Deux mécanismes: ES-NE doit n'en garder qu'un. ✅ patch 7 (systemctl + execv) |
 
@@ -82,7 +82,7 @@ Autres chemins hors `Paths.cpp` (état):
 - ✅ `ThemeData.cpp:1859` (`/recalbox/share_init/...`): ignoré sous ESNE (patch 3).
 - ❌ `ThemeData.cpp:2370`, `ApiSystem.cpp:1128`, `SystemData.cpp:1347` (`/etc/emulationstation/...`, « compatibilité RetroPie ») → à garder ou supprimer, sans importance.
 - ✅ `ApiSystem.cpp:2702` (`/boot/boot/batocera.board`): `getRunningBoard()` renvoie une chaîne vide (patch 5). ✅ `Platform.cpp:685` (`batocera.arch`): non lu sous ESNE, repli sur les macros d'architecture (patch 3 + 4).
-- ✅ `GuiMenu.cpp`: `/usr/bin/batocera-keyboard` remplacé par `esctl keyboard` (patch 8, commit `88507e6`).
+- ✅ `GuiMenu.cpp`: `/usr/bin/batocera-keyboard` remplacé par `esctl keyboard` (patch 8, commit `8de5495`).
 - 🚧 `ApiSystem.cpp:2727-2745, 3259`: `/usr/bin/batocera-shutdown` ✅ (remplacé par `systemctl suspend` dans `suspend()`); `virtual-sindenlightgun-remap`, `virtual-wii-mouse-bar-remap`, `steamdeckgun-remap` ❌ (`replugControllers_*`, encore appelés tels quels); `batocera-backglass` ⛔ masqué.
 - ✅ `ApiSystem.cpp:2207`: `pm-suspend` remplacé par un test de `systemctl` dans le `PATH` (patch 5).
 - ❌ `VideoPlayerComponent.cpp:243`: `omxplayer` (Raspberry Pi uniquement) → ignorer.
@@ -100,16 +100,16 @@ Le plan initial a été regroupé à l'exécution: le patch 5 livré (`LinuxApiS
 
 | Plan | Préfixe | Changement | État | Commit du fork |
 |---|---|---|---|---|
-| 1 | `esne: build:` | option CMake `-DESNE=ON` + define `ESNE` (+ `ESNE_SHARE_DIR`) | ✅ | `99b711a` |
-| 2 | `esne: paths:` | branche `ESNE` dans `Paths.cpp` (XDG + `ESNE_*_DIR`) | ✅ | `e142310` |
-| 3 | `esne: paths:` | supprimer `/recalbox`, `batocera.board`, `batocera.arch` | ✅ | `e28606c` (+ `b935f4c` pour `batocera.board`) |
-| (ajout) | `esne: build:` | définir `X86`/`X86_64` depuis `CMAKE_SYSTEM_PROCESSOR` | ✅ | `67167a7` |
-| 4 | `esne: syscalls:` | `LinuxApiSystem` calquée sur `Win32ApiSystem`, choisie à la compilation | ✅ | `b935f4c` |
-| 5 | `esne: syscalls:` | résolution, audio, info, systems, version via `esctl` | 🚧 côté ES ✅; `esctl`: version, résolution, audio ✅, le reste ❌ | `b935f4c`, `3bdea9b` (audio) |
-| 6 | `esne: menus:` | masquer les menus du groupe C | 🚧 menus protégés par `isScriptingSupported` ✅; appels directs dans `GuiMenu.cpp` ❌ | `b935f4c` (partiel) |
-| 7 | `esne: syscalls:` | arrêt / redémarrage direct (`Platform.cpp`) et `emulationstation.sh` allégé | ✅ (`2c029de`) | |
-| 8 | `esne: syscalls:` | `GuiMenu.cpp`: `batocera-keyboard` → `esctl keyboard` | ✅ | `88507e6` |
-| 9 | `esne: launch:` | adapter le lancement d'`FileData.cpp` à `es-launcher` | ✅ (sans objet, sauf l'installation d'un core manquant: `b567ac1`) | |
+| 1 | `esne: build:` | option CMake `-DESNE=ON` + define `ESNE` (+ `ESNE_SHARE_DIR`) | ✅ | `6921537` |
+| 2 | `esne: paths:` | branche `ESNE` dans `Paths.cpp` (XDG + `ESNE_*_DIR`) | ✅ | `765f90b` |
+| 3 | `esne: paths:` | supprimer `/recalbox`, `batocera.board`, `batocera.arch` | ✅ | `feca76e` (+ `6e72066` pour `batocera.board`) |
+| (ajout) | `esne: build:` | définir `X86`/`X86_64` depuis `CMAKE_SYSTEM_PROCESSOR` | ✅ | `cac1569` |
+| 4 | `esne: syscalls:` | `LinuxApiSystem` calquée sur `Win32ApiSystem`, choisie à la compilation | ✅ | `6e72066` |
+| 5 | `esne: syscalls:` | résolution, audio, info, systems, version via `esctl` | 🚧 côté ES ✅; `esctl`: version, résolution, audio ✅, le reste ❌ | `6e72066`, `9bc4a88` (audio) |
+| 6 | `esne: menus:` | masquer les menus du groupe C | 🚧 menus protégés par `isScriptingSupported` ✅; appels directs dans `GuiMenu.cpp` ❌ | `6e72066` (partiel) |
+| 7 | `esne: syscalls:` | arrêt / redémarrage direct (`Platform.cpp`) et `emulationstation.sh` allégé | ✅ (`eb881ba`) | |
+| 8 | `esne: syscalls:` | `GuiMenu.cpp`: `batocera-keyboard` → `esctl keyboard` | ✅ | `8de5495` |
+| 9 | `esne: launch:` | adapter le lancement d'`FileData.cpp` à `es-launcher` | ✅ (sans objet, sauf l'installation d'un core manquant: `980fde0`) | |
 | 10 | `esne: menus:` | groupe B: activer au cas par cas | ❌ | |
 
 ## 6. Ce que ça change dans ES-NE

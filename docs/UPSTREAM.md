@@ -14,9 +14,9 @@ ES-NE embarque un fork d'EmulationStation comme sous-module git.
 | Champ | Valeur |
 |---|---|
 | Branche upstream | `master` |
-| Commit de base | `5b1764c9a` (« Merge pull request #2239 from batocera-linux/fixfribidimultilines ») |
-| Date d'épinglage | 2026-10-12 |
-| Branche du fork | `esne` (une trentaine de commits au-dessus de la base) |
+| Commit de base | `8d2b39446` (« update po », rebase du 2026-10-15; la base précédente était `5b1764c9a`) |
+| Date d'épinglage | 2026-10-15 |
+| Branche du fork | `esne` (38 commits au-dessus de la base) |
 | Sous-modules d'ES | `external/pugixml` (initialisé avec `--recursive`) |
 
 Le sous-module d'ES-NE doit pointer vers un commit **présent sur GitHub**. Après chaque `git am` / rebase local dans
@@ -65,30 +65,30 @@ Hashes de la branche `esne` du fork.
 
 | Commit | Catégorie | Description |
 |---|---|---|
-| `99b711a` | build | option CMake `-DESNE=ON`, `ESNE_SHARE_DIR`, exclusive avec BATOCERA/RETROBAT/WIN32 |
-| `e142310` | paths | disposition XDG dans `Paths.cpp` (`ESNE_{CONFIG,DATA,STATE,SHARE}_DIR`) |
-| `e28606c` | paths | ne plus lire `batocera.arch` ni réécrire `/recalbox` sous ESNE |
-| `67167a7` | build | définir `X86`/`X86_64` depuis `CMAKE_SYSTEM_PROCESSOR` |
-| `b935f4c` | syscalls | `LinuxApiSystem`: traduction `batocera-*` → `esctl`, menus conditionnés, mises à jour désactivées, suspend direct; Kodi retiré (absent d'ES-NE, entrées masquées) |
-| `3bdea9b` | syscalls | les 4 fonctions audio (`get`/`set` périphérique et profil) passent par `executeScript` / `executeEnumerationScript` au lieu de `popen`/`system` |
-| `3dfc4be` | menus | crée `esne.conf` au premier lancement (sinon aucun réglage ne s'enregistre), entrée « QUIT EMULATIONSTATION » dans le menu Quitter, menu disposition clavier masqué (`batocera-keyboard`) |
-| `f074529` | i18n | applique `system.language` au démarrage (Batocera l'exporte via ses scripts d'init) et cherche les `.mo` à côté de l'exécutable, quel que soit le dossier courant |
-| `c11bacd` | scrapers | les clés développeur (ScreenScraper, TheGamesDB...) viennent d'un `esne-keys.cmake` non versionné (modèle: `esne-keys.cmake.example`) |
-| `a8dae80` | scrapers | modèle de clés entièrement commenté (les valeurs factices étaient compilées et faisaient apparaître ScreenScraper sans identifiants valides) |
-| `9ecfacc` | lancement | crée `<state>/logs` au démarrage: ES redirige la sortie de l'émulateur dedans, et le shell abandonnait avec le code 1 sans lancer `es-launcher` si le dossier manquait |
-| `2c029de` | arrêt / redémarrage | `systemctl reboot` / `poweroff` à la place de `shutdown` et des fichiers `/tmp/*.please`; « redémarrer ES » se relance par `execv` (mêmes arguments) |
-| `cc3bbbc` | redémarrage requis | après un réglage qui demande un redémarrage (langue...), ES propose de se relancer tout de suite |
-| `afda9b3` | Zaparoo | pas de sondage de `127.0.0.1:7497` (ni d'erreur de connexion à chaque démarrage) sauf si `zaparoo.enabled=1` dans `esne.conf` |
-| `7a84842` | menu Quitter | retire « mettre en veille » et « extinction rapide » (l'extinction rapide ne fait qu'éviter la sauvegarde des métadonnées) |
-| `3be4670` | décorations | un bezel par système: jeu de décorations « THE BEZEL PROJECT » (aperçu = image du système); pas de bezel par jeu |
-| `0ef1c7c` | chemins | dossier de données par défaut `~/esne` (au lieu de `~/.local/share/esne`) |
-| `96f4090` | clés | clés de développeur lues à l'exécution dans `~/.config/esne/keys.conf` (`EsneKeys.h`); scrapers à clé et RetroAchievements proposés seulement si la clé est renseignée |
-| `4e803a0` | scrapers | repli sur le premier scraper disponible si celui qui est configuré n'a pas de clé (évitait un SIGSEGV au scrape) |
-| `b567ac1`, `0d9de3f` | lancement | code de sortie 205 (core manquant): lit `/tmp/esne-missing-core` (core, paquet, source), propose l'installation (`GuiLoading` puis `ApiSystem::installLibretroCore` → `esctl install-core`); variante AUR |
-| `88507e6` | menus | disposition du clavier via `esctl keyboard get/list/set` (menu affiché si `esctl has keyboard`) |
-| `9902d9a` | menus | Kodi retiré: `isScriptingSupported(KODI)` renvoie faux, entrées « KODI » masquées même si `kodi` est installé |
-| `bb89193` | ressources | écran de démarrage (`logo.png`), `splash.svg` et `window_icon_256.png` remplacés par ceux d'ES-NE; `splash_batocera.svg` supprimé (visuels Batocera et icône « ES » d'EmulationStation retirés) |
-| `b271b59`, `f4b04f2` | i18n | traductions françaises complètes (`.po` + `.pot`, 1282 chaînes) |
+| `6921537` | build | option CMake `-DESNE=ON`, `ESNE_SHARE_DIR`, exclusive avec BATOCERA/RETROBAT/WIN32 |
+| `765f90b` | paths | disposition XDG dans `Paths.cpp` (`ESNE_{CONFIG,DATA,STATE,SHARE}_DIR`) |
+| `feca76e` | paths | ne plus lire `batocera.arch` ni réécrire `/recalbox` sous ESNE |
+| `cac1569` | build | définir `X86`/`X86_64` depuis `CMAKE_SYSTEM_PROCESSOR` |
+| `6e72066` | syscalls | `LinuxApiSystem`: traduction `batocera-*` → `esctl`, menus conditionnés, mises à jour désactivées, suspend direct; Kodi retiré (absent d'ES-NE, entrées masquées) |
+| `9bc4a88` | syscalls | les 4 fonctions audio (`get`/`set` périphérique et profil) passent par `executeScript` / `executeEnumerationScript` au lieu de `popen`/`system` |
+| `1e5845a` | menus | crée `esne.conf` au premier lancement (sinon aucun réglage ne s'enregistre), entrée « QUIT EMULATIONSTATION » dans le menu Quitter, menu disposition clavier masqué (`batocera-keyboard`) |
+| `acd075d` | i18n | applique `system.language` au démarrage (Batocera l'exporte via ses scripts d'init) et cherche les `.mo` à côté de l'exécutable, quel que soit le dossier courant |
+| `9152c03` | scrapers | les clés développeur (ScreenScraper, TheGamesDB...) viennent d'un `esne-keys.cmake` non versionné (modèle: `esne-keys.cmake.example`) |
+| `5b3352e` | scrapers | modèle de clés entièrement commenté (les valeurs factices étaient compilées et faisaient apparaître ScreenScraper sans identifiants valides) |
+| `fbe1a73` | lancement | crée `<state>/logs` au démarrage: ES redirige la sortie de l'émulateur dedans, et le shell abandonnait avec le code 1 sans lancer `es-launcher` si le dossier manquait |
+| `eb881ba` | arrêt / redémarrage | `systemctl reboot` / `poweroff` à la place de `shutdown` et des fichiers `/tmp/*.please`; « redémarrer ES » se relance par `execv` (mêmes arguments) |
+| `a89e170` | redémarrage requis | après un réglage qui demande un redémarrage (langue...), ES propose de se relancer tout de suite |
+| `a53a4e1` | Zaparoo | pas de sondage de `127.0.0.1:7497` (ni d'erreur de connexion à chaque démarrage) sauf si `zaparoo.enabled=1` dans `esne.conf` |
+| `84d8fca` | menu Quitter | retire « mettre en veille » et « extinction rapide » (l'extinction rapide ne fait qu'éviter la sauvegarde des métadonnées) |
+| `af121ce` | décorations | un bezel par système: jeu de décorations « THE BEZEL PROJECT » (aperçu = image du système); pas de bezel par jeu |
+| `21e0b24` | chemins | dossier de données par défaut `~/esne` (au lieu de `~/.local/share/esne`) |
+| `619d295` | clés | clés de développeur lues à l'exécution dans `~/.config/esne/keys.conf` (`EsneKeys.h`); scrapers à clé et RetroAchievements proposés seulement si la clé est renseignée |
+| `d3176ec` | scrapers | repli sur le premier scraper disponible si celui qui est configuré n'a pas de clé (évitait un SIGSEGV au scrape) |
+| `980fde0`, `e43dce0` | lancement | code de sortie 205 (core manquant): lit `/tmp/esne-missing-core` (core, paquet, source), propose l'installation (`GuiLoading` puis `ApiSystem::installLibretroCore` → `esctl install-core`); variante AUR |
+| `8de5495` | menus | disposition du clavier via `esctl keyboard get/list/set` (menu affiché si `esctl has keyboard`) |
+| `17d6c20` | menus | Kodi retiré: `isScriptingSupported(KODI)` renvoie faux, entrées « KODI » masquées même si `kodi` est installé |
+| `218a886` | ressources | écran de démarrage (`logo.png`), `splash.svg` et `window_icon_256.png` remplacés par ceux d'ES-NE; `splash_batocera.svg` supprimé (visuels Batocera et icône « ES » d'EmulationStation retirés) |
+| `035e6d0`, `6d64e5e` | i18n | traductions françaises complètes (`.po` + `.pot`, 1282 chaînes) |
 
 ## Ce qui reste de Batocera dans le frontend (état actuel)
 - `updates.batocera.org`: sert seulement à la liste des thèmes téléchargeables (`themes.json`); surchargeable par `global.updates.url`.
@@ -109,3 +109,6 @@ en expression, liste des scrapers initialisée à la demande (ordre d'initialisa
 `Paths::homePath` en statique local, `-Wno-sign-compare` (~230 warnings de style).
 Bugs suspects laissés tels quels (comportement amont) : propriété thème « multiLine »
 (TextComponent), `repeat = 1` (ThemeStoryboard), `mLastCursor = -9999` (ImageGridComponent).
+
+## Rebase du 2026-10-15
+Rebase de la branche `esne` sur le `master` de Batocera (`8d2b39446`): 8 conflits, tous mineurs (`#if ESNE` dans `GuiMenu.cpp`, menu du clavier, `.po`, splash). Le résultat compile en `-DESNE=ON` sans erreur ni warning. Nouveautés d'upstream reprises: HDR, réseaux Wi-Fi, affichage de droite à gauche, options masquées quand un réglage requis manque, corrections diverses; 8 chaînes françaises ajoutées. L'ancienne branche est gardée en local sous `esne-before-rebase` (hashes du journal ci-dessus mis à jour).
