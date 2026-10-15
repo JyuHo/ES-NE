@@ -10,7 +10,7 @@ Lancement: ``-f`` (plein écran), ``-n`` (sans barre de menus), ``-q`` (quitte R
   RMG, SDL3) est conservé, sinon on écrit le nom d'ES. ``rmg_autoconfig=0`` laisse tes propres profils.
 * Vidéo (plugin GLideN64): ``GLideN64.ini``, section ``[User]``, quand le réglage ES est choisi: ``rmg_resolution``
   (``nativeResFactor``), ``rmg_msaa``, ``rmg_fxaa``, ``rmg_af``, ``rmg_filter``, ``rmg_vsync``, ``rmg_fps``, ``rmg_hires``,
-  ``rmg_aspect``. Ces fichiers ne sont modifiés que s'ils existent (RMG les crée à son premier lancement).
+  ``rmg_aspect`` (valeurs relevées sur un fichier réel: 16:9 = 2, résolution 6X = 6). Ces fichiers ne sont modifiés que s'ils existent (RMG les crée à son premier lancement).
 """
 from __future__ import annotations
 
@@ -48,7 +48,7 @@ VIDEO: dict[str, tuple[str, frozenset[str]]] = {
     "rmg_vsync": (r"video\verticalSync", frozenset({"0", "1"})),
     "rmg_fps": (r"onScreenDisplay\showFPS", frozenset({"0", "1"})),
     "rmg_hires": (r"textureFilter\txHiresEnable", frozenset({"0", "1"})),
-    "rmg_aspect": (r"frameBufferEmulation\aspect", frozenset({"0", "1", "2", "3"})),  # étiré, 4:3, 16:9, ajusté
+    "rmg_aspect": (r"frameBufferEmulation\aspect", frozenset({"0", "1", "2", "3"})),  # étiré, 4:3, 16:9 (2, relevé), ajusté
 }
 
 
