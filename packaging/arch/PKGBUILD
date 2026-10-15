@@ -34,7 +34,8 @@ sha256sums=(SKIP SKIP)
 
 pkgver() {
   cd "$pkgname"
-  printf '1.0.3.r%s.g%s' "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  version=$(sed -n 's/^__version__ = "\(.*\)"/\1/p' src/esne/__init__.py)
+  printf '%s.r%s.g%s' "$version" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
