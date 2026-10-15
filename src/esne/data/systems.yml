@@ -212,6 +212,14 @@ xbox360:
   extensions: [.iso, .xex]
   emulators:
     xenia: {}
+dreamcast:
+  name: Sega Dreamcast
+  manufacturer: Sega
+  release: 1998
+  hardware: console
+  extensions: [.gdi, .cdi, .chd, .cue]
+  emulators:
+    redream: {}
 steam:
   name: Steam
   manufacturer: Valve

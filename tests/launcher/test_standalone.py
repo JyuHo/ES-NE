@@ -168,3 +168,17 @@ def test_xenia_console_region_patches_its_own_byte(esne_env, monkeypatch, tmp_pa
     assert not xenia.set_console_region(xconfig, "7")        # valeur non relevée
     xconfig.write_bytes(bytes(6912))                         # octet à zéro: fichier non reconnu
     assert not xenia.set_console_region(xconfig, "34")
+
+
+def test_redream_is_found_and_gets_the_game(esne_env, monkeypatch, tmp_path):
+    home = tmp_path / "home"
+    (home / ".local" / "bin").mkdir(parents=True)
+    exe = home / ".local" / "bin" / "redream"
+    exe.write_bytes(b"x")
+    exe.chmod(0o755)
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setattr(standalone.shutil, "which", lambda name: None)
+    rom = tmp_path / "Jeu.gdi"
+    rom.write_bytes(b"x")
+    command = standalone.Standalone().generate(ctx("redream", rom, "dreamcast"))
+    assert command.argv == [str(exe), str(rom)]

@@ -31,6 +31,11 @@ xenia:
   binary: ["~/.local/bin/[Xx]enia*.AppImage", "~/Applications/[Xx]enia*.AppImage", xenia_canary, xenia]
   args: ["--fullscreen=true", "{rom}"]
   package: "l'AppImage Xenia Canary dans ~/.local/bin"
+redream:
+  # Redream (Dreamcast): archive Linux de redream.io, pas de paquet; le binaire peut être placé dans le PATH, ~/.local/bin ou ~/Applications.
+  binary: [redream, "~/.local/bin/redream", "~/Applications/redream/redream", "~/Applications/redream", "~/redream/redream"]
+  args: ["{rom}"]
+  package: "Redream (redream.io, archive Linux dans ~/.local/bin)"
 eden:
   binary: [eden, "~/.local/bin/[Ee]den*.AppImage", "~/Applications/[Ee]den*.AppImage", "flatpak run dev.eden_emu.eden"]
   args: [-f, -g, "{rom}"]
