@@ -96,9 +96,16 @@ DOLPHIN_FEATURES = (
     '<choice name="OFF" value="false" /><choice name="ON" value="true" /></feature>'
     '<feature name="FAST DISC TRANSFER RATE" value="dolphin_fastdisc" description="Removes disc loading.">'
     '<choice name="OFF" value="false" /><choice name="ON" value="true" /></feature>'
+)
+# Propres à la GameCube (système « gc »), puis à la Wii: ES les affiche seulement dans le menu de ce système.
+DOLPHIN_GC_FEATURES = (
     '<feature name="GAMECUBE LANGUAGE" value="dolphin_gc_language" description="GameCube system language.">'
     '<choice name="ENGLISH / JAPANESE" value="0" /><choice name="GERMAN" value="1" /><choice name="FRENCH" value="2" />'
     '<choice name="SPANISH" value="3" /><choice name="ITALIAN" value="4" /><choice name="DUTCH" value="5" /></feature>'
+    '<feature name="AUTOCONFIGURE CONTROLLERS" value="dolphin_gc_pad" description="Map the pads ES sees (up to 4) to the GameCube ports. Rewrites GCPadNew.ini when ON; leave unset to keep your own mapping.">'
+    '<choice name="ON" value="sdl" /></feature>'
+)
+DOLPHIN_WII_FEATURES = (
     '<feature name="WII LANGUAGE" value="dolphin_wii_language" description="Wii system language (written to the Wii SYSCONF).">'
     '<choice name="JAPANESE" value="0" /><choice name="ENGLISH" value="1" /><choice name="GERMAN" value="2" />'
     '<choice name="FRENCH" value="3" /><choice name="SPANISH" value="4" /><choice name="ITALIAN" value="5" />'
@@ -106,8 +113,6 @@ DOLPHIN_FEATURES = (
     '<choice name="KOREAN" value="9" /></feature>'
     '<feature name="WII TV MODE" value="dolphin_wii_tv" description="Wii NAND aspect ratio setting.">'
     '<choice name="4:3" value="0" /><choice name="16:9" value="1" /></feature>'
-    '<feature name="AUTOCONFIGURE CONTROLLERS" value="dolphin_gc_pad" description="Map the pads ES sees (up to 4) to the GameCube ports. Rewrites GCPadNew.ini when ON; leave unset to keep your own mapping.">'
-    '<choice name="ON" value="sdl" /></feature>'
     '<feature name="WII CONTROLLERS" value="dolphin_wii_pad" description="Map your pad to an emulated Wiimote, or use real Wiimotes. Rewrites WiimoteNew.ini when set.">'
     '<choice name="CLASSIC CONTROLLER" value="classic" /><choice name="WIIMOTE + NUNCHUK (EMULATED)" value="nunchuk" />'
     '<choice name="REAL WIIMOTES" value="real" /></feature>'
@@ -288,7 +293,9 @@ def render() -> str:
         f'  <emulator name="libretro" features="{",".join(LIBRETRO_FEATURES)}">{VIDEO_DRIVER_FEATURE}</emulator>\n'
         f'  <emulator name="cemu" features="">{CEMU_FEATURES}</emulator>\n'
         f'  <emulator name="pcsx2" features="">{PCSX2_FEATURES}</emulator>\n'
-        f'  <emulator name="dolphin" features="">{DOLPHIN_FEATURES}</emulator>\n'
+        f'  <emulator name="dolphin" features="">{DOLPHIN_FEATURES}'
+        f'<system name="gc" features="">{DOLPHIN_GC_FEATURES}</system>'
+        f'<system name="wii" features="">{DOLPHIN_WII_FEATURES}</system></emulator>\n'
         f'  <emulator name="eden" features="">{EDEN_FEATURES}</emulator>\n'
         f'  <emulator name="rpcs3" features="">{RPCS3_FEATURES}</emulator>\n'
         f'  <emulator name="xemu" features="">{XEMU_FEATURES}</emulator>\n'
