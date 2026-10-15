@@ -173,6 +173,26 @@ XENIA_FEATURES = (
 )
 
 
+# Options Redream (ES enregistre <système>.<clé>); écrites dans redream.cfg quand elles sont choisies.
+REDREAM_FEATURES = (
+    '<feature name="REGION" value="redream_region" description="Dreamcast region. Applied to redream.cfg, which Redream creates at its first launch.">'
+    '<choice name="EUROPE" value="europe" /><choice name="USA" value="usa" /><choice name="JAPAN" value="japan" /></feature>'
+    '<feature name="CONSOLE LANGUAGE" value="redream_language" description="Dreamcast system language.">'
+    '<choice name="ENGLISH" value="english" /><choice name="FRENCH" value="french" /><choice name="GERMAN" value="german" />'
+    '<choice name="SPANISH" value="spanish" /><choice name="ITALIAN" value="italian" /><choice name="JAPANESE" value="japanese" /></feature>'
+    '<feature name="BROADCAST" value="redream_broadcast" description="TV standard. PAL for Europe, NTSC for USA and Japan.">'
+    '<choice name="PAL" value="pal" /><choice name="NTSC" value="ntsc" /></feature>'
+    '<feature name="CABLE" value="redream_cable" description="Video cable. VGA gives a progressive image in games that support it.">'
+    '<choice name="VGA" value="vga" /><choice name="COMPOSITE" value="composite" /></feature>'
+    '<feature name="ASPECT RATIO" value="redream_aspect" description="Screen aspect ratio.">'
+    '<choice name="16:9" value="16:9" /><choice name="4:3" value="4:3" /><choice name="STRETCH" value="stretch" /></feature>'
+    '<feature name="RENDERING RESOLUTION" value="redream_res" description="Internal resolution scale.">'
+    '<choice name="1X" value="1" /><choice name="2X" value="2" /><choice name="3X" value="3" /><choice name="4X" value="4" /></feature>'
+    '<feature name="VSYNC" value="redream_vsync" description="Fix screen tearing.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+)
+
+
 STEAM_FEATURES = (
     '<feature name="KEEP STEAM OPEN" value="steam_keep_open" '
     'description="Keep the Steam client running after the game (faster next launch). Off: close it when ES-NE had to open it.">'
@@ -192,6 +212,7 @@ def render() -> str:
         f'  <emulator name="rpcs3" features="">{RPCS3_FEATURES}</emulator>\n'
         f'  <emulator name="xemu" features="">{XEMU_FEATURES}</emulator>\n'
         f'  <emulator name="xenia" features="">{XENIA_FEATURES}</emulator>\n'
+        f'  <emulator name="redream" features="">{REDREAM_FEATURES}</emulator>\n'
         f'  <emulator name="steam" features="">{STEAM_FEATURES}</emulator>\n'
         "</features>\n"
     )
