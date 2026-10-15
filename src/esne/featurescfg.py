@@ -87,6 +87,8 @@ EDEN_FEATURES = (
     '<choice name="DOCKED" value="1" /><choice name="HANDHELD" value="0" /></feature>'
     '<feature name="RESOLUTION" value="eden_resolution" description="Internal resolution scale.">'
     '<choice name="1X (720P/1080P)" value="3" /><choice name="2X (1440P/2160P)" value="6" /><choice name="3X" value="7" /><choice name="4X" value="8" /></feature>'
+    '<feature name="ANISOTROPIC FILTERING" value="eden_af" description="Texture sharpness at oblique angles.">'
+    '<choice name="2X" value="2" /><choice name="4X" value="3" /><choice name="8X" value="4" /><choice name="16X" value="5" /></feature>'
     '<feature name="VSYNC MODE" value="eden_vsync" description="Synchronization with the screen.">'
     '<choice name="MAILBOX (RECOMMENDED)" value="1" /><choice name="FIFO" value="2" />'
     '<choice name="FIFO RELAXED" value="3" /><choice name="IMMEDIATE (NO VSYNC)" value="0" /></feature>'

@@ -139,3 +139,11 @@ def test_resolution_uses_edens_own_indexes(tmp_path):
     assert eden.apply_settings(ini, ctx([], eden_resolution="6"))
     assert "resolution_setup\\default=false\nresolution_setup=6\n" in ini.read_text()
     assert not eden.apply_settings(ini, ctx([], eden_resolution="4"))   # index de yuzu, pas d'Eden
+
+
+def test_anisotropic_filtering_indexes(tmp_path):
+    ini = tmp_path / "qt-config.ini"
+    ini.write_text(REAL)
+    assert eden.apply_settings(ini, ctx([], eden_af="3"))
+    assert "max_anisotropy\\default=false\nmax_anisotropy=3\n" in ini.read_text()
+    assert not eden.apply_settings(ini, ctx([], eden_af="6"))
