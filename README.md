@@ -2,6 +2,8 @@
   <img src="assets/es-ne-banner.png" alt="ES-NE" width="720">
 </p>
 
+<p align="center"><b>Français</b> | <a href="README.en.md">English</a> | <a href="README.de.md">Deutsch</a></p>
+
 # ES-NE
 
 Version standalone de [batocera-emulationstation](https://github.com/batocera-linux/batocera-emulationstation)
