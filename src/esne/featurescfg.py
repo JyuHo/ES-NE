@@ -106,6 +106,8 @@ DOLPHIN_FEATURES = (
     '<choice name="KOREAN" value="9" /></feature>'
     '<feature name="WII TV MODE" value="dolphin_wii_tv" description="Wii NAND aspect ratio setting.">'
     '<choice name="4:3" value="0" /><choice name="16:9" value="1" /></feature>'
+    '<feature name="AUTOCONFIGURE CONTROLLERS" value="dolphin_gc_pad" description="Map the pads ES sees (up to 4) to the GameCube ports. Rewrites GCPadNew.ini when ON; leave unset to keep your own mapping.">'
+    '<choice name="ON" value="sdl" /></feature>'
     '<feature name="WII CONTROLLERS" value="dolphin_wii_pad" description="Map your pad to an emulated Wiimote, or use real Wiimotes. Rewrites WiimoteNew.ini when set.">'
     '<choice name="CLASSIC CONTROLLER" value="classic" /><choice name="WIIMOTE + NUNCHUK (EMULATED)" value="nunchuk" />'
     '<choice name="REAL WIIMOTES" value="real" /></feature>'

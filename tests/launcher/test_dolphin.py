@@ -154,3 +154,28 @@ def test_wii_pad_ignored_for_gamecube(home):
     ctx = Context(system="gamecube", rom=str(rom), config=Cfg(dolphin_wii_pad="classic"), emulator="dolphin")
     dolphin.Dolphin().generate(ctx)
     assert not (home / "cfg" / "dolphin-emu" / "WiimoteNew.ini").exists()
+
+
+def test_gamecube_two_players_mapped_and_ports_set(home):
+    folder = home / "cfg" / "dolphin-emu"
+    folder.mkdir(parents=True)
+    (folder / "Dolphin.ini").write_text("[Core]\nSIDevice0 = 0\nSIDevice1 = 0\nSIDevice2 = 6\n")
+    rom = home / "Jeu.iso"
+    rom.write_bytes(b"x")
+    pads = [Controller(player=1, index=0, name="PS4 Controller"), Controller(player=2, index=1, name="PS4 Controller")]
+    dolphin.Dolphin().generate(Context(system="gamecube", rom=str(rom), config=Cfg(dolphin_gc_pad="sdl"),
+                                       emulator="dolphin", controllers=pads))
+    parser = read(folder / "GCPadNew.ini")
+    assert parser["GCPad1"]["Device"] == "SDL/0/PS4 Controller" and parser["GCPad2"]["Device"] == "SDL/1/PS4 Controller"
+    assert parser["GCPad1"]["Buttons/Z"] == "`Shoulder R`" and parser["GCPad2"]["Main Stick/Up"] == "`Left Y+`"
+    assert "Device" not in parser["GCPad3"] and "Device" not in parser["GCPad4"]
+    core = read(folder / "Dolphin.ini")["Core"]
+    assert [core[f"SIDevice{i}"] for i in range(4)] == ["6", "6", "0", "0"]
+
+
+def test_gamecube_pads_untouched_without_setting(home):
+    rom = home / "Jeu.iso"
+    rom.write_bytes(b"x")
+    dolphin.Dolphin().generate(Context(system="gamecube", rom=str(rom), config=Cfg(), emulator="dolphin",
+                                       controllers=[Controller(player=1, index=0, name="PS4 Controller")]))
+    assert not (home / "cfg" / "dolphin-emu" / "GCPadNew.ini").exists()

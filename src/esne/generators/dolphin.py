@@ -10,6 +10,8 @@ Chaque réglage n'est écrit que s'il est choisi dans ES (sinon Dolphin garde sa
 * ``GFX.ini``: ``dolphin_resolution`` (1 à 8), ``dolphin_msaa`` (0, 2, 4, 8), ``dolphin_af`` (-1 à 4), ``dolphin_ratio``
   (0 auto, 1 16:9, 2 4:3, 3 étiré), ``dolphin_vsync``, ``dolphin_fps``, ``dolphin_widescreen`` (hack 16:9),
   ``dolphin_hires``, ``dolphin_shaders`` (ubershaders 0 à 3), ``dolphin_waitshaders``.
+* ``GCPadNew.ini`` (GameCube seulement): ``dolphin_gc_pad`` = ``sdl`` mappe jusqu'à 4 manettes SDL sur les ports 1 à 4
+  (et règle ``SIDevice`` de ``Dolphin.ini``). Sans ce réglage les fichiers ne sont pas touchés.
 * ``WiimoteNew.ini`` (Wii seulement): ``dolphin_wii_pad`` = ``classic`` (Classic Controller émulé), ``nunchuk`` (Wiimote + Nunchuk
   émulés, pointeur au stick droit) ou ``real`` (vraies Wiimotes). Sans ce réglage le fichier n'est pas touché.
 * ``SYSCONF`` (NAND de la Wii, binaire): ``dolphin_wii_language`` (0 à 9), ``dolphin_wii_tv`` (0 4:3, 1 16:9),
@@ -94,6 +96,41 @@ def wiimote_mapping(mode: str) -> dict[str, str]:
     mapping.update(_four("Nunchuk/Stick", SDL_STICKS["Left Stick"]))
     mapping.update(_four("IR", SDL_STICKS["Right Stick"]))  # pointeur: stick droit
     return mapping
+
+
+def gamecube_mapping() -> dict[str, str]:
+    """Clés de ``[GCPadN]``: la disposition que Dolphin propose lui-même pour une manette SDL (A = Button A...)."""
+    mapping = {
+        "Buttons/A": "`Button A`", "Buttons/B": "`Button B`", "Buttons/X": "`Button X`", "Buttons/Y": "`Button Y`",
+        "Buttons/Z": "`Shoulder R`", "Buttons/Start": "`Start`",
+        "Triggers/L": "`Trigger L`", "Triggers/R": "`Trigger R`",
+        "Triggers/L-Analog": "`Trigger L`", "Triggers/R-Analog": "`Trigger R`",
+        "Rumble/Motor": "`Motor L` | `Motor R`",
+    }
+    mapping.update(_four("D-Pad", SDL_DPAD))
+    mapping.update(_four("Main Stick", SDL_STICKS["Left Stick"]))
+    mapping.update(_four("C-Stick", SDL_STICKS["Right Stick"]))
+    return mapping
+
+
+def write_gcpads(path: Path, pads: list) -> int:
+    """Réécrit ``GCPadNew.ini`` (jusqu'à 4 manettes SDL). Renvoie le nombre de manettes mappées."""
+    mapping = gamecube_mapping()
+    lines: list[str] = []
+    seen: dict[str, int] = {}
+    for number in range(1, 5):
+        lines.append(f"[GCPad{number}]")
+        if number <= len(pads):
+            name = (pads[number - 1].name or "").strip() or "Controller"
+            same = seen.get(name, 0)
+            seen[name] = same + 1
+            lines.append(f"Device = SDL/{same}/{name}")
+            lines += [f"{key} = {value}" for key, value in mapping.items()]
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(path.name + ".esne-tmp")
+    temporary.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    temporary.replace(path)
+    return min(len(pads), 4)
 
 
 def write_wiimotes(path: Path, mode: str, pads: list) -> int:
@@ -253,6 +290,11 @@ class Dolphin(Standalone):
         for name, sections in chosen(ctx).items():
             if not update_ini(folder / name, sections):
                 log.info("dolphin: %s introuvable, lance Dolphin une fois à la main pour le créer", name)
+        if ctx.system == "gamecube" and str(ctx.setting("dolphin_gc_pad", "") or "").strip().lower() == "sdl":
+            count = write_gcpads(folder / "GCPadNew.ini", ctx.controllers)
+            log.info("dolphin: %d manette(s) GameCube configurée(s)", count)
+            ports = {f"SIDevice{port}": "6" if port < count else "0" for port in range(4)}  # 6 = manette standard
+            update_ini(folder / "Dolphin.ini", {"Core": ports})
         mode = str(ctx.setting("dolphin_wii_pad", "") or "").strip().lower()
         if ctx.system == "wii" and mode:
             if mode in WII_PAD_MODES:
