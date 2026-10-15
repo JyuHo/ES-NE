@@ -5,7 +5,10 @@
   manette par son numéro SDL (``SDL-0``, ``SDL-1``...), le même que celui d'ES: aucun GUID à faire correspondre.
   ``pcsx2_autoconfig=0`` laisse tes propres réglages.
 * Réglages (liste « features » d'ES): ``pcsx2_gfxbackend`` (vulkan, opengl, software), ``pcsx2_ratio``, ``pcsx2_resolution``,
-  ``pcsx2_vsync``, ``pcsx2_fxaa``.
+  ``pcsx2_vsync``, ``pcsx2_fxaa``, et (valeurs vérifiées avant écriture, une valeur inconnue est ignorée) ``pcsx2_af``
+  (filtrage anisotrope 0, 2, 4, 8, 16), ``pcsx2_filter`` (filtrage des textures), ``pcsx2_cas`` (netteté AMD CAS),
+  ``pcsx2_dither`` (dithering), ``pcsx2_widescreen`` et ``pcsx2_nointerlace`` (patchs 16:9 et sans entrelacement),
+  ``pcsx2_fps`` (compteur d'images), ``pcsx2_volume`` et ``pcsx2_mute`` (son), ``pcsx2_achievements`` (RetroAchievements).
 * Le fichier n'est modifié que s'il existe: PCSX2 le crée à son premier lancement (assistant, BIOS), à faire une fois à la main.
 
 Noms de sections et de clés alignés sur ceux qu'écrit PCSX2 (vérifiés sur le générateur de Batocera, qui cible la même version).
@@ -25,6 +28,20 @@ log = logging.getLogger(__name__)
 
 RENDERER = {"auto": "-1", "opengl": "12", "software": "13", "vulkan": "14"}  # GSRendererType
 MAX_PLAYERS = 2  # sans multitap
+
+# clé ES -> (section, clé de PCSX2.ini, valeurs permises); noms de clés relevés sur un PCSX2.ini réel
+CHECKED_SETTINGS = {
+    "pcsx2_af": ("EmuCore/GS", "MaxAnisotropy", frozenset({"0", "2", "4", "8", "16"})),
+    "pcsx2_filter": ("EmuCore/GS", "filter", frozenset({"0", "1", "2", "3"})),
+    "pcsx2_cas": ("EmuCore/GS", "CASMode", frozenset({"0", "1", "2"})),
+    "pcsx2_dither": ("EmuCore/GS", "dithering_ps2", frozenset({"0", "1", "2"})),
+    "pcsx2_widescreen": ("EmuCore", "EnableWideScreenPatches", frozenset({"true", "false"})),
+    "pcsx2_nointerlace": ("EmuCore", "EnableNoInterlacingPatches", frozenset({"true", "false"})),
+    "pcsx2_fps": ("EmuCore/GS", "OsdShowFPS", frozenset({"true", "false"})),
+    "pcsx2_volume": ("SPU2/Output", "StandardVolume", frozenset({"0", "25", "50", "75", "100"})),
+    "pcsx2_mute": ("SPU2/Output", "OutputMuted", frozenset({"true", "false"})),
+    "pcsx2_achievements": ("Achievements", "Enabled", frozenset({"true", "false"})),
+}
 
 # (clé PCSX2, entrée SDL de PCSX2)
 PAD_MAPPING = [
@@ -95,6 +112,14 @@ def apply_settings(parser: configparser.RawConfigParser, ctx: Context) -> None:
         value = ctx.setting(setting, "")
         if value not in (None, ""):
             parser.set(gs, key, str(value))
+    for setting, (name, key, allowed) in CHECKED_SETTINGS.items():
+        value = str(ctx.setting(setting, "") or "").strip().lower()
+        if not value:
+            continue
+        if value not in allowed:
+            log.warning("valeur inconnue pour %s ignorée: %s", setting, value)
+            continue
+        parser.set(section(name), key, value)
     bios = paths.bios_dir() / "ps2"
     if bios.is_dir():  # le dossier de BIOS d'ES-NE, s'il existe
         parser.set(section("Folders"), "Bios", str(bios))

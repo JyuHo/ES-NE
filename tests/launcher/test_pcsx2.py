@@ -75,3 +75,19 @@ def test_missing_ini_is_not_created(home, tmp_path):
     rom.write_bytes(b"x")
     pcsx2.Pcsx2().generate(context(rom, [pad(1, 0)]))
     assert not (home / "inis" / "PCSX2.ini").exists()
+
+
+def test_checked_settings_are_written_and_invalid_ones_ignored(home, tmp_path):
+    ini = home / "inis" / "PCSX2.ini"
+    ini.parent.mkdir(parents=True)
+    ini.write_text("[EmuCore/GS]\nMaxAnisotropy = 0\nfilter = 2\n\n[SPU2/Output]\nStandardVolume = 100\n")
+    rom = tmp_path / "Jeu.iso"
+    rom.write_bytes(b"x")
+    pcsx2.Pcsx2().generate(context(rom, [], pcsx2_af="16", pcsx2_filter="9", pcsx2_widescreen="true", pcsx2_volume="50",
+                                   pcsx2_mute="false", pcsx2_achievements="true", pcsx2_fps="true", pcsx2_dither="1"))
+    data = read(ini)
+    assert data["EmuCore/GS"]["MaxAnisotropy"] == "16" and data["EmuCore/GS"]["filter"] == "2"  # 9: ignoré
+    assert data["EmuCore/GS"]["OsdShowFPS"] == "true" and data["EmuCore/GS"]["dithering_ps2"] == "1"
+    assert data["EmuCore"]["EnableWideScreenPatches"] == "true"
+    assert data["SPU2/Output"]["StandardVolume"] == "50" and data["SPU2/Output"]["OutputMuted"] == "false"
+    assert data["Achievements"]["Enabled"] == "true"

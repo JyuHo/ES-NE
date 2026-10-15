@@ -49,7 +49,7 @@ Dans `packaging/arch/` (PKGBUILD `es-ne-git`, `es-ne-session`, `es-ne.desktop`, 
 - Steam: piste Batocera: fin de partie lue dans `console_log.txt` de Steam
 - Autres ports PortMaster (OpenTyrian, SDLPoP, OpenGGS), Wine/umu, Ryujinx
 - RetroArch: netplay, `-monitor`, RetroAchievements en jeu
-- Réglages dans ES: Dolphin et PCSX2 (prochaine étape). RPCS3: pas d'autres options, les jeux se règlent au cas par cas dans RPCS3; Eden: filtrage anisotrope désactivé/auto; Xenia: autres langues et régions de la console, mode vidéo (`avpack`); Redream: renderer et autres options de `redream.cfg`
+- Réglages dans ES: Dolphin (prochaine étape); PCSX2: options ajoutées, à valider en jeu. RPCS3: pas d'autres options, les jeux se règlent au cas par cas dans RPCS3; Eden: filtrage anisotrope désactivé/auto; Xenia: autres langues et régions de la console, mode vidéo (`avpack`); Redream: renderer et autres options de `redream.cfg`
 - Traductions dans d'autres langues; bezels sur écran 16:9; option pour garder le ratio du bezel avec bandes noires en 16:10
 
 ## Versions
