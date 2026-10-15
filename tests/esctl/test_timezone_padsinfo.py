@@ -120,3 +120,9 @@ def test_pad_types():
 def test_commands_registered():
     from esne.esctl.commands import COMMANDS
     assert "timezone" in COMMANDS and "padsinfo" in COMMANDS
+
+
+def test_xbox_pads_are_recognised_by_name_or_vendor():
+    for name in ("Microsoft X-Box 360 pad", "Xbox 360 Controller", "Xbox One Wireless Controller", "Xbox Series X Controller"):
+        assert padsinfo.pad_type(name) == "xbox"
+    assert padsinfo.pad_type("Generic USB Joystick", "045e") == "xbox"

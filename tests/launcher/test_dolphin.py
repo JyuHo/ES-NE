@@ -179,3 +179,15 @@ def test_gamecube_pads_untouched_without_setting(home):
     dolphin.Dolphin().generate(Context(system="gamecube", rom=str(rom), config=Cfg(), emulator="dolphin",
                                        controllers=[Controller(player=1, index=0, name="PS4 Controller")]))
     assert not (home / "cfg" / "dolphin-emu" / "GCPadNew.ini").exists()
+
+
+def test_mixed_pad_models_are_counted_per_name(home):
+    """Une DS4 et une manette Xbox: chacune est le « 0 » de son propre nom (Dolphin numérote par nom)."""
+    rom = home / "Jeu.rvz"
+    rom.write_bytes(b"x")
+    pads = [Controller(player=1, index=0, name="PS4 Controller"), Controller(player=2, index=1, name="Xbox 360 Controller"),
+            Controller(player=3, index=2, name="Xbox 360 Controller")]
+    dolphin.Dolphin().generate(wii_context(rom, pads, "classic"))
+    parser = read(home / "cfg" / "dolphin-emu" / "WiimoteNew.ini")
+    assert [parser[f"Wiimote{n}"]["Device"] for n in (1, 2, 3)] == [
+        "SDL/0/PS4 Controller", "SDL/0/Xbox 360 Controller", "SDL/1/Xbox 360 Controller"]

@@ -156,3 +156,8 @@ def test_anisotropic_filtering_auto_and_default(tmp_path):
     assert "max_anisotropy\\default=false\nmax_anisotropy=0\n" in ini.read_text()
     assert eden.apply_settings(ini, ctx([], eden_af="1"))
     assert "max_anisotropy=1\n" in ini.read_text()
+
+
+def test_eden_guid_of_an_xbox_pad_keeps_vendor_and_product():
+    es = "0300a1b25e040000ea02000000007801"  # Xbox One S: CRC du nom différent selon la version de SDL
+    assert eden.eden_guid(es) == "030000005e040000ea02000000007801"
