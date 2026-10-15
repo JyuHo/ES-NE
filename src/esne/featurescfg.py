@@ -319,6 +319,35 @@ PPSSPP_FEATURES = (
 )
 
 
+DUCKSTATION_FEATURES = (
+    '<feature name="GRAPHICS API" value="duckstation_renderer" description="Renderer used by DuckStation. Applied to settings.ini, which DuckStation creates at its first launch.">'
+    '<choice name="AUTOMATIC" value="Automatic" /><choice name="VULKAN" value="Vulkan" /><choice name="OPENGL" value="OpenGL" /><choice name="SOFTWARE" value="Software" /></feature>'
+    '<feature name="RENDERING RESOLUTION" value="duckstation_resolution" description="Internal resolution (multiple of the native PS1 image).">'
+    '<choice name="AUTOMATIC" value="0" /><choice name="NATIVE" value="1" /><choice name="2X" value="2" /><choice name="3X" value="3" />'
+    '<choice name="4X" value="4" /><choice name="5X" value="5" /><choice name="6X" value="6" /><choice name="8X" value="8" />'
+    '<choice name="10X" value="10" /><choice name="12X" value="12" /><choice name="16X" value="16" /></feature>'
+    '<feature name="ANTI-ALIASING" value="duckstation_msaa" description="MSAA (needs a resolution above native).">'
+    '<choice name="OFF" value="1" /><choice name="2X" value="2" /><choice name="4X" value="4" /><choice name="8X" value="8" /></feature>'
+    '<feature name="TEXTURE FILTERING" value="duckstation_filter" description="How textures are smoothed.">'
+    '<choice name="NEAREST" value="Nearest" /><choice name="BILINEAR" value="Bilinear" /><choice name="JINC2" value="JINC2" />'
+    '<choice name="XBR" value="xBR" /><choice name="MMPX (ADVANCED)" value="MMPXAdvanced" /></feature>'
+    '<feature name="PGXP" value="duckstation_pgxp" description="Precise geometry: removes the wobbling of 3D models.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="WIDESCREEN HACK" value="duckstation_widescreen" description="Render 3D games in wide format (use with the 16:9 aspect ratio).">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="ASPECT RATIO" value="duckstation_aspect" description="Display ratio of the image.">'
+    '<choice name="4:3" value="4:3" /><choice name="16:9" value="16:9" /></feature>'
+    '<feature name="VSYNC" value="duckstation_vsync" description="Fix screen tearing.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="SHOW FPS" value="duckstation_fps" description="Frame counter overlay.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="MUTE AUDIO" value="duckstation_mute" description="Turn the sound off.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="AUTOCONFIGURE CONTROLLERS" value="duckstation_autoconfig" description="Let ES-NE write the controllers (players 1 and 2) in settings.ini. Disable to keep your own mapping.">'
+    '<choice name="ON" value="1" /><choice name="OFF" value="0" /></feature>'
+)
+
+
 REDREAM_FEATURES = (
     '<feature name="REGION" value="redream_region" description="Dreamcast region. Applied to redream.cfg, which Redream creates at its first launch.">'
     '<choice name="EUROPE" value="europe" /><choice name="USA" value="usa" /><choice name="JAPAN" value="japan" /></feature>'
@@ -372,6 +401,7 @@ def render() -> str:
         f'  <emulator name="redream" features="">{REDREAM_FEATURES}</emulator>\n'
         f'  <emulator name="rmg" features="">{RMG_FEATURES}</emulator>\n'
         f'  <emulator name="ppsspp" features="">{PPSSPP_FEATURES}</emulator>\n'
+        f'  <emulator name="duckstation" features="">{DUCKSTATION_FEATURES}</emulator>\n'
         f'  <emulator name="steam" features="">{STEAM_FEATURES}</emulator>\n'
         "</features>\n"
     )

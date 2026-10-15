@@ -36,6 +36,12 @@ ppsspp:
   binary: ["~/.local/bin/[Pp][Pp][Ss][Ss][Pp][Pp]*.AppImage", "~/Applications/[Pp][Pp][Ss][Ss][Pp][Pp]*.AppImage", PPSSPPSDL, ppsspp, "flatpak run org.ppsspp.PPSSPP"]
   args: [--fullscreen, --pause-menu-exit, "{rom}"]
   package: "PPSSPP (AppImage dans ~/.local/bin, paquet ppsspp ou Flatpak)"
+duckstation:
+  # DuckStation (PS1): AppImage de github.com/stenzek/duckstation/releases, paquet duckstation-qt (AUR) ou Flatpak.
+  # -batch ferme DuckStation avec le jeu, -fullscreen plein écran, -- sépare les options du chemin du jeu.
+  binary: ["~/.local/bin/[Dd]uck[Ss]tation*.AppImage", "~/Applications/[Dd]uck[Ss]tation*.AppImage", duckstation-qt, duckstation, "flatpak run org.duckstation.DuckStation"]
+  args: [-batch, -fullscreen, --, "{rom}"]
+  package: "DuckStation (AppImage dans ~/.local/bin, AUR duckstation-qt ou Flatpak)"
 xenia:
   # Xenia Canary (Xbox 360): pas de paquet officiel, AppImage du fork Linux natif (github.com/peerloomllc/xenia-canary/releases).
   # Les options de ligne de commande portent le nom de celles de ~/.local/share/Xenia/xenia-canary.config.toml (ex. [Display] fullscreen).
