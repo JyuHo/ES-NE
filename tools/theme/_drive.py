@@ -22,5 +22,5 @@ time.sleep(14)
 shot("00-start")
 for s in SYSTEMS:
     shot(f"{s}-system"); key("BackSpace"); time.sleep(3); shot(f"{s}-gamelist")
-    key("Return"); time.sleep(1)
+    key("Return"); time.sleep(1); key("Right"); time.sleep(1.5)
 p.terminate()

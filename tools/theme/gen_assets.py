@@ -20,8 +20,36 @@ AMBIANCES = {
 
 # système : (nom affiché, sous-titre, angle des barres lumineuses)
 SYSTEMS = {
+    "psx": ("PLAYSTATION", "SONY · 1994", -28),
     "ps2": ("PLAYSTATION 2", "SONY · 2000", -12),
+    "ps3": ("PLAYSTATION 3", "SONY · 2006", 0),
+    "psp": ("PSP", "SONY · 2004", 72),
 }
+
+SYSTEM_XML = """<theme>
+	<formatVersion>7</formatVersion>
+	<include>./../theme.xml</include>
+	<view name="system">
+		<image name="logo">
+			<path>./../art/logo/{sid}.png</path>
+		</image>
+		<image name="bg" extra="true">
+			<path>./../art/bg/{sid}-${{subset.colorset}}.jpg</path>
+			<pos>0 0</pos>
+			<size>1 1</size>
+			<zIndex>0</zIndex>
+		</image>
+	</view>
+	<view name="basic, detailed">
+		<image name="background">
+			<path>./../art/bg/{sid}-${{subset.colorset}}.jpg</path>
+		</image>
+		<image name="logo">
+			<path>./../art/logo/{sid}.png</path>
+		</image>
+	</view>
+</theme>
+"""
 
 BG = """<html><style>
 @font-face{{font-family:R;src:url('{font}')}}
@@ -124,6 +152,8 @@ def main():
                 im.save(ROOT / "art" / "bg" / f"{sid}-{amb}.jpg", quality=82, optimize=True)
             lg = shot(page, LOGO.format(font=FONT, name=name, sub=sub), 800, 220, True)
             lg.save(ROOT / "art" / "logo" / f"{sid}.png", optimize=True)
+            (ROOT / sid).mkdir(exist_ok=True)
+            (ROOT / sid / "theme.xml").write_text(SYSTEM_XML.format(sid=sid))
         buttons(page)
         b.close()
 
