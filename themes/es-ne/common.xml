@@ -215,10 +215,12 @@
 		</menuBackground>
 		<menuText name="menutitle">
 			<fontPath>${font}</fontPath>
+			<fontSize>0.045</fontSize>
 			<color>${text}</color>
 		</menuText>
 		<menuText name="menutext">
 			<fontPath>${font}</fontPath>
+			<fontSize>0.032</fontSize>
 			<color>${text}</color>
 			<selectorColor>${accent}55</selectorColor>
 			<selectedColor>ffffff</selectedColor>
@@ -226,6 +228,7 @@
 		</menuText>
 		<menuTextSmall name="menutextsmall">
 			<fontPath>${font}</fontPath>
+			<fontSize>0.026</fontSize>
 			<color>${textDim}</color>
 			<selectorColor>${accent}55</selectorColor>
 		</menuTextSmall>
