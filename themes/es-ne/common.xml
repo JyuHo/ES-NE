@@ -108,7 +108,7 @@
 			<zIndex>5</zIndex>
 		</image>
 		<text name="md_lbl_releasedate">
-			<pos>0.04 0.665</pos>
+			<pos>0.04 0.640</pos>
 			<size>0.16 0.04</size>
 			<fontPath>${font}</fontPath>
 			<fontSize>0.03</fontSize>
@@ -116,7 +116,7 @@
 			<zIndex>40</zIndex>
 		</text>
 		<text name="md_lbl_developer">
-			<pos>0.04 0.715</pos>
+			<pos>0.04 0.690</pos>
 			<size>0.16 0.04</size>
 			<fontPath>${font}</fontPath>
 			<fontSize>0.03</fontSize>
@@ -124,7 +124,7 @@
 			<zIndex>40</zIndex>
 		</text>
 		<text name="md_lbl_publisher">
-			<pos>0.04 0.765</pos>
+			<pos>0.04 0.740</pos>
 			<size>0.16 0.04</size>
 			<fontPath>${font}</fontPath>
 			<fontSize>0.03</fontSize>
@@ -132,7 +132,7 @@
 			<zIndex>40</zIndex>
 		</text>
 		<text name="md_lbl_players">
-			<pos>0.04 0.815</pos>
+			<pos>0.04 0.790</pos>
 			<size>0.16 0.04</size>
 			<fontPath>${font}</fontPath>
 			<fontSize>0.03</fontSize>
@@ -140,7 +140,7 @@
 			<zIndex>40</zIndex>
 		</text>
 		<text name="md_lbl_lastplayed">
-			<pos>0.04 0.865</pos>
+			<pos>0.04 0.840</pos>
 			<size>0.16 0.04</size>
 			<fontPath>${font}</fontPath>
 			<fontSize>0.03</fontSize>
@@ -148,7 +148,7 @@
 			<zIndex>40</zIndex>
 		</text>
 		<datetime name="md_releasedate">
-			<pos>0.20 0.665</pos>
+			<pos>0.20 0.640</pos>
 			<size>0.28 0.04</size>
 			<fontPath>${font}</fontPath>
 			<fontSize>0.03</fontSize>
@@ -156,7 +156,7 @@
 			<zIndex>40</zIndex>
 		</datetime>
 		<text name="md_developer">
-			<pos>0.20 0.715</pos>
+			<pos>0.20 0.690</pos>
 			<size>0.28 0.04</size>
 			<fontPath>${font}</fontPath>
 			<fontSize>0.03</fontSize>
@@ -164,7 +164,7 @@
 			<zIndex>40</zIndex>
 		</text>
 		<text name="md_publisher">
-			<pos>0.20 0.765</pos>
+			<pos>0.20 0.740</pos>
 			<size>0.28 0.04</size>
 			<fontPath>${font}</fontPath>
 			<fontSize>0.03</fontSize>
@@ -172,7 +172,7 @@
 			<zIndex>40</zIndex>
 		</text>
 		<text name="md_players">
-			<pos>0.20 0.815</pos>
+			<pos>0.20 0.790</pos>
 			<size>0.28 0.04</size>
 			<fontPath>${font}</fontPath>
 			<fontSize>0.03</fontSize>
@@ -180,7 +180,7 @@
 			<zIndex>40</zIndex>
 		</text>
 		<datetime name="md_lastplayed">
-			<pos>0.20 0.865</pos>
+			<pos>0.20 0.840</pos>
 			<size>0.28 0.04</size>
 			<fontPath>${font}</fontPath>
 			<fontSize>0.03</fontSize>
@@ -368,5 +368,9 @@
 			<iconColor>${accent2}</iconColor>
 			<fontPath>${font}</fontPath>
 		</helpsystem>
+		<menuTextEdit name="menutextedit">
+			<inactive>./art/ui/textbox-${subset.colorset}-inactive.png</inactive>
+			<active>./art/ui/textbox-${subset.colorset}-active.png</active>
+		</menuTextEdit>
 	</view>
 </theme>

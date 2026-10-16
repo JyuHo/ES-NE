@@ -46,7 +46,7 @@ def _k(n, i):
 (cfg / "es_input.cfg").write_text(
     '<?xml version="1.0"?>\n<inputList>\n<inputConfig type="keyboard" deviceName="Keyboard" deviceGUID="-1">\n'
     + "\n".join(_k(n, i) for n, i in [("a", 13), ("b", 8), ("up", 1073741906), ("down", 1073741905),
-        ("left", 1073741904), ("right", 1073741903), ("start", 115), ("select", 32), ("pageup", 1073741899),
+        ("left", 1073741904), ("right", 1073741903), ("y", 121), ("x", 120), ("start", 115), ("select", 32), ("pageup", 1073741899),
         ("pagedown", 1073741902)]) + "\n</inputConfig>\n</inputList>\n")
 (cfg / "esne.conf").write_text(f"system.language={os.environ.get('ESLANG', 'en_US')}\n")
 sys.path.insert(0, str(REPO / "src"))

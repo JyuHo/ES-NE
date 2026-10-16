@@ -20,6 +20,9 @@ p = subprocess.Popen([ES, "--windowed", "--resolution", "1280", "800", "--no-spl
 time.sleep(14)
 # première utilisation : écran de config des touches possible → on tente Return pour passer
 shot("00-start")
+shot("search_pre")
+key("y"); time.sleep(2); shot("extra-search"); key("Return"); time.sleep(1)
+key("space"); time.sleep(2); shot("extra-quick"); key("Return"); time.sleep(1)
 for n in range(len(SYSTEMS) + 2):
     shot(f"{n:02d}-system"); key("BackSpace"); time.sleep(2); shot(f"{n:02d}-gamelist")
     key("Return"); time.sleep(1); key("Right"); time.sleep(1.5)

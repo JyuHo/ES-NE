@@ -84,11 +84,9 @@ html,body{{margin:0;width:1280px;height:800px;overflow:hidden;background:linear-
  background:linear-gradient(to bottom,transparent,{c1}55 40%,{c2}33 70%,transparent)}}
 .glow{{position:absolute;left:-200px;bottom:-400px;width:1700px;height:700px;border-radius:50%;
  background:radial-gradient(closest-side,{c1}40,transparent)}}
-.name{{position:absolute;right:40px;bottom:-30px;font:700 {wm}px R;color:#fff;opacity:.035;white-space:nowrap}}
 </style><body>
 <div class=glow></div>
 {bars}
-<div class=name>{name}</div>
 </body></html>"""
 
 LOGO = """<html><style>
@@ -103,9 +101,18 @@ html,body{{margin:0;width:800px;height:220px;background:transparent}}
 
 
 SRC = ROOT / "art" / "logo-src"   # logos monochromes tiers (voir themes/es-ne/art/logo-src/README.md)
-LOGO_SVG = """<html><style>html,body{{margin:0;width:800px;height:220px;background:transparent}}
+LOGO_SVG = """<html style="zoom:2"><style>html,body{{margin:0;width:800px;height:220px;background:transparent}}
 .w{{width:800px;height:220px;display:flex;align-items:center;justify-content:center}}
 img{{max-width:620px;max-height:150px}}</style><body><div class=w><img src="{src}"></div></body></html>"""
+
+
+def dither(im):
+    """Léger bruit pour éviter les bandes dans les dégradés sombres (JPEG)."""
+    import numpy as np
+    a = np.asarray(im).astype("float32")
+    rng = np.random.default_rng(7)
+    a += rng.normal(0, 1.2, a.shape[:2])[..., None]
+    return Image.fromarray(a.clip(0, 255).astype("uint8"))
 
 
 def bars(c1, c2, seed):
@@ -122,9 +129,10 @@ def bars(c1, c2, seed):
     return "".join(out)
 
 
-def shot(page, html, w, h, transparent=False):
-    page.set_viewport_size({"width": w, "height": h})
-    page.set_content(html)
+def shot(page, html, w, h, transparent=False, scale=1):
+    """Rend du HTML de w×h px (CSS) en image de w*scale × h*scale (zoom CSS, pas de flou)."""
+    page.set_viewport_size({"width": int(w * scale), "height": int(h * scale)})
+    page.set_content(html.replace("<html>", f"<html style='zoom:{scale}'>", 1))
     page.wait_for_timeout(200)
     return Image.open(io.BytesIO(page.screenshot(omit_background=transparent)))
 
@@ -167,7 +175,7 @@ def buttons(page):
         else:
             w, body = 140, f'<div class=p>{content}</div>'
         html = BTN.format(font=FONT, w=w, pw=w - 8, r=30, body=body)
-        shot(page, html, w, 96, True).save(d / f"{name}.png", optimize=True)
+        shot(page, html, w, 96, True, scale=2).save(d / f"{name}.png", optimize=True)
 
 
 
@@ -196,6 +204,19 @@ def badges(page):
         shot(page, html, w * 2, h * 2, True).save(d / f"{name}.png", optimize=True)
 
 
+def textboxes():
+    """Fonds de la zone de saisie (clavier virtuel): ninepatch 48×48, un jeu par ambiance."""
+    from PIL import ImageDraw
+    d = ROOT / "art" / "ui"
+    fills = {"nuit": ((20, 20, 48, 255), (106, 92, 255, 255)), "braise": ((48, 20, 18, 255), (255, 90, 54, 255))}
+    for amb, (fill, edge) in fills.items():
+        for kind, border in (("inactive", None), ("active", edge)):
+            im = Image.new("RGBA", (192, 192), (0, 0, 0, 0))
+            dr = ImageDraw.Draw(im)
+            dr.rounded_rectangle((0, 0, 191, 191), radius=32, fill=fill, outline=border, width=8 if border else 0)
+            im.resize((48, 48), Image.LANCZOS).save(d / f"textbox-{amb}-{kind}.png", optimize=True)
+
+
 def main():
     only = sys.argv[1:] or list(SYSTEMS)
     with sync_playwright() as p:
@@ -205,24 +226,26 @@ def main():
             name, sub, ang, wmark = SYSTEMS[sid]
             for amb, (c1, c2, top, bot) in AMBIANCES.items():
                 html = BG.format(font=FONT, top=top, bot=bot, c1=c1, c2=c2, ang=ang,
-                                 bars=bars(c1, c2, sid), name=wmark, wm=260 if len(wmark) < 5 else 170)
-                im = shot(page, html, 1280, 800).convert("RGB")
-                im.save(ROOT / "art" / "bg" / f"{sid}-{amb}.jpg", quality=82, optimize=True)
+                                 bars=bars(c1, c2, sid), name=wmark)
+                im = dither(shot(page, html, 1280, 800, scale=1.5).convert("RGB"))
+                im.save(ROOT / "art" / "bg" / f"{sid}-{amb}.jpg", quality=88, optimize=True, subsampling=0)
             svg = SRC / f"{sid}.svg"
             if svg.exists():
                 tmp = ROOT / "art" / "logo" / f"_{sid}.html"
                 tmp.write_text(LOGO_SVG.format(src=svg.as_uri()))
+                page.set_viewport_size({"width": 1600, "height": 440})
                 page.goto(tmp.as_uri()); page.wait_for_timeout(200)
                 lg = Image.open(io.BytesIO(page.screenshot(omit_background=True)))
                 tmp.unlink()
                 lg = lg.crop(lg.getbbox())
             else:
-                lg = shot(page, LOGO.format(font=FONT, name=name, sub=sub), 800, 220, True)
+                lg = shot(page, LOGO.format(font=FONT, name=name, sub=sub), 800, 220, True, scale=2)
             lg.save(ROOT / "art" / "logo" / f"{sid}.png", optimize=True)
             (ROOT / sid).mkdir(exist_ok=True)
             (ROOT / sid / "theme.xml").write_text(SYSTEM_XML.format(sid=sid))
         buttons(page)
         badges(page)
+        textboxes()
         b.close()
 
 
