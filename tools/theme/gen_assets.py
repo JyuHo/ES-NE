@@ -79,7 +79,7 @@ SYSTEM_XML = """<theme>
 
 BG = """<html><style>
 @font-face{{font-family:R;src:url('{font}')}}
-html,body{{margin:0;width:1280px;height:800px;overflow:hidden;background:linear-gradient({top},{bot})}}
+html,body{{margin:0;width:1280px;height:720px;overflow:hidden;background:linear-gradient({top},{bot})}}
 .bar{{position:absolute;top:-200px;height:1300px;transform:rotate({ang}deg);
  background:linear-gradient(to bottom,transparent,{c1}55 40%,{c2}33 70%,transparent)}}
 .glow{{position:absolute;left:-200px;bottom:-400px;width:1700px;height:700px;border-radius:50%;
@@ -227,8 +227,8 @@ def main():
             for amb, (c1, c2, top, bot) in AMBIANCES.items():
                 html = BG.format(font=FONT, top=top, bot=bot, c1=c1, c2=c2, ang=ang,
                                  bars=bars(c1, c2, sid), name=wmark)
-                im = dither(shot(page, html, 1280, 800, scale=1.5).convert("RGB"))
-                im.save(ROOT / "art" / "bg" / f"{sid}-{amb}.jpg", quality=88, optimize=True, subsampling=0)
+                im = dither(shot(page, html, 1280, 720, scale=1.5).convert("RGB"))
+                im.save(ROOT / "art" / "bg" / f"{sid}-{amb}.jpg", quality=85, optimize=True)
             svg = SRC / f"{sid}.svg"
             if svg.exists():
                 tmp = ROOT / "art" / "logo" / f"_{sid}.html"
