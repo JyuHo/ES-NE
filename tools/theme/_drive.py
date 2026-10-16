@@ -21,6 +21,6 @@ time.sleep(14)
 # première utilisation : écran de config des touches possible → on tente Return pour passer
 shot("00-start")
 for s in SYSTEMS:
-    shot(f"{s}-system"); key("BackSpace"); time.sleep(3); shot(f"{s}-gamelist")
+    shot(f"{s}-system"); key("Return"); time.sleep(3); shot(f"{s}-gamelist")
     key("Return"); time.sleep(1)
 p.terminate()

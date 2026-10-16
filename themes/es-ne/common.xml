@@ -208,4 +208,35 @@
 			<zIndex>40</zIndex>
 		</text>
 	</view>
+
+	<view name="menu">
+		<menuBackground name="menubg">
+			<color>0d0d24f2</color>
+		</menuBackground>
+		<menuText name="menutitle">
+			<fontPath>${font}</fontPath>
+			<color>${text}</color>
+		</menuText>
+		<menuText name="menutext">
+			<fontPath>${font}</fontPath>
+			<color>${text}</color>
+			<selectorColor>${accent}55</selectorColor>
+			<selectedColor>ffffff</selectedColor>
+			<separatorColor>${accent}33</separatorColor>
+		</menuText>
+		<menuTextSmall name="menutextsmall">
+			<fontPath>${font}</fontPath>
+			<color>${textDim}</color>
+			<selectorColor>${accent}55</selectorColor>
+		</menuTextSmall>
+		<menuText name="menufooter">
+			<fontPath>${font}</fontPath>
+			<color>${textDim}</color>
+		</menuText>
+		<helpsystem name="help">
+			<textColor>${textDim}</textColor>
+			<iconColor>${accent2}</iconColor>
+			<fontPath>${font}</fontPath>
+		</helpsystem>
+	</view>
 </theme>
