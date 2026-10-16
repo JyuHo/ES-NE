@@ -5,30 +5,6 @@
 		<image name="logo">
 			<path>./../art/logo/psx.png</path>
 		</image>
-		<text name="sysmaker" extra="true">
-			<text>SONY · 1994</text>
-			<pos>0.5 0.24</pos>
-			<origin>0.5 0.5</origin>
-			<size>0.6 0.04</size>
-			<alignment>center</alignment>
-			<fontPath>${fontBold}</fontPath>
-			<fontSize>0.03</fontSize>
-			<color>${accent2}</color>
-			<zIndex>45</zIndex>
-		</text>
-		<text name="sysdesc" extra="true">
-			<text>The first PlayStation (1994). It established CD-ROM and 3D: Final Fantasy VII, Metal Gear Solid, Gran Turismo.</text>
-			<text lang="fr">La première PlayStation (1994). Elle a imposé le CD-ROM et la 3D : Final Fantasy VII, Metal Gear Solid, Gran Turismo.</text>
-			<pos>0.5 0.34</pos>
-			<origin>0.5 0.5</origin>
-			<size>0.56 0.16</size>
-			<alignment>center</alignment>
-			<fontPath>${font}</fontPath>
-			<fontSize>0.036</fontSize>
-			<lineSpacing>1.2</lineSpacing>
-			<color>${text}</color>
-			<zIndex>45</zIndex>
-		</text>
 		<image name="bg" extra="true">
 			<path>./../art/bg/psx-${subset.colorset}.jpg</path>
 			<pos>0 0</pos>

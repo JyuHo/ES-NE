@@ -5,30 +5,6 @@
 		<image name="logo">
 			<path>./../art/logo/wiiu.png</path>
 		</image>
-		<text name="sysmaker" extra="true">
-			<text>NINTENDO · 2012</text>
-			<pos>0.5 0.24</pos>
-			<origin>0.5 0.5</origin>
-			<size>0.6 0.04</size>
-			<alignment>center</alignment>
-			<fontPath>${fontBold}</fontPath>
-			<fontSize>0.03</fontSize>
-			<color>${accent2}</color>
-			<zIndex>45</zIndex>
-		</text>
-		<text name="sysdesc" extra="true">
-			<text>Nintendo's 2012 console with a touchscreen GamePad, compatible with Wii games.</text>
-			<text lang="fr">Console de Nintendo (2012) avec la manette GamePad à écran tactile, compatible avec les jeux Wii.</text>
-			<pos>0.5 0.34</pos>
-			<origin>0.5 0.5</origin>
-			<size>0.56 0.16</size>
-			<alignment>center</alignment>
-			<fontPath>${font}</fontPath>
-			<fontSize>0.036</fontSize>
-			<lineSpacing>1.2</lineSpacing>
-			<color>${text}</color>
-			<zIndex>45</zIndex>
-		</text>
 		<image name="bg" extra="true">
 			<path>./../art/bg/wiiu-${subset.colorset}.jpg</path>
 			<pos>0 0</pos>

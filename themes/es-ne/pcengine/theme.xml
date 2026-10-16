@@ -5,30 +5,6 @@
 		<image name="logo">
 			<path>./../art/logo/pcengine.png</path>
 		</image>
-		<text name="sysmaker" extra="true">
-			<text>NEC · 1987</text>
-			<pos>0.5 0.24</pos>
-			<origin>0.5 0.5</origin>
-			<size>0.6 0.04</size>
-			<alignment>center</alignment>
-			<fontPath>${fontBold}</fontPath>
-			<fontSize>0.03</fontSize>
-			<color>${accent2}</color>
-			<zIndex>45</zIndex>
-		</text>
-		<text name="sysdesc" extra="true">
-			<text>NEC and Hudson Soft's console (1987): 8-bit CPU, 16-bit graphics. Sold as the TurboGrafx-16 in North America.</text>
-			<text lang="fr">Console de NEC et Hudson Soft (1987) : processeur 8 bits, graphismes 16 bits. TurboGrafx-16 en Amérique du Nord.</text>
-			<pos>0.5 0.34</pos>
-			<origin>0.5 0.5</origin>
-			<size>0.56 0.16</size>
-			<alignment>center</alignment>
-			<fontPath>${font}</fontPath>
-			<fontSize>0.036</fontSize>
-			<lineSpacing>1.2</lineSpacing>
-			<color>${text}</color>
-			<zIndex>45</zIndex>
-		</text>
 		<image name="bg" extra="true">
 			<path>./../art/bg/pcengine-${subset.colorset}.jpg</path>
 			<pos>0 0</pos>
