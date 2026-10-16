@@ -90,6 +90,7 @@ Hashes de la branche `esne` du fork.
 | `218a886` | ressources | écran de démarrage (`logo.png`), `splash.svg` et `window_icon_256.png` remplacés par ceux d'ES-NE; `splash_batocera.svg` supprimé (visuels Batocera et icône « ES » d'EmulationStation retirés) |
 | `035e6d0`, `6d64e5e` | i18n | traductions françaises complètes (`.po` + `.pot`, 1282 chaînes) |
 | `643df40` | i18n | 17 chaînes (redémarrage d'ES, installation d'un core, AUR, Wi-Fi, HDR, indexation, volume au stick droit, MSAA, limite d'images) traduites dans les 32 autres langues; seules les chaînes vides sont remplies; `eu_ES`: deux `%S` corrigés en `%s` |
+| `af40479` | ES-NE | thème `es-ne` choisi par défaut (`ThemeSet`, sous `#if ESNE`), pour pouvoir retirer Carbon du paquet |
 
 ## Ce qui reste de Batocera dans le frontend (état actuel)
 - `updates.batocera.org`: sert seulement à la liste des thèmes téléchargeables (`themes.json`); surchargeable par `global.updates.url`.

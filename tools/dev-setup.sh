@@ -3,7 +3,7 @@
 # Prépare un environnement de test minimal pour ES-NE (développement, pas une installation):
 #  - ~/.config/esne/es_systems.cfg avec un seul système "snes" lancé par es-launcher (prérequis: retroarch et le core snes9x, et es-launcher dans le PATH)
 #  - une ROM factice dans ~/esne/roms/snes
-#  - le thème "carbon" (RetroPie/es-theme-carbon) dans ~/esne/themes
+#  - le thème ES-NE du dépôt (themes/es-ne), lié dans ~/esne/themes
 # Usage: sh tools/dev-setup.sh [--force]    (--force: réécrit es_systems.cfg)
 set -eu
 
@@ -39,9 +39,12 @@ else
     echo "conservé: $CFG (--force pour le réécrire)"
 fi
 
-if [ ! -d "$DATA/themes/es-theme-carbon" ]; then
-    git clone --depth 1 https://github.com/RetroPie/es-theme-carbon.git "$DATA/themes/es-theme-carbon"
+REPO="$(cd "$(dirname "$0")/.." && pwd)"
+mkdir -p "$DATA/themes"
+if [ ! -e "$DATA/themes/es-ne" ]; then
+    ln -s "$REPO/themes/es-ne" "$DATA/themes/es-ne"
+    echo "thème lié: $DATA/themes/es-ne -> $REPO/themes/es-ne"
 else
-    echo "thème déjà présent: $DATA/themes/es-theme-carbon"
+    echo "thème déjà présent: $DATA/themes/es-ne"
 fi
 echo "ok"

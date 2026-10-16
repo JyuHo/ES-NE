@@ -37,7 +37,7 @@ for s in SYSTEMS:
     (data / "roms" / s / "gamelist.xml").write_text(f"<gameList>{games}</gameList>")
 (cfg / "es_settings.cfg").write_text(
     '<?xml version="1.0"?>\n<config>\n'
-    '<string name="ThemeSet" value="es-ne" />\n'
+    + ('' if os.environ.get('NOTHEMESET') else '<string name="ThemeSet" value="es-ne" />\n') +
     f'<string name="ThemeColorSet" value="{AMB}" />\n<string name="subset.buttons" value="{BTNS}" />\n'
     '<string name="Language" value="fr_FR" />\n'
     '<bool name="ShowHelpPrompts" value="true" />\n</config>\n')

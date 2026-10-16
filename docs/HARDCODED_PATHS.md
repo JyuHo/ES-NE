@@ -17,7 +17,7 @@ sont dans `docs/AUDIT_ANALYSIS.md`; le rapport brut dans `docs/audit/HARDCODED.m
 | `sudo reboot` / `sudo poweroff` | dans `emulationstation.sh` | `systemctl reboot/poweroff` ou polkit |
 | Tags de `es_systems.cfg` | `%ROM%`, `%BASENAME%`, `%ROM_RAW%`, `%HOME%`, `%SYSTEM%`, `%EMULATOR%`, `%CORE%` | conservés tels quels |
 | Fonctions « hors Batocera » | README upstream: lancement d'émulateurs, musique de fond, webserver ne fonctionnent pas hors Batocera | à réimplémenter via `es-launcher` / `esctl` |
-| Thème par défaut | ES-Carbon, dans `/etc/emulationstation/themes` | paquet de thème séparé |
+| Thème par défaut | ES-NE (`themes/es-ne`, livré dans `/usr/share/esne/themes`) | paquet de thème séparé |
 | Options CLI | `--resolution`, `--windowed`, `--fullscreen-borderless`, `--gamelist-only`, `--no-splash`, `--vsync`, `--max-vram`, `--force-kiosk`... | inchangées |
 | Dépendances de build | CMake, SDL2, SDL2_mixer, FreeImage, FreeType, cURL, RapidJSON, LibVLC, Boost, gettext | paquets Arch équivalents |
 

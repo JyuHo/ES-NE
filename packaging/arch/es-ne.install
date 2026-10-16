@@ -1,6 +1,6 @@
 post_install() {
   echo ">> ES-NE: lance « es-genconfig » en tant qu'utilisateur pour créer ~/.config/esne/es_systems.cfg et les dossiers de roms."
-  echo ">> Le thème Carbon est livré dans /usr/share/esne/themes; d'autres thèmes vont dans ~/esne/themes."
+  echo ">> Le thème ES-NE est livré dans /usr/share/esne/themes (par défaut, deux ambiances et trois jeux d'icônes de touches dans Interface utilisateur → Thème); tes propres thèmes vont dans ~/esne/themes."
   echo ">> Jeu libre de démonstration pour le système « Ports »: « es-genconfig --install-port digger » (0,5 Mo, télécharge depuis PortMaster)."
   echo ">> Cores libretro (optionnels, un par système, voir « pacman -Qi es-ne-git »): sudo pacman -S --needed libretro-nestopia libretro-snes9x libretro-gambatte libretro-mgba libretro-genesis-plus-gx libretro-mupen64plus-next libretro-beetle-psx libretro-beetle-pce-fast libretro-melonds libretro-ppsspp"
   echo ">> Cores absents des dépôts officiels (AUR): libretro-fceumm, libretro-fbneo, libretro-pcsx-rearmed, libretro-stella, libretro-gpsp. Erreur « le cœur est manquant »: ES propose d'installer le core (dépôts officiels) en un clic; pour l'AUR, ES propose de le construire (git et base-devel requis, mot de passe demandé). Relance es-genconfig ensuite."

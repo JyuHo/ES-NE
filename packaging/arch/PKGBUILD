@@ -4,7 +4,7 @@
 # Clés de scraping (ScreenScraper, TheGamesDB...): aucune n'est compilée ni empaquetée; ES les lit dans ~/.config/esne/keys.conf
 # (modèle créé par es-genconfig).
 pkgname=es-ne-git
-pkgver=1.0.9
+pkgver=1.0.10
 pkgrel=1
 install=es-ne.install
 pkgdesc='EmulationStation front-end and RetroArch launcher for Linux, with no Batocera dependency (ES-NE)'
@@ -27,10 +27,8 @@ optdepends=('gamescope: session de connexion dédiée (es-ne-session)'
             'paru: installation des cores AUR depuis ES (ou yay)')
 provides=(es-ne)
 conflicts=(es-ne)
-# Le thème Carbon (RetroPie) n'a pas de licence explicite: il est téléchargé à la construction, jamais copié dans ce dépôt.
-source=("$pkgname::git+https://github.com/JyuHo/ES-NE.git"
-        "es-theme-carbon::git+https://github.com/RetroPie/es-theme-carbon.git")
-sha256sums=(SKIP SKIP)
+source=("$pkgname::git+https://github.com/JyuHo/ES-NE.git")
+sha256sums=(SKIP)
 
 pkgver() {
   cd "$pkgname"
@@ -67,10 +65,9 @@ package() {
   cp -r third_party/emulationstation/resources "$pkgdir/usr/share/esne/resources"
   printf '%s\n' "$pkgver" > "$pkgdir/usr/share/esne/esne.version"
 
-  # thème par défaut: ES prend le premier thème disponible quand aucun n'est choisi
+  # thème ES-NE (thème par défaut du frontend, voir themes/es-ne/LICENSE.md pour les licences des polices et logos)
   install -d "$pkgdir/usr/share/esne/themes"
-  cp -r "$srcdir/es-theme-carbon" "$pkgdir/usr/share/esne/themes/es-theme-carbon"
-  rm -rf "$pkgdir/usr/share/esne/themes/es-theme-carbon/.git"
+  cp -r themes/es-ne "$pkgdir/usr/share/esne/themes/es-ne"
 
   install -Dm755 packaging/arch/es-ne-session "$pkgdir/usr/bin/es-ne-session"
   install -Dm644 packaging/arch/es-ne.desktop "$pkgdir/usr/share/wayland-sessions/es-ne.desktop"
