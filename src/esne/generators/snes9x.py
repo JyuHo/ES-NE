@@ -61,9 +61,9 @@ def template(path: Path) -> dict[str, str] | None:
 
 
 # Manettes Sony (PS4 « Wireless Controller », relevé sur un snes9x.conf réel; DualSense a les mêmes numéros, non vérifié):
-# disposition SNES (A à droite = rond, B en bas = croix), croix directionnelle vue comme les axes 6 et 7.
+# disposition SNES (A à droite = rond, B en bas = croix, X en haut = triangle, Y à gauche = carré; SDL numérote croix 0, rond 1, triangle 2, carré 3), croix directionnelle vue comme les axes 6 et 7.
 SONY = {
-    "A": "Button 1", "B": "Button 0", "X": "Button 3", "Y": "Button 2", "L": "Button 4", "R": "Button 5",
+    "A": "Button 1", "B": "Button 0", "X": "Button 2", "Y": "Button 3", "L": "Button 4", "R": "Button 5",
     "Select": "Button 8", "Start": "Button 9",
     "Up": "Axis 6 + 40%", "Down": "Axis 6 - 40%", "Left": "Axis 7 - 40%", "Right": "Axis 7 + 40%",
 }
