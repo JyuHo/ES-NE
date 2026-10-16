@@ -1,0 +1,14 @@
+<theme>
+	<view name="system, basic, detailed, menu">
+		<helpsystem name="help">
+			<iconB>./art/buttons/xbox-a.png</iconB>
+			<iconA>./art/buttons/xbox-b.png</iconA>
+			<iconX>./art/buttons/xbox-y.png</iconX>
+			<iconY>./art/buttons/xbox-x.png</iconY>
+			<iconL>./art/buttons/xbox-lb.png</iconL>
+			<iconR>./art/buttons/xbox-rb.png</iconR>
+			<iconStart>./art/buttons/xbox-menu.png</iconStart>
+			<iconSelect>./art/buttons/xbox-view.png</iconSelect>
+		</helpsystem>
+	</view>
+</theme>

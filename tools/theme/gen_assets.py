@@ -69,6 +69,47 @@ def shot(page, html, w, h, transparent=False):
     return Image.open(io.BytesIO(page.screenshot(omit_background=transparent)))
 
 
+# --- icônes de touches (aide) : blanc pur, teintées par iconColor dans le thème ---
+BTN = """<html><style>
+@font-face{{font-family:R;src:url('{font}')}}
+html,body{{margin:0;width:{w}px;height:96px;background:transparent}}
+.c{{box-sizing:border-box;width:88px;height:88px;margin:4px;border:10px solid #fff;border-radius:50%;
+ display:flex;align-items:center;justify-content:center;color:#fff;font:700 56px R}}
+.p{{box-sizing:border-box;width:{pw}px;height:60px;margin:18px 4px;border:9px solid #fff;border-radius:{r}px;
+ display:flex;align-items:center;justify-content:center;color:#fff;font:700 38px R}}
+svg{{width:52px;height:52px;fill:none;stroke:#fff;stroke-width:11;stroke-linejoin:round}}
+</style><body>{body}</body></html>"""
+
+SYM = {
+    "cross": '<svg viewBox="0 0 52 52"><path d="M8 8L44 44M44 8L8 44"/></svg>',
+    "circle": '<svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="19"/></svg>',
+    "square": '<svg viewBox="0 0 52 52"><rect x="8" y="8" width="36" height="36"/></svg>',
+    "triangle": '<svg viewBox="0 0 52 52"><path d="M26 6L47 44H5Z"/></svg>',
+    "menu": '<svg viewBox="0 0 52 52" style="stroke-width:7"><path d="M8 14H44M8 26H44M8 38H44"/></svg>',
+    "view": '<svg viewBox="0 0 52 52" style="stroke-width:6"><rect x="6" y="14" width="26" height="24"/><path d="M38 20V44H16"/></svg>',
+    "share": '<svg viewBox="0 0 52 52" style="stroke-width:6"><path d="M6 36V14H46V36ZM18 26H34"/></svg>',
+}
+ICONS = {  # (fichier, type, contenu)
+    "xbox-a": ("c", "A"), "xbox-b": ("c", "B"), "xbox-x": ("c", "X"), "xbox-y": ("c", "Y"),
+    "xbox-lb": ("p", "LB"), "xbox-rb": ("p", "RB"), "xbox-menu": ("c", SYM["menu"]), "xbox-view": ("c", SYM["view"]),
+    "psx-cross": ("c", SYM["cross"]), "psx-circle": ("c", SYM["circle"]), "psx-square": ("c", SYM["square"]),
+    "psx-triangle": ("c", SYM["triangle"]), "psx-l1": ("p", "L1"), "psx-r1": ("p", "R1"),
+    "psx-options": ("c", SYM["menu"]), "psx-share": ("c", SYM["share"]),
+}
+
+
+def buttons(page):
+    d = ROOT / "art" / "buttons"
+    d.mkdir(parents=True, exist_ok=True)
+    for name, (kind, content) in ICONS.items():
+        if kind == "c":
+            w, body = 96, f'<div class=c>{content}</div>'
+        else:
+            w, body = 140, f'<div class=p>{content}</div>'
+        html = BTN.format(font=FONT, w=w, pw=w - 8, r=30, body=body)
+        shot(page, html, w, 96, True).save(d / f"{name}.png", optimize=True)
+
+
 def main():
     only = sys.argv[1:] or list(SYSTEMS)
     with sync_playwright() as p:
@@ -83,6 +124,7 @@ def main():
                 im.save(ROOT / "art" / "bg" / f"{sid}-{amb}.jpg", quality=82, optimize=True)
             lg = shot(page, LOGO.format(font=FONT, name=name, sub=sub), 800, 220, True)
             lg.save(ROOT / "art" / "logo" / f"{sid}.png", optimize=True)
+        buttons(page)
         b.close()
 
 

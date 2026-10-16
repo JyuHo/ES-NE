@@ -1,0 +1,14 @@
+<theme>
+	<view name="system, basic, detailed, menu">
+		<helpsystem name="help">
+			<iconB>./art/buttons/psx-cross.png</iconB>
+			<iconA>./art/buttons/psx-circle.png</iconA>
+			<iconX>./art/buttons/psx-triangle.png</iconX>
+			<iconY>./art/buttons/psx-square.png</iconY>
+			<iconL>./art/buttons/psx-l1.png</iconL>
+			<iconR>./art/buttons/psx-r1.png</iconR>
+			<iconStart>./art/buttons/psx-options.png</iconStart>
+			<iconSelect>./art/buttons/psx-share.png</iconSelect>
+		</helpsystem>
+	</view>
+</theme>

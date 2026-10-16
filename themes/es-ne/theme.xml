@@ -6,5 +6,9 @@
 	<include subset="colorset" name="nuit" displayName="Nuit (bleu-violet)">./colors-nuit.xml</include>
 	<include subset="colorset" name="braise" displayName="Braise (rouge-orange)">./colors-braise.xml</include>
 
+	<include subset="buttons" name="default" displayName="Défaut ES">./buttons-default.xml</include>
+	<include subset="buttons" name="xbox" displayName="Xbox">./buttons-xbox.xml</include>
+	<include subset="buttons" name="psx" displayName="PlayStation">./buttons-psx.xml</include>
+
 	<include>./common.xml</include>
 </theme>

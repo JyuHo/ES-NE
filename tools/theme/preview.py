@@ -7,6 +7,7 @@ Nécessite xvfb-run, ImageMagick (import) et python-xlib.
 import os, sys, subprocess, tempfile, time, pathlib, shutil
 
 ES, OUT = sys.argv[1], pathlib.Path(sys.argv[2])
+BTNS = os.environ.get("BTNS", "default")
 AMB = sys.argv[3] if len(sys.argv) > 3 else "nuit"
 SYSTEMS = sys.argv[4:] or ["ps2"]
 REPO = pathlib.Path(__file__).resolve().parents[2]
@@ -33,7 +34,7 @@ for s in SYSTEMS:
 (cfg / "es_settings.cfg").write_text(
     '<?xml version="1.0"?>\n<config>\n'
     '<string name="ThemeSet" value="es-ne" />\n'
-    f'<string name="ThemeColorSet" value="{AMB}" />\n'
+    f'<string name="ThemeColorSet" value="{AMB}" />\n<string name="subset.buttons" value="{BTNS}" />\n'
     '<string name="Language" value="fr_FR" />\n'
     '<bool name="ShowHelpPrompts" value="true" />\n</config>\n')
 def _k(n, i):
