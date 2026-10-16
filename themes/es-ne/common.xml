@@ -3,7 +3,6 @@
 		<fontBold>./fonts/Rajdhani-Bold.ttf</fontBold>
 		<font>./fonts/Rajdhani-Medium.ttf</font>
 		<text>f2f2fa</text>
-		<textDim>9aa0c0</textDim>
 	</variables>
 
 	<view name="system">
