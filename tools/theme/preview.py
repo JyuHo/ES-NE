@@ -40,7 +40,7 @@ for s in SYSTEMS:
     + ('' if os.environ.get('NOTHEMESET') else '<string name="ThemeSet" value="es-ne" />\n') +
     f'<string name="ThemeColorSet" value="{AMB}" />\n<string name="subset.buttons" value="{BTNS}" />\n'
     '<string name="Language" value="fr_FR" />\n'
-    '<bool name="ShowHelpPrompts" value="true" />\n</config>\n')
+    '<bool name="ShowHelpPrompts" value="true" />\n' + ('<bool name="DebugImage" value="true" />\n' if os.environ.get('DEBUGIMG') else '') + '</config>\n')
 def _k(n, i):
     return f'<input name="{n}" type="key" id="{i}" value="1" />'
 (cfg / "es_input.cfg").write_text(
