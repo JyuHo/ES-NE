@@ -94,7 +94,7 @@ ICONS = {  # (fichier, type, contenu)
     "xbox-lb": ("p", "LB"), "xbox-rb": ("p", "RB"), "xbox-menu": ("c", SYM["menu"]), "xbox-view": ("c", SYM["view"]),
     "psx-cross": ("c", SYM["cross"]), "psx-circle": ("c", SYM["circle"]), "psx-square": ("c", SYM["square"]),
     "psx-triangle": ("c", SYM["triangle"]), "psx-l1": ("p", "L1"), "psx-r1": ("p", "R1"),
-    "psx-options": ("c", SYM["menu"]), "psx-share": ("c", SYM["share"]),
+    "psx-options": ("p", SYM["menu"].replace('viewBox="0 0 52 52"', 'viewBox="0 0 52 52" style="width:44px;height:44px;stroke-width:8"', 1).replace(' style="stroke-width:7"', "")), "psx-share": ("p", "SHARE"),
 }
 
 
