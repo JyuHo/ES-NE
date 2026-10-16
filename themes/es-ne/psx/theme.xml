@@ -6,15 +6,63 @@
 			<path>./../art/logo/psx.png</path>
 		</image>
 		<image name="bg" extra="true">
-			<path>./../art/bg/psx-${subset.colorset}.png</path>
+			<path>./../art/bg/base-${subset.colorset}.png</path>
 			<pos>0 0</pos>
 			<size>1 1</size>
 			<zIndex>0</zIndex>
 		</image>
+		<image name="bars0" extra="true">
+			<path>./../art/bg/bars.png</path>
+			<pos>0.591 0.524</pos>
+			<origin>0.5 0.5</origin>
+			<size>1.6 0</size>
+			<rotationOrigin>0.5 0.5</rotationOrigin>
+			<rotation>28</rotation>
+			<flipX>false</flipX>
+			<color>${accent}</color>
+			<opacity>1.0</opacity>
+			<zIndex>1</zIndex>
+		</image>
+		<image name="bars1" extra="true">
+			<path>./../art/bg/bars.png</path>
+			<pos>0.568 0.49</pos>
+			<origin>0.5 0.5</origin>
+			<size>1.6 0</size>
+			<rotationOrigin>0.5 0.5</rotationOrigin>
+			<rotation>22</rotation>
+			<flipX>false</flipX>
+			<color>${accent2}</color>
+			<opacity>0.55</opacity>
+			<zIndex>2</zIndex>
+		</image>
 	</view>
 	<view name="basic, detailed">
 		<image name="background">
-			<path>./../art/bg/psx-${subset.colorset}.png</path>
+			<path>./../art/bg/base-${subset.colorset}.png</path>
+		</image>
+		<image name="bars0" extra="true">
+			<path>./../art/bg/bars.png</path>
+			<pos>0.591 0.524</pos>
+			<origin>0.5 0.5</origin>
+			<size>1.6 0</size>
+			<rotationOrigin>0.5 0.5</rotationOrigin>
+			<rotation>28</rotation>
+			<flipX>false</flipX>
+			<color>${accent}</color>
+			<opacity>1.0</opacity>
+			<zIndex>1</zIndex>
+		</image>
+		<image name="bars1" extra="true">
+			<path>./../art/bg/bars.png</path>
+			<pos>0.568 0.49</pos>
+			<origin>0.5 0.5</origin>
+			<size>1.6 0</size>
+			<rotationOrigin>0.5 0.5</rotationOrigin>
+			<rotation>22</rotation>
+			<flipX>false</flipX>
+			<color>${accent2}</color>
+			<opacity>0.55</opacity>
+			<zIndex>2</zIndex>
 		</image>
 		<image name="logo">
 			<path>./../art/logo/psx.png</path>

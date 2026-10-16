@@ -60,22 +60,49 @@ SYSTEM_XML = """<theme>
 			<path>./../art/logo/{sid}.png</path>
 		</image>
 		<image name="bg" extra="true">
-			<path>./../art/bg/{sid}-${{subset.colorset}}.png</path>
+			<path>./../art/bg/base-${{subset.colorset}}.png</path>
 			<pos>0 0</pos>
 			<size>1 1</size>
 			<zIndex>0</zIndex>
 		</image>
+{layers}
 	</view>
 	<view name="basic, detailed">
 		<image name="background">
-			<path>./../art/bg/{sid}-${{subset.colorset}}.png</path>
+			<path>./../art/bg/base-${{subset.colorset}}.png</path>
 		</image>
+{layers}
 		<image name="logo">
 			<path>./../art/logo/{sid}.png</path>
 		</image>
 	</view>
 </theme>
 """
+
+LAYER = """		<image name="bars{n}" extra="true">
+			<path>./../art/bg/bars.png</path>
+			<pos>{px} {py}</pos>
+			<origin>0.5 0.5</origin>
+			<size>1.6 0</size>
+			<rotationOrigin>0.5 0.5</rotationOrigin>
+			<rotation>{rot}</rotation>
+			<flipX>{flip}</flipX>
+			<color>{color}</color>
+			<opacity>{op}</opacity>
+			<zIndex>{z}</zIndex>
+		</image>"""
+
+
+def layers_xml(sid, ang):
+    """Deux couches de la meme image de bandes, decalees/tournees differemment selon le systeme."""
+    import random
+    r = random.Random(sid)
+    out = []
+    for n, (color, op, dang) in enumerate((("${accent}", 1.0, 0), ("${accent2}", 0.55, r.choice([-9, -6, 6, 9])))):
+        out.append(LAYER.format(n=n, px=round(0.5 + r.uniform(-0.12, 0.12), 3), py=round(0.5 + r.uniform(-0.1, 0.1), 3),
+                                rot=-(ang + dang), flip=str(bool(n and r.random() < 0.5)).lower(),
+                                color=color, op=op, z=1 + n))
+    return "\n".join(out)
 
 BG = """<html><style>
 @font-face{{font-family:R;src:url('{font}')}}
@@ -104,6 +131,25 @@ SRC = ROOT / "art" / "logo-src"   # logos monochromes tiers (voir themes/es-ne/a
 LOGO_SVG = """<html style="zoom:2"><style>html,body{{margin:0;width:800px;height:220px;background:transparent}}
 .w{{width:800px;height:220px;display:flex;align-items:center;justify-content:center}}
 img{{max-width:620px;max-height:150px}}</style><body><div class=w><img src="{src}"></div></body></html>"""
+
+
+BARS = """<html><style>
+html,body{margin:0;width:1536px;height:1536px;overflow:hidden;background:transparent}
+.bar{position:absolute;top:0;height:1536px;
+ background:linear-gradient(to bottom,transparent,rgba(255,255,255,.34) 35%,rgba(255,255,255,.22) 70%,transparent)}
+</style><body>{bars}</body></html>"""
+
+
+def shared_bars():
+    import random
+    r = random.Random(11)
+    out = []
+    for i in range(24):
+        x = r.randint(0, 1536)
+        w = r.choice([2, 3, 4, 70, 140, 6])
+        op = 0.75 if w < 10 else 0.12
+        out.append(f'<div class=bar style="left:{x}px;width:{w}px;opacity:{op}"></div>')
+    return BARS.replace("{bars}", "".join(out))
 
 
 def dither(im):
@@ -240,13 +286,13 @@ def main():
     with sync_playwright() as p:
         b = p.chromium.launch()
         page = b.new_page()
+        (ROOT / "art" / "bg").mkdir(parents=True, exist_ok=True)
+        for amb, (c1, c2, top, bot) in AMBIANCES.items():
+            html = BG.format(font=FONT, top=top, bot=bot, c1=c1, c2=c2, ang=0, bars="", name="")
+            shot(page, html, 1280, 720, scale=1.5).convert("RGB").save(ROOT / "art" / "bg" / f"base-{amb}.png", optimize=True)
+        shot(page, shared_bars(), 1536, 1536, True, scale=2).save(ROOT / "art" / "bg" / "bars.png", optimize=True)
         for sid in only:
             name, sub, ang, wmark = SYSTEMS[sid]
-            for amb, (c1, c2, top, bot) in AMBIANCES.items():
-                html = BG.format(font=FONT, top=top, bot=bot, c1=c1, c2=c2, ang=ang,
-                                 bars=bars(c1, c2, sid), name=wmark)
-                im = shot(page, html, 1280, 720, scale=1.5).convert("RGB")
-                im.save(ROOT / "art" / "bg" / f"{sid}-{amb}.png", optimize=True)
             svg = SRC / f"{sid}.svg"
             if svg.exists():
                 tmp = ROOT / "art" / "logo" / f"_{sid}.html"
@@ -260,7 +306,7 @@ def main():
                 lg = shot(page, LOGO.format(font=FONT, name=name, sub=sub), 800, 220, True, scale=2)
             lg.save(ROOT / "art" / "logo" / f"{sid}.png", optimize=True)
             (ROOT / sid).mkdir(exist_ok=True)
-            (ROOT / sid / "theme.xml").write_text(SYSTEM_XML.format(sid=sid))
+            (ROOT / sid / "theme.xml").write_text(SYSTEM_XML.format(sid=sid, layers=layers_xml(sid, ang)))
         buttons(page)
         badges(page)
         textboxes()
