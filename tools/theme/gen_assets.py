@@ -60,7 +60,7 @@ SYSTEM_XML = """<theme>
 			<path>./../art/logo/{sid}.png</path>
 		</image>
 		<image name="bg" extra="true">
-			<path>./../art/bg/{sid}-${{subset.colorset}}.jpg</path>
+			<path>./../art/bg/{sid}-${{subset.colorset}}.png</path>
 			<pos>0 0</pos>
 			<size>1 1</size>
 			<zIndex>0</zIndex>
@@ -68,7 +68,7 @@ SYSTEM_XML = """<theme>
 	</view>
 	<view name="basic, detailed">
 		<image name="background">
-			<path>./../art/bg/{sid}-${{subset.colorset}}.jpg</path>
+			<path>./../art/bg/{sid}-${{subset.colorset}}.png</path>
 		</image>
 		<image name="logo">
 			<path>./../art/logo/{sid}.png</path>
@@ -245,8 +245,8 @@ def main():
             for amb, (c1, c2, top, bot) in AMBIANCES.items():
                 html = BG.format(font=FONT, top=top, bot=bot, c1=c1, c2=c2, ang=ang,
                                  bars=bars(c1, c2, sid), name=wmark)
-                im = dither(shot(page, html, 1280, 720, scale=1.5).convert("RGB"))
-                im.save(ROOT / "art" / "bg" / f"{sid}-{amb}.jpg", quality=85, optimize=True)
+                im = shot(page, html, 1280, 720, scale=1.5).convert("RGB")
+                im.save(ROOT / "art" / "bg" / f"{sid}-{amb}.png", optimize=True)
             svg = SRC / f"{sid}.svg"
             if svg.exists():
                 tmp = ROOT / "art" / "logo" / f"_{sid}.html"

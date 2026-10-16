@@ -6,17 +6,25 @@
 	</variables>
 
 	<view name="screen">
+		<image name="wifi_off" extra="true">
+			<path>./art/ui/wifi.png</path>
+			<pos>0.986 0.016</pos>
+			<origin>1 0</origin>
+			<size>0 0.034</size>
+			<color>${textDim}55</color>
+			<zIndex>49</zIndex>
+		</image>
 		<batteryIndicator name="batteryIndicator">
 			<pos>0.952 0.016</pos>
 			<size>0.034 0.034</size>
 			<horizontalAlignment>right</horizontalAlignment>
+			<itemSpacing>0</itemSpacing>
 			<networkIcon>./art/ui/wifi.png</networkIcon>
-			<color>${textDim}</color>
-			<activityColor>${accent2}</activityColor>
+			<color>${accent2}</color>
 		</batteryIndicator>
 		<controllerActivity name="controllerActivity">
 			<pos>0.80 0.016</pos>
-			<size>0.145 0.034</size>
+			<size>0.158 0.034</size>
 			<horizontalAlignment>right</horizontalAlignment>
 			<itemSpacing>0.004</itemSpacing>
 			<imagePath>./art/ui/pad.png</imagePath>
