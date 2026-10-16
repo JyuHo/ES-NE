@@ -97,14 +97,14 @@
 		<image name="panelL" extra="true">
 			<path>./art/ui/white.png</path>
 			<pos>0.02 0.18</pos>
-			<size>0.48 0.74</size>
+			<size>0.48 0.72</size>
 			<color>${panel}</color>
 			<zIndex>5</zIndex>
 		</image>
 		<image name="panelR" extra="true">
 			<path>./art/ui/white.png</path>
 			<pos>0.52 0.04</pos>
-			<size>0.46 0.88</size>
+			<size>0.46 0.86</size>
 			<color>${panel}</color>
 			<zIndex>5</zIndex>
 		</image>
@@ -117,7 +117,7 @@
 			<zIndex>40</zIndex>
 		</text>
 		<text name="md_lbl_developer">
-			<pos>0.04 0.75</pos>
+			<pos>0.04 0.715</pos>
 			<size>0.16 0.04</size>
 			<fontPath>${font}</fontPath>
 			<fontSize>0.03</fontSize>
@@ -133,7 +133,7 @@
 			<zIndex>40</zIndex>
 		</text>
 		<text name="md_lbl_players">
-			<pos>0.04 0.85</pos>
+			<pos>0.04 0.815</pos>
 			<size>0.16 0.04</size>
 			<fontPath>${font}</fontPath>
 			<fontSize>0.03</fontSize>
@@ -157,7 +157,7 @@
 			<zIndex>40</zIndex>
 		</datetime>
 		<text name="md_developer">
-			<pos>0.20 0.75</pos>
+			<pos>0.20 0.715</pos>
 			<size>0.28 0.04</size>
 			<fontPath>${font}</fontPath>
 			<fontSize>0.03</fontSize>
@@ -173,7 +173,7 @@
 			<zIndex>40</zIndex>
 		</text>
 		<text name="md_players">
-			<pos>0.20 0.85</pos>
+			<pos>0.20 0.815</pos>
 			<size>0.28 0.04</size>
 			<fontPath>${font}</fontPath>
 			<fontSize>0.03</fontSize>

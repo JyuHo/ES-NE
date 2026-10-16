@@ -13,6 +13,9 @@ SYSTEMS = sys.argv[4:] or ["ps2"]
 REPO = pathlib.Path(__file__).resolve().parents[2]
 OUT.mkdir(parents=True, exist_ok=True)
 
+import yaml
+_c = yaml.safe_load((REPO / "src/esne/data/systems.yml").read_text())
+CAT = _c.get("systems", _c)
 tmp = pathlib.Path(tempfile.mkdtemp(prefix="esne-prev-"))
 share, cfg, data = tmp / "share", tmp / "cfg", tmp / "data"
 for d in (share, cfg, data / "roms"):
@@ -20,14 +23,15 @@ for d in (share, cfg, data / "roms"):
 (share / "themes").symlink_to(REPO / "themes")
 for s in SYSTEMS:
     (data / "roms" / s).mkdir()
+    ext = (CAT.get(s, {}).get("extensions") or ["iso"])[0].lstrip(".")
     for g in ("Demo Game One", "Demo Game Two", "Another Demo"):
-        (data / "roms" / s / f"{g}.iso").write_text("x")
+        (data / "roms" / s / f"{g}.{ext}").write_text("x")
     from PIL import Image, ImageDraw
     (data / "roms" / s / "images").mkdir()
     im = Image.new("RGB", (640, 480), (60, 90, 140)); ImageDraw.Draw(im).rectangle((20, 20, 620, 460), outline=(255, 255, 255), width=6)
     im.save(data / "roms" / s / "images" / "shot.png")
     games = "".join(
-        f"<game><path>./{g}.iso</path><name>{g}</name><image>./images/shot.png</image><rating>0.8</rating>"
+        f"<game><path>./{g}.{ext}</path><name>{g}</name><image>./images/shot.png</image><rating>0.8</rating>"
         f"<genre>Action</genre><desc>Description de démonstration. " + "Texte de remplissage. " * 12 + "</desc></game>"
         for g in ("Demo Game One", "Demo Game Two", "Another Demo"))
     (data / "roms" / s / "gamelist.xml").write_text(f"<gameList>{games}</gameList>")

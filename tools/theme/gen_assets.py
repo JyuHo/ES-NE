@@ -20,10 +20,36 @@ AMBIANCES = {
 
 # système : (nom affiché, sous-titre, angle des barres lumineuses)
 SYSTEMS = {
-    "psx": ("PLAYSTATION", "SONY · 1994", -28),
-    "ps2": ("PLAYSTATION 2", "SONY · 2000", -12),
-    "ps3": ("PLAYSTATION 3", "SONY · 2006", 0),
-    "psp": ("PSP", "SONY · 2004", 72),
+    "psx": ("PLAYSTATION", "SONY · 1994", -28, "PS"),
+    "ps2": ("PLAYSTATION 2", "SONY · 2000", -12, "PS2"),
+    "ps3": ("PLAYSTATION 3", "SONY · 2006", 0, "PS3"),
+    "psp": ("PSP", "SONY · 2004", 72, "PSP"),
+    "nes": ("NES", "NINTENDO · 1983", -35, "NES"),
+    "snes": ("SUPER NINTENDO", "NINTENDO · 1990", -18, "SNES"),
+    "gb": ("GAME BOY", "NINTENDO · 1989", 90, "GB"),
+    "gbc": ("GAME BOY COLOR", "NINTENDO · 1998", 84, "GBC"),
+    "gba": ("GAME BOY ADVANCE", "NINTENDO · 2001", 76, "GBA"),
+    "mastersystem": ("MASTER SYSTEM", "SEGA · 1985", -45, "SMS"),
+    "megadrive": ("MEGA DRIVE", "SEGA · 1988", -8, "MD"),
+    "gamegear": ("GAME GEAR", "SEGA · 1990", 60, "GG"),
+    "dreamcast": ("DREAMCAST", "SEGA · 1998", 15, "DC"),
+    "n64": ("NINTENDO 64", "NINTENDO · 1996", -22, "64"),
+    "gc": ("GAMECUBE", "NINTENDO · 2001", 30, "GC"),
+    "wii": ("WII", "NINTENDO · 2006", 0, "WII"),
+    "wiiu": ("WII U", "NINTENDO · 2012", -4, "WII U"),
+    "switch": ("SWITCH", "NINTENDO · 2017", -90, "NS"),
+    "nds": ("NINTENDO DS", "NINTENDO · 2004", 66, "DS"),
+    "pcengine": ("PC ENGINE", "NEC · 1987", -55, "PCE"),
+    "atari2600": ("ATARI 2600", "ATARI · 1977", -70, "2600"),
+    "arcade": ("ARCADE", "VARIOUS · 1978", -14, "ARCADE"),
+    "xbox": ("XBOX", "MICROSOFT · 2001", 20, "XBOX"),
+    "xbox360": ("XBOX 360", "MICROSOFT · 2005", 12, "360"),
+    "steam": ("STEAM", "VALVE · 2003", -30, "STEAM"),
+    "windows": ("WINDOWS", "MICROSOFT · 1985", 0, "PC"),
+    "ports": ("PORTS", "DIVERS", -6, "PORTS"),
+    "auto-favorites": ("FAVORITES", "COLLECTION", -12, "FAV"),
+    "auto-allgames": ("ALL GAMES", "COLLECTION", -12, "ALL"),
+    "auto-lastplayed": ("LAST PLAYED", "COLLECTION", -12, "NEW"),
 }
 
 SYSTEM_XML = """<theme>
@@ -150,10 +176,10 @@ def main():
         b = p.chromium.launch()
         page = b.new_page()
         for sid in only:
-            name, sub, ang = SYSTEMS[sid]
+            name, sub, ang, wmark = SYSTEMS[sid]
             for amb, (c1, c2, top, bot) in AMBIANCES.items():
                 html = BG.format(font=FONT, top=top, bot=bot, c1=c1, c2=c2, ang=ang,
-                                 bars=bars(c1, c2, sid), name=name.split()[-1], wm=260 if len(name.split()[-1]) < 6 else 170)
+                                 bars=bars(c1, c2, sid), name=wmark, wm=260 if len(wmark) < 5 else 170)
                 im = shot(page, html, 1280, 800).convert("RGB")
                 im.save(ROOT / "art" / "bg" / f"{sid}-{amb}.jpg", quality=82, optimize=True)
             svg = SRC / f"{sid}.svg"
