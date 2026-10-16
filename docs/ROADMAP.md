@@ -51,7 +51,7 @@ Dans `packaging/arch/` (PKGBUILD `es-ne-git`, `es-ne-session`, `es-ne.desktop`, 
 - Autres ports PortMaster (OpenTyrian, SDLPoP, OpenGGS), Wine/umu, Ryujinx
 - RetroArch: netplay, `-monitor`, RetroAchievements en jeu
 - Réglages dans ES: Dolphin et PCSX2 validés en jeu. RPCS3: pas d'autres options, les jeux se règlent au cas par cas dans RPCS3; Redream et Xenia: options principales faites, le reste volontairement laissé à la configuration de l'émulateur
-- README en français, anglais et allemand ✅ (1.0.8); traductions de l'interface d'ES dans d'autres langues; bezels sur écran 16:9; option pour garder le ratio du bezel avec bandes noires en 16:10
+- README en français, anglais et allemand ✅ (1.0.8); interface d'ES: les 17 chaînes d'ES-NE ou récentes d'upstream sont traduites dans toutes les langues (1.0.8); restent les langues incomplètes d'upstream (`cy_GB`, `he`, `nn_NO`, `oc_FR`, `uk_UA`, `fi_FI`, `el`: 300 à 1100 chaînes) et les menus matériels masqués dans ES-NE; bezels sur écran 16:9; option pour garder le ratio du bezel avec bandes noires en 16:10
 
 ## Versions
 
