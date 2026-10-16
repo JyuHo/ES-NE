@@ -175,7 +175,7 @@ SVG_ICONS = {
     "psx-cross": "playstation_button_cross_outline", "psx-circle": "playstation_button_circle_outline",
     "psx-square": "playstation_button_square_outline", "psx-triangle": "playstation_button_triangle_outline",
     "psx-l1": "playstation_trigger_l1_outline", "psx-r1": "playstation_trigger_r1_outline",
-    "psx-options": "playstation5_button_options_outline", "psx-share": "playstation5_button_create_outline",
+    "psx-options": "playstation4_button_options_outline", "psx-share": "playstation4_button_share_outline",
 }
 
 
