@@ -206,6 +206,8 @@ BADGES = {
 <path mask=url(#m) d="M6 6H50L58 14V58H6Z" fill=#fff />"""),
     "trophy": (64, 64, """<path d="M18 6H46V26C46 36 40 42 32 42C24 42 18 36 18 26Z M46 12H58C58 26 52 32 44 33 M18 12H6C6 26 12 32 20 33 M28 42H36V50H28Z M18 54H46V60H18Z" fill=#fff stroke=#fff stroke-width=4 stroke-linejoin=round />"""),
     "heart": (64, 64, """<path d="M32 58C10 42 4 30 4 20C4 11 11 5 19 5C25 5 30 8 32 13C34 8 39 5 45 5C53 5 60 11 60 20C60 30 54 42 32 58Z" fill=#fff />"""),
+    "wifi": (64, 64, """<g fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round">
+<path d="M6 25C21 10 43 10 58 25"/><path d="M15 34C25 25 39 25 49 34"/><path d="M24 43C29 38 35 38 40 43"/></g><circle cx="32" cy="52" r="5" fill="#fff"/>"""),
     "pill": (160, 56, """<rect x=2 y=2 width=156 height=52 rx=26 fill=#fff />"""),
 }
 
