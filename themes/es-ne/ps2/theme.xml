@@ -5,6 +5,30 @@
 		<image name="logo">
 			<path>./../art/logo/ps2.png</path>
 		</image>
+		<text name="sysmaker" extra="true">
+			<text>SONY · 2000</text>
+			<pos>0.5 0.24</pos>
+			<origin>0.5 0.5</origin>
+			<size>0.6 0.04</size>
+			<alignment>center</alignment>
+			<fontPath>${fontBold}</fontPath>
+			<fontSize>0.03</fontSize>
+			<color>${accent2}</color>
+			<zIndex>45</zIndex>
+		</text>
+		<text name="sysdesc" extra="true">
+			<text>The best-selling console ever (2000), with a built-in DVD drive and PlayStation game compatibility.</text>
+			<text lang="fr">La console la plus vendue de l'histoire (2000), lecteur DVD intégré et compatible avec les jeux PlayStation.</text>
+			<pos>0.5 0.34</pos>
+			<origin>0.5 0.5</origin>
+			<size>0.56 0.16</size>
+			<alignment>center</alignment>
+			<fontPath>${font}</fontPath>
+			<fontSize>0.036</fontSize>
+			<lineSpacing>1.2</lineSpacing>
+			<color>${text}</color>
+			<zIndex>45</zIndex>
+		</text>
 		<image name="bg" extra="true">
 			<path>./../art/bg/ps2-${subset.colorset}.jpg</path>
 			<pos>0 0</pos>

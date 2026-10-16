@@ -32,7 +32,7 @@ for s in SYSTEMS:
     im.save(data / "roms" / s / "images" / "shot.png")
     games = "".join(
         f"<game><path>./{g}.{ext}</path><name>{g}</name><image>./images/shot.png</image><rating>0.8</rating>"
-        f"<genre>Action</genre><desc>Description de démonstration. " + "Texte de remplissage. " * 12 + "</desc></game>"
+        f"<genre>Action</genre><favorite>true</favorite><players>2</players><region>eu</region><desc>Description de démonstration. " + "Texte de remplissage. " * 12 + "</desc></game>"
         for g in ("Demo Game One", "Demo Game Two", "Another Demo"))
     (data / "roms" / s / "gamelist.xml").write_text(f"<gameList>{games}</gameList>")
 (cfg / "es_settings.cfg").write_text(
@@ -48,6 +48,7 @@ def _k(n, i):
     + "\n".join(_k(n, i) for n, i in [("a", 13), ("b", 8), ("up", 1073741906), ("down", 1073741905),
         ("left", 1073741904), ("right", 1073741903), ("start", 115), ("select", 32), ("pageup", 1073741899),
         ("pagedown", 1073741902)]) + "\n</inputConfig>\n</inputList>\n")
+(cfg / "esne.conf").write_text(f"system.language={os.environ.get('ESLANG', 'en_US')}\n")
 sys.path.insert(0, str(REPO / "src"))
 from esne import systemscfg
 catalog = __import__("yaml").safe_load((REPO / "src/esne/data/systems.yml").read_text())

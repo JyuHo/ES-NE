@@ -52,6 +52,117 @@ SYSTEMS = {
     "auto-lastplayed": ("LAST PLAYED", "COLLECTION", -12, "NEW"),
 }
 
+DESC = {
+ "nes": [
+  "Console 8 bits de Nintendo (Famicom au Japon dès 1983). Elle a relancé le jeu de salon avec Super Mario Bros. et The Legend of Zelda.",
+  "Nintendo's 8-bit console (Famicom in Japan from 1983). It revived home gaming with Super Mario Bros. and The Legend of Zelda."
+ ],
+ "snes": [
+  "La 16 bits de Nintendo (1990). Super Mario World, A Link to the Past, Chrono Trigger et le fameux Mode 7.",
+  "Nintendo's 16-bit console (1990). Super Mario World, A Link to the Past, Chrono Trigger and the famous Mode 7."
+ ],
+ "gb": [
+  "La portable à écran monochrome de Nintendo (1989). Tetris et Pokémon en ont fait une légende.",
+  "Nintendo's monochrome handheld (1989). Tetris and Pokémon made it a legend."
+ ],
+ "gbc": [
+  "La Game Boy en couleurs (1998), compatible avec les jeux de la Game Boy d'origine.",
+  "The Game Boy in color (1998), compatible with original Game Boy games."
+ ],
+ "gba": [
+  "Portable 32 bits de Nintendo (2001), à écran horizontal, compatible Game Boy et Game Boy Color.",
+  "Nintendo's 32-bit handheld (2001), with a horizontal screen, compatible with Game Boy and Game Boy Color."
+ ],
+ "mastersystem": [
+  "Console 8 bits de Sega (1985). Alex Kidd et Phantasy Star ; très populaire en Europe et au Brésil.",
+  "Sega's 8-bit console (1985). Alex Kidd and Phantasy Star; hugely popular in Europe and Brazil."
+ ],
+ "megadrive": [
+  "La 16 bits de Sega (1988, Genesis en Amérique du Nord). Sonic the Hedgehog et Streets of Rage.",
+  "Sega's 16-bit console (1988, Genesis in North America). Sonic the Hedgehog and Streets of Rage."
+ ],
+ "gamegear": [
+  "Portable couleur rétroéclairée de Sega (1990), basée sur le matériel de la Master System.",
+  "Sega's backlit color handheld (1990), built on Master System hardware."
+ ],
+ "dreamcast": [
+  "La dernière console de Sega (1998), première à intégrer un modem. Shenmue, Jet Set Radio, Sonic Adventure.",
+  "Sega's last console (1998), the first with a built-in modem. Shenmue, Jet Set Radio, Sonic Adventure."
+ ],
+ "n64": [
+  "Console 64 bits de Nintendo (1996) à cartouches, avec stick analogique et quatre ports manettes. Super Mario 64, Ocarina of Time.",
+  "Nintendo's 64-bit cartridge console (1996), with an analog stick and four controller ports. Super Mario 64, Ocarina of Time."
+ ],
+ "gc": [
+  "Console compacte de Nintendo (2001) à mini-disques. Super Smash Bros. Melee, The Wind Waker.",
+  "Nintendo's compact console (2001) using mini discs. Super Smash Bros. Melee, The Wind Waker."
+ ],
+ "wii": [
+  "Console de Nintendo (2006) misant sur la télécommande à détection de mouvement. Wii Sports, Mario Kart Wii.",
+  "Nintendo's 2006 console built around a motion-sensing remote. Wii Sports, Mario Kart Wii."
+ ],
+ "wiiu": [
+  "Console de Nintendo (2012) avec la manette GamePad à écran tactile, compatible avec les jeux Wii.",
+  "Nintendo's 2012 console with a touchscreen GamePad, compatible with Wii games."
+ ],
+ "switch": [
+  "Console hybride de Nintendo (2017), de salon ou portable, avec ses manettes Joy-Con amovibles.",
+  "Nintendo's hybrid console (2017), home or handheld, with detachable Joy-Con controllers."
+ ],
+ "nds": [
+  "Portable de Nintendo (2004) à deux écrans dont un tactile. Pokémon, Nintendogs, New Super Mario Bros.",
+  "Nintendo's dual-screen handheld (2004), one touch-sensitive. Pokémon, Nintendogs, New Super Mario Bros."
+ ],
+ "pcengine": [
+  "Console de NEC et Hudson Soft (1987) : processeur 8 bits, graphismes 16 bits. TurboGrafx-16 en Amérique du Nord.",
+  "NEC and Hudson Soft's console (1987): 8-bit CPU, 16-bit graphics. Sold as the TurboGrafx-16 in North America."
+ ],
+ "atari2600": [
+  "La console Atari à cartouches (1977), alors appelée Video Computer System. Pitfall!, Space Invaders, Adventure.",
+  "Atari's cartridge console (1977), then called the Video Computer System. Pitfall!, Space Invaders, Adventure."
+ ],
+ "arcade": [
+  "Les bornes d'arcade, de l'âge d'or des années 1970-80 à nos jours, émulées via MAME et FinalBurn.",
+  "Arcade cabinets, from the golden age of the 1970s-80s to today, emulated with MAME and FinalBurn."
+ ],
+ "xbox": [
+  "La première console de Microsoft (2001), avec disque dur intégré et Xbox Live. Halo : Combat Evolved.",
+  "Microsoft's first console (2001), with a built-in hard drive and Xbox Live. Halo: Combat Evolved."
+ ],
+ "xbox360": [
+  "Console de Microsoft (2005) : haute définition, succès et Xbox Live Arcade.",
+  "Microsoft's 2005 console: high definition, achievements and Xbox Live Arcade."
+ ],
+ "steam": [
+  "La plateforme de jeux PC de Valve (2003). Les jeux de votre bibliothèque Steam, lancés depuis l'interface.",
+  "Valve's PC gaming platform (2003). The games from your Steam library, launched from the interface."
+ ],
+ "windows": [
+  "Les jeux PC Windows, lancés sous Linux grâce à une couche de compatibilité.",
+  "Windows PC games, launched on Linux through a compatibility layer."
+ ],
+ "ports": [
+  "Ports natifs et réimplémentations de jeux, lancés directement sous Linux.",
+  "Native ports and reimplementations of games, launched directly on Linux."
+ ],
+ "psx": [
+  "La première PlayStation (1994). Elle a imposé le CD-ROM et la 3D : Final Fantasy VII, Metal Gear Solid, Gran Turismo.",
+  "The first PlayStation (1994). It established CD-ROM and 3D: Final Fantasy VII, Metal Gear Solid, Gran Turismo."
+ ],
+ "ps2": [
+  "La console la plus vendue de l'histoire (2000), lecteur DVD intégré et compatible avec les jeux PlayStation.",
+  "The best-selling console ever (2000), with a built-in DVD drive and PlayStation game compatibility."
+ ],
+ "ps3": [
+  "Console de Sony (2006) : processeur Cell, Blu-ray et PlayStation Network.",
+  "Sony's 2006 console: Cell processor, Blu-ray and the PlayStation Network."
+ ],
+ "psp": [
+  "Portable de Sony (2004) à grand écran large et disques UMD. God of War: Chains of Olympus, Monster Hunter.",
+  "Sony's widescreen handheld (2004) using UMD discs. God of War: Chains of Olympus, Monster Hunter."
+ ]
+}
+
 SYSTEM_XML = """<theme>
 	<formatVersion>7</formatVersion>
 	<include>./../theme.xml</include>
@@ -59,7 +170,7 @@ SYSTEM_XML = """<theme>
 		<image name="logo">
 			<path>./../art/logo/{sid}.png</path>
 		</image>
-		<image name="bg" extra="true">
+{desc}		<image name="bg" extra="true">
 			<path>./../art/bg/{sid}-${{subset.colorset}}.jpg</path>
 			<pos>0 0</pos>
 			<size>1 1</size>
@@ -106,6 +217,38 @@ SRC = ROOT / "art" / "logo-src"   # logos monochromes tiers (voir themes/es-ne/a
 LOGO_SVG = """<html><style>html,body{{margin:0;width:800px;height:220px;background:transparent}}
 .w{{width:800px;height:220px;display:flex;align-items:center;justify-content:center}}
 img{{max-width:620px;max-height:150px}}</style><body><div class=w><img src="{src}"></div></body></html>"""
+
+
+def desc_xml(sid, sub):
+    from xml.sax.saxutils import escape
+    if sid not in DESC:
+        return ""
+    fr, en = DESC[sid]
+    return f"""		<text name="sysmaker" extra="true">
+			<text>{escape(sub)}</text>
+			<pos>0.5 0.24</pos>
+			<origin>0.5 0.5</origin>
+			<size>0.6 0.04</size>
+			<alignment>center</alignment>
+			<fontPath>${{fontBold}}</fontPath>
+			<fontSize>0.03</fontSize>
+			<color>${{accent2}}</color>
+			<zIndex>45</zIndex>
+		</text>
+		<text name="sysdesc" extra="true">
+			<text>{escape(en)}</text>
+			<text lang="fr">{escape(fr)}</text>
+			<pos>0.5 0.34</pos>
+			<origin>0.5 0.5</origin>
+			<size>0.56 0.16</size>
+			<alignment>center</alignment>
+			<fontPath>${{font}}</fontPath>
+			<fontSize>0.036</fontSize>
+			<lineSpacing>1.2</lineSpacing>
+			<color>${{text}}</color>
+			<zIndex>45</zIndex>
+		</text>
+"""
 
 
 def bars(c1, c2, seed):
@@ -170,6 +313,32 @@ def buttons(page):
         shot(page, html, w, 96, True).save(d / f"{name}.png", optimize=True)
 
 
+
+# --- pastilles d'information (blanc pur, teintées dans le thème) ---
+BADGES = {
+    "pad": (128, 80, """<defs><mask id=m><rect width=128 height=80 fill=#fff />
+<path d="M24 28h12M30 22v12" stroke=#000 stroke-width=6 />
+<circle cx=96 cy=24 r=5 /><circle cx=106 cy=34 r=5 /><circle cx=96 cy=44 r=5 /><circle cx=86 cy=34 r=5 />
+<circle cx=50 cy=48 r=7 /><circle cx=78 cy=48 r=7 /></mask></defs>
+<path mask=url(#m) d="M30 10H98C113 10 121 23 125 48C128 66 123 75 112 75C101 75 97 66 91 58H37C31 66 27 75 16 75C5 75 0 66 3 48C7 23 15 10 30 10Z" fill=#fff />"""),
+    "save": (64, 64, """<defs><mask id=m><rect width=64 height=64 fill=#fff />
+<rect x=18 y=6 width=24 height=16 fill=#000 /><rect x=14 y=34 width=36 height=24 rx=3 fill=#000 /></mask></defs>
+<path mask=url(#m) d="M6 6H50L58 14V58H6Z" fill=#fff />"""),
+    "trophy": (64, 64, """<path d="M18 6H46V26C46 36 40 42 32 42C24 42 18 36 18 26Z M46 12H58C58 26 52 32 44 33 M18 12H6C6 26 12 32 20 33 M28 42H36V50H28Z M18 54H46V60H18Z" fill=#fff stroke=#fff stroke-width=4 stroke-linejoin=round />"""),
+    "heart": (64, 64, """<path d="M32 58C10 42 4 30 4 20C4 11 11 5 19 5C25 5 30 8 32 13C34 8 39 5 45 5C53 5 60 11 60 20C60 30 54 42 32 58Z" fill=#fff />"""),
+    "pill": (160, 56, """<rect x=2 y=2 width=156 height=52 rx=26 fill=#fff />"""),
+}
+
+
+def badges(page):
+    d = ROOT / "art" / "ui"
+    d.mkdir(parents=True, exist_ok=True)
+    for name, (w, h, body) in BADGES.items():
+        html = (f"<html><body style='margin:0;background:transparent'><svg xmlns='http://www.w3.org/2000/svg' "
+                f"width={w * 2} height={h * 2} viewBox='0 0 {w} {h}'>{body}</svg></body></html>")
+        shot(page, html, w * 2, h * 2, True).save(d / f"{name}.png", optimize=True)
+
+
 def main():
     only = sys.argv[1:] or list(SYSTEMS)
     with sync_playwright() as p:
@@ -194,8 +363,9 @@ def main():
                 lg = shot(page, LOGO.format(font=FONT, name=name, sub=sub), 800, 220, True)
             lg.save(ROOT / "art" / "logo" / f"{sid}.png", optimize=True)
             (ROOT / sid).mkdir(exist_ok=True)
-            (ROOT / sid / "theme.xml").write_text(SYSTEM_XML.format(sid=sid))
+            (ROOT / sid / "theme.xml").write_text(SYSTEM_XML.format(sid=sid, desc=desc_xml(sid, sub)))
         buttons(page)
+        badges(page)
         b.close()
 
 
