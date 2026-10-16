@@ -10,7 +10,7 @@
 			<pos>0.80 0.016</pos>
 			<size>0.145 0.034</size>
 			<horizontalAlignment>right</horizontalAlignment>
-			<itemSpacing>6</itemSpacing>
+			<itemSpacing>0.004</itemSpacing>
 			<imagePath>./art/ui/pad.png</imagePath>
 			<color>${textDim}</color>
 			<activityColor>${accent2}</activityColor>
@@ -351,7 +351,7 @@
 
 	<view name="menu">
 		<menuBackground name="menubg">
-			<color>0d0d24f2</color>
+			<color>${menuBg}</color>
 		</menuBackground>
 		<menuText name="menutitle">
 			<fontPath>${font}</fontPath>
@@ -362,15 +362,15 @@
 			<fontPath>${font}</fontPath>
 			<fontSize>0.032</fontSize>
 			<color>${text}</color>
-			<selectorColor>${accent}55</selectorColor>
+			<selectorColor>${menuSel}</selectorColor>
 			<selectedColor>ffffff</selectedColor>
-			<separatorColor>${accent}33</separatorColor>
+			<separatorColor>${menuSep}</separatorColor>
 		</menuText>
 		<menuTextSmall name="menutextsmall">
 			<fontPath>${font}</fontPath>
 			<fontSize>0.026</fontSize>
 			<color>${textDim}</color>
-			<selectorColor>${accent}55</selectorColor>
+			<selectorColor>${menuSel}</selectorColor>
 		</menuTextSmall>
 		<menuText name="menufooter">
 			<fontPath>${font}</fontPath>

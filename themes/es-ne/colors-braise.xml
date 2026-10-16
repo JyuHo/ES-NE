@@ -4,6 +4,9 @@
 		<accent>ff5a36</accent>
 		<accent2>ffb347</accent2>
 		<panel>1c0a0acc</panel>
+		<menuBg>0d0d24f2</menuBg>
+		<menuSel>ff5a3655</menuSel>
+		<menuSep>ff5a3633</menuSep>
 		<textDim>c4a39a</textDim>
 	</variables>
 </theme>
