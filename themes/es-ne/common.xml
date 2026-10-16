@@ -1,0 +1,211 @@
+<theme>
+	<variables>
+		<fontBold>./fonts/Rajdhani-Bold.ttf</fontBold>
+		<font>./fonts/Rajdhani-Medium.ttf</font>
+		<text>f2f2fa</text>
+		<textDim>9aa0c0</textDim>
+	</variables>
+
+	<view name="system">
+		<helpsystem name="help">
+			<pos>0.012 0.95</pos>
+			<textColor>${textDim}</textColor>
+			<iconColor>${accent2}</iconColor>
+			<fontPath>${font}</fontPath>
+			<fontSize>0.028</fontSize>
+		</helpsystem>
+		<carousel name="systemcarousel">
+			<type>horizontal</type>
+			<size>1 0.30</size>
+			<pos>0 0.62</pos>
+			<color>00000000</color>
+			<logoSize>0.30 0.22</logoSize>
+			<logoScale>1.25</logoScale>
+			<maxLogoCount>3</maxLogoCount>
+			<zIndex>40</zIndex>
+		</carousel>
+		<text name="logoText">
+			<fontPath>${fontBold}</fontPath>
+			<color>${text}</color>
+			<forceUppercase>true</forceUppercase>
+		</text>
+		<text name="systemInfo">
+			<pos>0 0.90</pos>
+			<size>1 0.04</size>
+			<alignment>center</alignment>
+			<fontPath>${font}</fontPath>
+			<fontSize>0.03</fontSize>
+			<color>${textDim}</color>
+			<zIndex>50</zIndex>
+		</text>
+	</view>
+
+	<view name="basic, detailed">
+		<helpsystem name="help">
+			<pos>0.012 0.95</pos>
+			<textColor>${textDim}</textColor>
+			<iconColor>${accent2}</iconColor>
+			<fontPath>${font}</fontPath>
+			<fontSize>0.028</fontSize>
+		</helpsystem>
+		<text name="logoText">
+			<visible>false</visible>
+		</text>
+		<image name="logo">
+			<pos>0.03 0.03</pos>
+			<maxSize>0.34 0.12</maxSize>
+			<origin>0 0</origin>
+			<zIndex>50</zIndex>
+		</image>
+		<textlist name="gamelist">
+			<pos>0.03 0.19</pos>
+			<size>0.46 0.44</size>
+			<fontPath>${font}</fontPath>
+			<fontSize>0.04</fontSize>
+			<primaryColor>${text}</primaryColor>
+			<secondaryColor>${accent2}</secondaryColor>
+			<selectorColor>${accent}66</selectorColor>
+			<selectedColor>ffffff</selectedColor>
+			<selectorHeight>0.06</selectorHeight>
+			<horizontalMargin>0.01</horizontalMargin>
+			<alignment>left</alignment>
+			<zIndex>20</zIndex>
+		</textlist>
+	</view>
+
+	<view name="detailed">
+		<image name="md_image">
+			<pos>0.75 0.30</pos>
+			<maxSize>0.42 0.38</maxSize>
+			<origin>0.5 0.5</origin>
+			<zIndex>30</zIndex>
+		</image>
+		<image name="md_marquee">
+			<pos>0.75 0.10</pos>
+			<maxSize>0.38 0.14</maxSize>
+			<origin>0.5 0.5</origin>
+			<zIndex>35</zIndex>
+		</image>
+		<text name="md_description">
+			<pos>0.54 0.56</pos>
+			<size>0.43 0.34</size>
+			<fontPath>${font}</fontPath>
+			<fontSize>0.032</fontSize>
+			<color>${textDim}</color>
+			<zIndex>40</zIndex>
+		</text>
+		<image name="panelL" extra="true">
+			<path>./art/ui/white.png</path>
+			<pos>0.02 0.18</pos>
+			<size>0.48 0.74</size>
+			<color>${panel}</color>
+			<zIndex>5</zIndex>
+		</image>
+		<image name="panelR" extra="true">
+			<path>./art/ui/white.png</path>
+			<pos>0.52 0.04</pos>
+			<size>0.46 0.88</size>
+			<color>${panel}</color>
+			<zIndex>5</zIndex>
+		</image>
+		<text name="md_lbl_releasedate">
+			<pos>0.04 0.7</pos>
+			<size>0.16 0.04</size>
+			<fontPath>${font}</fontPath>
+			<fontSize>0.03</fontSize>
+			<color>${accent2}</color>
+			<zIndex>40</zIndex>
+		</text>
+		<text name="md_lbl_developer">
+			<pos>0.04 0.75</pos>
+			<size>0.16 0.04</size>
+			<fontPath>${font}</fontPath>
+			<fontSize>0.03</fontSize>
+			<color>${accent2}</color>
+			<zIndex>40</zIndex>
+		</text>
+		<text name="md_lbl_publisher">
+			<pos>0.04 0.8</pos>
+			<size>0.16 0.04</size>
+			<fontPath>${font}</fontPath>
+			<fontSize>0.03</fontSize>
+			<color>${accent2}</color>
+			<zIndex>40</zIndex>
+		</text>
+		<text name="md_lbl_players">
+			<pos>0.04 0.85</pos>
+			<size>0.16 0.04</size>
+			<fontPath>${font}</fontPath>
+			<fontSize>0.03</fontSize>
+			<color>${accent2}</color>
+			<zIndex>40</zIndex>
+		</text>
+		<text name="md_lbl_lastplayed">
+			<pos>0.04 0.9</pos>
+			<size>0.16 0.04</size>
+			<fontPath>${font}</fontPath>
+			<fontSize>0.03</fontSize>
+			<color>${accent2}</color>
+			<zIndex>40</zIndex>
+		</text>
+		<datetime name="md_releasedate">
+			<pos>0.20 0.7</pos>
+			<size>0.28 0.04</size>
+			<fontPath>${font}</fontPath>
+			<fontSize>0.03</fontSize>
+			<color>${text}</color>
+			<zIndex>40</zIndex>
+		</datetime>
+		<text name="md_developer">
+			<pos>0.20 0.75</pos>
+			<size>0.28 0.04</size>
+			<fontPath>${font}</fontPath>
+			<fontSize>0.03</fontSize>
+			<color>${text}</color>
+			<zIndex>40</zIndex>
+		</text>
+		<text name="md_publisher">
+			<pos>0.20 0.8</pos>
+			<size>0.28 0.04</size>
+			<fontPath>${font}</fontPath>
+			<fontSize>0.03</fontSize>
+			<color>${text}</color>
+			<zIndex>40</zIndex>
+		</text>
+		<text name="md_players">
+			<pos>0.20 0.85</pos>
+			<size>0.28 0.04</size>
+			<fontPath>${font}</fontPath>
+			<fontSize>0.03</fontSize>
+			<color>${text}</color>
+			<zIndex>40</zIndex>
+		</text>
+		<datetime name="md_lastplayed">
+			<pos>0.20 0.9</pos>
+			<size>0.28 0.04</size>
+			<fontPath>${font}</fontPath>
+			<fontSize>0.03</fontSize>
+			<color>${text}</color>
+			<zIndex>40</zIndex>
+		</datetime>
+		<text name="md_lbl_rating"><visible>false</visible></text>
+		<text name="md_lbl_genre"><visible>false</visible></text>
+		<text name="md_lbl_playcount"><visible>false</visible></text>
+		<text name="md_lbl_gametime"><visible>false</visible></text>
+		<rating name="md_rating">
+			<pos>0.54 0.505</pos>
+			<size>0.14 0.035</size>
+			<color>${accent2}</color>
+			<zIndex>40</zIndex>
+		</rating>
+		<text name="md_genre">
+			<pos>0.70 0.51</pos>
+			<size>0.27 0.03</size>
+			<alignment>right</alignment>
+			<fontPath>${font}</fontPath>
+			<fontSize>0.028</fontSize>
+			<color>${accent2}</color>
+			<zIndex>40</zIndex>
+		</text>
+	</view>
+</theme>

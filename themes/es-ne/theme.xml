@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ES-NE theme — original work, see LICENSE.md. Fonts: Rajdhani (SIL OFL 1.1). -->
+<theme>
+	<formatVersion>7</formatVersion>
+
+	<include subset="colorset" name="nuit" displayName="Nuit (bleu-violet)">./colors-nuit.xml</include>
+	<include subset="colorset" name="braise" displayName="Braise (rouge-orange)">./colors-braise.xml</include>
+
+	<include>./common.xml</include>
+</theme>
