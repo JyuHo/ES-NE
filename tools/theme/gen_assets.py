@@ -175,14 +175,7 @@ SVG_ICONS = {
     "psx-cross": "playstation_button_cross_outline", "psx-circle": "playstation_button_circle_outline",
     "psx-square": "playstation_button_square_outline", "psx-triangle": "playstation_button_triangle_outline",
     "psx-l1": "playstation_trigger_l1_outline", "psx-r1": "playstation_trigger_r1_outline",
-}
-# Options/Share: les SVG Kenney montrent la manette entiere (illisible a petite taille) -> pictos dessines
-OWN = {
-    "psx-options": '<rect x="4" y="12" width="56" height="40" rx="20" fill="none" stroke="#fff" stroke-width="5"/>'
-                   '<path d="M20 25H44M20 32H44M20 39H44" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/>',
-    "psx-share": '<rect x="4" y="12" width="56" height="40" rx="20" fill="none" stroke="#fff" stroke-width="5"/>'
-                 '<path d="M32 40V22M25 29L32 22L39 29" fill="none" stroke="#fff" stroke-width="4.5" '
-                 'stroke-linecap="round" stroke-linejoin="round"/>',
+    "psx-options": "playstation5_button_options_outline", "psx-share": "playstation5_button_create_outline",
 }
 
 
@@ -204,12 +197,6 @@ def buttons(page):
     d.mkdir(parents=True, exist_ok=True)
     for out, src in SVG_ICONS.items():
         svg_png(page, src, 256, crop=True).save(d / f"{out}.png", optimize=True)
-    for out, body in OWN.items():
-        html = ("<html><body style='margin:0;background:transparent'><svg xmlns='http://www.w3.org/2000/svg' "
-                f"width=256 height=256 viewBox='0 0 64 64'>{body}</svg></body></html>")
-        im = shot(page, html, 256, 256, True)
-        bb = im.getbbox()
-        im.crop((bb[0] - 4, bb[1] - 4, bb[2] + 4, bb[3] + 4)).save(d / f"{out}.png", optimize=True)
 
 
 # --- pastilles d'information (blanc pur, teintées dans le thème) ---
