@@ -98,3 +98,13 @@ def test_builtin_sony_profile(home):
     text = conf.read_text()
     assert "[Joypad 0]\nA = Joystick 1 Button 1\nB = Joystick 1 Button 0" in text
     assert "Up = Joystick 1 Axis 6 + 40%" in text and "Joystick 2 Button 9" in text
+
+
+def test_left_stick_option(home):
+    from esne.generators.base import Controller
+    conf = write(home)
+    snes9x.Snes9x().generate(Context(system="snes", rom="g.sfc", config=Cfg(snes9x_directions="stick"), emulator="snes9x",
+                                     controllers=[Controller(player=1, index=0, name="Wireless Controller")]))
+    text = conf.read_text()
+    assert "Up = Joystick 1 Axis 1 - 40%" in text and "Down = Joystick 1 Axis 1 + 40%" in text
+    assert "Left = Joystick 1 Axis 0 - 40%" in text and "Right = Joystick 1 Axis 0 + 40%" in text

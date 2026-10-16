@@ -67,20 +67,22 @@ SONY = {
     "Select": "Button 8", "Start": "Button 9",
     "Up": "Axis 6 + 40%", "Down": "Axis 6 - 40%", "Left": "Axis 7 - 40%", "Right": "Axis 7 + 40%",
 }
+# Joystick gauche à la place de la croix (relevé sur le même fichier: axes 0 et 1, Haut = Axis 1 négatif)
+SONY_STICK = {**SONY, "Up": "Axis 1 - 40%", "Down": "Axis 1 + 40%", "Left": "Axis 0 - 40%", "Right": "Axis 0 + 40%"}
 SONY_VENDOR = 0x054C
 
 
-def builtin(pad: Controller) -> dict[str, str] | None:
+def builtin(pad: Controller, stick: bool = False) -> dict[str, str] | None:
     ids = evdev.guid_ids(pad.guid)
     sony = (ids is not None and ids[0] == SONY_VENDOR) or any(word in pad.name.lower() for word in ("wireless controller", "dualshock", "dualsense", "playstation"))
-    return SONY if sony else None
+    return (SONY_STICK if stick else SONY) if sony else None
 
 
-def pad_sections(binding: dict[str, str] | None, pads: list[Controller]) -> dict[str, dict[str, str]]:
+def pad_sections(binding: dict[str, str] | None, pads: list[Controller], stick: bool = False) -> dict[str, dict[str, str]]:
     """Profil intégré du modèle de chaque manette; à défaut, ``binding`` (mappage fait dans Snes9x pour le joueur 1)."""
     sections = {}
     for n, pad in enumerate(pads[:MAX_PADS]):
-        own = builtin(pad) or binding
+        own = builtin(pad, stick) or binding
         if pad.index is None or own is None:
             log.info("snes9x: modèle de manette inconnu (%s), configure-la dans Snes9x", pad.name or pad.guid)
             continue
@@ -123,7 +125,7 @@ class Snes9x(Standalone):
             values = chosen(ctx)
             shown = ", ".join(f"{k}={v}" for d in values.values() for k, v in d.items())
             if str(ctx.setting("snes9x_autoconfig", "1")) != "0" and ctx.controllers:
-                pads = pad_sections(template(conf), ctx.controllers)
+                pads = pad_sections(template(conf), ctx.controllers, str(ctx.setting("snes9x_directions", "dpad")) == "stick")
                 values.update(pads)
                 shown += f"; {len(pads)} manette(s)"
             if iniedit.patch_ini(conf, values, spaced=True):

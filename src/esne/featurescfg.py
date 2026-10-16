@@ -343,6 +343,8 @@ SNES9X_FEATURES = (
     '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
     '<feature name="OVERCLOCK CPU" value="snes9x_overclock" description="Reduces slowdowns in some games.">'
     '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="DIRECTIONS" value="snes9x_directions" description="Which control moves in the game (Sony pads; needs AUTOCONFIGURE CONTROLLERS).">'
+    '<choice name="D-PAD" value="dpad" /><choice name="LEFT STICK" value="stick" /></feature>'
     '<feature name="AUTOCONFIGURE CONTROLLERS" value="snes9x_autoconfig" description="Copy the player 1 mapping made once in Snes9x to every controller (same model). Disable to keep your own mapping.">'
     '<choice name="ON" value="1" /><choice name="OFF" value="0" /></feature>'
 )
