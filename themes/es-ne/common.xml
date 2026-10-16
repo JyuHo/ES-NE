@@ -5,6 +5,19 @@
 		<text>f2f2fa</text>
 	</variables>
 
+	<view name="screen">
+		<controllerActivity name="controllerActivity">
+			<pos>0.80 0.016</pos>
+			<size>0.145 0.034</size>
+			<horizontalAlignment>right</horizontalAlignment>
+			<itemSpacing>6</itemSpacing>
+			<imagePath>./art/ui/pad.png</imagePath>
+			<color>${textDim}</color>
+			<activityColor>${accent2}</activityColor>
+			<hotkeyColor>${accent}</hotkeyColor>
+		</controllerActivity>
+	</view>
+
 	<view name="system">
 		<helpsystem name="help">
 			<pos>0.012 0.95</pos>
