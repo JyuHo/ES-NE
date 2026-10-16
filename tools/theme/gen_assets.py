@@ -186,9 +186,11 @@ OWN = {
 }
 
 
-def svg_png(page, name, size=192, crop=False):
-    html = (f"<html><body style='margin:0;background:transparent'><img src='{(BSRC / (name + '.svg')).as_uri()}' "
-            f"width={size} height={size}></body></html>")
+def svg_png(page, name, size=192, crop=False, src=None):
+    """Rend un SVG 64x64 en PNG (SVG injecte en ligne: pas de chargement de fichier)."""
+    svg = (src or BSRC / (name + ".svg")).read_text()
+    svg = svg.replace('width="64" height="64"', f'width="{size}" height="{size}" viewBox="0 0 64 64"', 1)
+    html = f"<html><body style='margin:0;background:transparent'>{svg}</body></html>"
     im = shot(page, html, size, size, True)
     if crop:
         bb = im.getbbox()
