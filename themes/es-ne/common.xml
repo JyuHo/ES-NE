@@ -19,7 +19,7 @@
 			<size>1 0.30</size>
 			<pos>0 0.62</pos>
 			<color>00000000</color>
-			<logoSize>0.30 0.22</logoSize>
+			<logoSize>0.22 0.12</logoSize>
 			<logoScale>1.25</logoScale>
 			<maxLogoCount>3</maxLogoCount>
 			<zIndex>40</zIndex>

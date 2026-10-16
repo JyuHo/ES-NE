@@ -58,7 +58,7 @@ html,body{{margin:0;width:1280px;height:800px;overflow:hidden;background:linear-
  background:linear-gradient(to bottom,transparent,{c1}55 40%,{c2}33 70%,transparent)}}
 .glow{{position:absolute;left:-200px;bottom:-400px;width:1700px;height:700px;border-radius:50%;
  background:radial-gradient(closest-side,{c1}40,transparent)}}
-.name{{position:absolute;right:40px;bottom:-30px;font:700 260px R;color:#fff;opacity:.035;white-space:nowrap}}
+.name{{position:absolute;right:40px;bottom:-30px;font:700 {wm}px R;color:#fff;opacity:.035;white-space:nowrap}}
 </style><body>
 <div class=glow></div>
 {bars}
@@ -74,6 +74,12 @@ html,body{{margin:0;width:800px;height:220px;background:transparent}}
 .b{{display:flex;gap:8px;margin-bottom:10px}}.b i{{width:34px;height:6px;background:#fff;transform:skewX(-30deg)}}
 </style><body><div class=w><div class=b><i></i><i style="opacity:.6"></i><i style="opacity:.3"></i></div>
 <div class=n>{name}</div><div class=s>{sub}</div></div></body></html>"""
+
+
+SRC = ROOT / "art" / "logo-src"   # logos monochromes tiers (voir themes/es-ne/art/logo-src/README.md)
+LOGO_SVG = """<html><style>html,body{{margin:0;width:800px;height:220px;background:transparent}}
+.w{{width:800px;height:220px;display:flex;align-items:center;justify-content:center}}
+img{{max-width:620px;max-height:150px}}</style><body><div class=w><img src="{src}"></div></body></html>"""
 
 
 def bars(c1, c2, seed):
@@ -147,10 +153,19 @@ def main():
             name, sub, ang = SYSTEMS[sid]
             for amb, (c1, c2, top, bot) in AMBIANCES.items():
                 html = BG.format(font=FONT, top=top, bot=bot, c1=c1, c2=c2, ang=ang,
-                                 bars=bars(c1, c2, sid), name=name.split()[-1])
+                                 bars=bars(c1, c2, sid), name=name.split()[-1], wm=260 if len(name.split()[-1]) < 6 else 170)
                 im = shot(page, html, 1280, 800).convert("RGB")
                 im.save(ROOT / "art" / "bg" / f"{sid}-{amb}.jpg", quality=82, optimize=True)
-            lg = shot(page, LOGO.format(font=FONT, name=name, sub=sub), 800, 220, True)
+            svg = SRC / f"{sid}.svg"
+            if svg.exists():
+                tmp = ROOT / "art" / "logo" / f"_{sid}.html"
+                tmp.write_text(LOGO_SVG.format(src=svg.as_uri()))
+                page.goto(tmp.as_uri()); page.wait_for_timeout(200)
+                lg = Image.open(io.BytesIO(page.screenshot(omit_background=True)))
+                tmp.unlink()
+                lg = lg.crop(lg.getbbox())
+            else:
+                lg = shot(page, LOGO.format(font=FONT, name=name, sub=sub), 800, 220, True)
             lg.save(ROOT / "art" / "logo" / f"{sid}.png", optimize=True)
             (ROOT / sid).mkdir(exist_ok=True)
             (ROOT / sid / "theme.xml").write_text(SYSTEM_XML.format(sid=sid))
