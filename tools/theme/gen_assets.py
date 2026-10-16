@@ -166,26 +166,39 @@ ICONS = {  # (fichier, type, contenu)
 }
 
 
+BSRC = ROOT / "art" / "buttons-src"
+# fichier de sortie -> icone source (jeu d'icones Input Prompts, CC0, voir docs/THIRD_PARTY.md)
+SVG_ICONS = {
+    "xbox-a": "xbox_button_a_outline", "xbox-b": "xbox_button_b_outline", "xbox-x": "xbox_button_x_outline",
+    "xbox-y": "xbox_button_y_outline", "xbox-lb": "xbox_lb_outline", "xbox-rb": "xbox_rb_outline",
+    "xbox-menu": "xbox_button_menu_outline", "xbox-view": "xbox_button_view_outline",
+    "psx-cross": "playstation_button_cross_outline", "psx-circle": "playstation_button_circle_outline",
+    "psx-square": "playstation_button_square_outline", "psx-triangle": "playstation_button_triangle_outline",
+    "psx-l1": "playstation_trigger_l1_outline", "psx-r1": "playstation_trigger_r1_outline",
+    "psx-options": "playstation4_button_options_outline", "psx-share": "playstation4_button_share_outline",
+}
+
+
+def svg_png(page, name, size=192, crop=False):
+    html = (f"<html><body style='margin:0;background:transparent'><img src='{(BSRC / (name + '.svg')).as_uri()}' "
+            f"width={size} height={size}></body></html>")
+    im = shot(page, html, size, size, True)
+    if crop:
+        bb = im.getbbox()
+        pad = size // 32
+        im = im.crop((bb[0] - pad, bb[1] - pad, bb[2] + pad, bb[3] + pad))
+    return im
+
+
 def buttons(page):
     d = ROOT / "art" / "buttons"
     d.mkdir(parents=True, exist_ok=True)
-    for name, (kind, content) in ICONS.items():
-        if kind == "c":
-            w, body = 96, f'<div class=c>{content}</div>'
-        else:
-            w, body = 140, f'<div class=p>{content}</div>'
-        html = BTN.format(font=FONT, w=w, pw=w - 8, r=30, body=body)
-        shot(page, html, w, 96, True, scale=2).save(d / f"{name}.png", optimize=True)
-
+    for out, src in SVG_ICONS.items():
+        svg_png(page, src).save(d / f"{out}.png", optimize=True)
 
 
 # --- pastilles d'information (blanc pur, teintées dans le thème) ---
 BADGES = {
-    "pad": (128, 80, """<defs><mask id=m><rect width=128 height=80 fill=#fff />
-<path d="M24 28h12M30 22v12" stroke=#000 stroke-width=6 />
-<circle cx=96 cy=24 r=5 /><circle cx=106 cy=34 r=5 /><circle cx=96 cy=44 r=5 /><circle cx=86 cy=34 r=5 />
-<circle cx=50 cy=48 r=7 /><circle cx=78 cy=48 r=7 /></mask></defs>
-<path mask=url(#m) d="M30 10H98C113 10 121 23 125 48C128 66 123 75 112 75C101 75 97 66 91 58H37C31 66 27 75 16 75C5 75 0 66 3 48C7 23 15 10 30 10Z" fill=#fff />"""),
     "save": (64, 64, """<defs><mask id=m><rect width=64 height=64 fill=#fff />
 <rect x=18 y=6 width=24 height=16 fill=#000 /><rect x=14 y=34 width=36 height=24 rx=3 fill=#000 /></mask></defs>
 <path mask=url(#m) d="M6 6H50L58 14V58H6Z" fill=#fff />"""),
@@ -198,6 +211,7 @@ BADGES = {
 def badges(page):
     d = ROOT / "art" / "ui"
     d.mkdir(parents=True, exist_ok=True)
+    svg_png(page, "controller_playstation4", 256, crop=True).save(d / "pad.png", optimize=True)
     for name, (w, h, body) in BADGES.items():
         html = (f"<html><body style='margin:0;background:transparent'><svg xmlns='http://www.w3.org/2000/svg' "
                 f"width={w * 2} height={h * 2} viewBox='0 0 {w} {h}'>{body}</svg></body></html>")
