@@ -8,22 +8,31 @@
 	<view name="screen">
 		<image name="wifi_off" extra="true">
 			<path>./art/ui/wifi.png</path>
-			<pos>0.986 0.016</pos>
+			<pos>0.938 0.016</pos>
 			<origin>1 0</origin>
 			<size>0 0.034</size>
 			<color>${textDim}55</color>
 			<zIndex>49</zIndex>
 		</image>
 		<batteryIndicator name="batteryIndicator">
-			<pos>0.952 0.016</pos>
+			<pos>0.904 0.016</pos>
 			<size>0.034 0.034</size>
 			<horizontalAlignment>right</horizontalAlignment>
 			<itemSpacing>0</itemSpacing>
 			<networkIcon>./art/ui/wifi.png</networkIcon>
 			<color>${accent2}</color>
 		</batteryIndicator>
+		<text name="clock">
+			<pos>0.89 0.016</pos>
+			<size>0.096 0.034</size>
+			<alignment>right</alignment>
+			<verticalAlignment>center</verticalAlignment>
+			<fontPath>${font}</fontPath>
+			<fontSize>0.03</fontSize>
+			<color>${textDim}</color>
+		</text>
 		<controllerActivity name="controllerActivity">
-			<pos>0.80 0.016</pos>
+			<pos>0.771 0.016</pos>
 			<size>0.158 0.034</size>
 			<horizontalAlignment>right</horizontalAlignment>
 			<itemSpacing>0.004</itemSpacing>
