@@ -90,10 +90,10 @@
 		<carousel name="systemcarousel">
 			<type>horizontal</type>
 			<size>1 0.30</size>
-			<pos>0 0.62</pos>
+			<pos>0 0.36</pos>
 			<color>00000000</color>
 			<logoSize>0.22 0.12</logoSize>
-			<logoScale>1.25</logoScale>
+			<logoScale>1.35</logoScale>
 			<maxLogoCount>3</maxLogoCount>
 			<zIndex>40</zIndex>
 		</carousel>
@@ -103,7 +103,7 @@
 			<forceUppercase>true</forceUppercase>
 		</text>
 		<text name="systemInfo">
-			<pos>0 0.90</pos>
+			<pos>0 0.63</pos>
 			<size>1 0.04</size>
 			<alignment>center</alignment>
 			<fontPath>${font}</fontPath>
