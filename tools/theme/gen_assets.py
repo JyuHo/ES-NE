@@ -55,23 +55,7 @@ SYSTEMS = {
 SYSTEM_XML = """<theme>
 	<formatVersion>7</formatVersion>
 	<include>./../theme.xml</include>
-	<view name="system">
-		<image name="logo">
-			<path>./../art/logo/{sid}.png</path>
-		</image>
-		<image name="bg" extra="true">
-			<path>./../art/bg/base-${{subset.colorset}}.png</path>
-			<pos>0 0</pos>
-			<size>1 1</size>
-			<zIndex>0</zIndex>
-		</image>
-{layers}
-	</view>
-	<view name="basic, detailed">
-		<image name="background">
-			<path>./../art/bg/base-${{subset.colorset}}.png</path>
-		</image>
-{layers}
+	<view name="system, basic, detailed">
 		<image name="logo">
 			<path>./../art/logo/{sid}.png</path>
 		</image>
@@ -79,37 +63,6 @@ SYSTEM_XML = """<theme>
 </theme>
 """
 
-LAYER = """		<image name="bars{n}" extra="true">
-			<path>./../art/bg/bars.png</path>
-			<pos>{px} {py}</pos>
-			<origin>0.5 0.5</origin>
-			<size>1.6 0</size>
-			<rotationOrigin>0.5 0.5</rotationOrigin>
-			<rotation>{rot}</rotation>
-			<flipX>{flip}</flipX>
-			<color>{color}</color>
-			<opacity>{op}</opacity>
-			<zIndex>{z}</zIndex>
-			<storyboard repeat="forever">
-				<animation property="pos" from="{px} {py}" to="{px2} {py2}" begin="0" duration="{dur}" mode="easeInOut" />
-				<animation property="pos" from="{px2} {py2}" to="{px} {py}" begin="{dur}" duration="{dur}" mode="easeInOut" />
-			</storyboard>
-		</image>"""
-
-
-def layers_xml(sid, ang):
-    """Deux couches de la meme image de bandes, decalees/tournees differemment selon le systeme."""
-    import random
-    r = random.Random(sid)
-    out = []
-    for n, (color, op, dang, dur, amp) in enumerate((("${accent}", 1.0, 0, 45000, 0.05),
-                                                     ("${accent2}", 0.55, r.choice([-9, -6, 6, 9]), 60000, -0.07))):
-        px = round(0.5 + r.uniform(-0.12, 0.12), 3)
-        py = round(0.5 + r.uniform(-0.1, 0.1), 3)
-        out.append(LAYER.format(n=n, px=px, py=py, px2=round(px + amp, 3), py2=py, dur=dur,
-                                rot=-(ang + dang), flip=str(bool(n and r.random() < 0.5)).lower(),
-                                color=color, op=op, z=1 + n))
-    return "\n".join(out)
 
 BG = """<html><style>
 @font-face{{font-family:R;src:url('{font}')}}
@@ -313,7 +266,7 @@ def main():
                 lg = shot(page, LOGO.format(font=FONT, name=name, sub=sub), 800, 220, True, scale=2)
             lg.save(ROOT / "art" / "logo" / f"{sid}.png", optimize=True)
             (ROOT / sid).mkdir(exist_ok=True)
-            (ROOT / sid / "theme.xml").write_text(SYSTEM_XML.format(sid=sid, layers=layers_xml(sid, ang)))
+            (ROOT / sid / "theme.xml").write_text(SYSTEM_XML.format(sid=sid))
         buttons(page)
         badges(page)
         textboxes()

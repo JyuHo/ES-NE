@@ -34,7 +34,43 @@
 		</controllerActivity>
 	</view>
 
-	<view name="system">
+	<view name="system" extraTransition="instant">
+		<image name="bg" extra="true">
+			<path>./art/bg/base-${subset.colorset}.png</path>
+			<pos>0 0</pos>
+			<size>1 1</size>
+			<zIndex>0</zIndex>
+		</image>
+		<image name="bars0" extra="true">
+			<path>./art/bg/bars.png</path>
+			<pos>0.485 0.59</pos>
+			<origin>0.5 0.5</origin>
+			<size>1.6 0</size>
+			<rotationOrigin>0.5 0.5</rotationOrigin>
+			<rotation>30</rotation>
+			<color>${accent}</color>
+			<opacity>1.0</opacity>
+			<zIndex>1</zIndex>
+			<storyboard repeat="forever">
+				<animation property="pos" from="0.485 0.59" to="0.565 0.59" begin="0" duration="65450" mode="easeInOut" />
+				<animation property="pos" from="0.565 0.59" to="0.485 0.59" begin="65450" duration="65450" mode="easeInOut" />
+			</storyboard>
+		</image>
+		<image name="bars1" extra="true">
+			<path>./art/bg/bars.png</path>
+			<pos>0.548 0.564</pos>
+			<origin>0.5 0.5</origin>
+			<size>1.6 0</size>
+			<rotationOrigin>0.5 0.5</rotationOrigin>
+			<rotation>39</rotation>
+			<color>${accent2}</color>
+			<opacity>0.55</opacity>
+			<zIndex>2</zIndex>
+			<storyboard repeat="forever">
+				<animation property="pos" from="0.548 0.564" to="0.428 0.564" begin="0" duration="93500" mode="easeInOut" />
+				<animation property="pos" from="0.428 0.564" to="0.548 0.564" begin="93500" duration="93500" mode="easeInOut" />
+			</storyboard>
+		</image>
 		<helpsystem name="help">
 			<pos>0.012 0.95</pos>
 			<textColor>${textDim}</textColor>
@@ -69,6 +105,39 @@
 	</view>
 
 	<view name="basic, detailed">
+		<image name="background">
+			<path>./art/bg/base-${subset.colorset}.png</path>
+		</image>
+		<image name="bars0" extra="true">
+			<path>./art/bg/bars.png</path>
+			<pos>0.485 0.59</pos>
+			<origin>0.5 0.5</origin>
+			<size>1.6 0</size>
+			<rotationOrigin>0.5 0.5</rotationOrigin>
+			<rotation>30</rotation>
+			<color>${accent}</color>
+			<opacity>1.0</opacity>
+			<zIndex>1</zIndex>
+			<storyboard repeat="forever">
+				<animation property="pos" from="0.485 0.59" to="0.565 0.59" begin="0" duration="65450" mode="easeInOut" />
+				<animation property="pos" from="0.565 0.59" to="0.485 0.59" begin="65450" duration="65450" mode="easeInOut" />
+			</storyboard>
+		</image>
+		<image name="bars1" extra="true">
+			<path>./art/bg/bars.png</path>
+			<pos>0.548 0.564</pos>
+			<origin>0.5 0.5</origin>
+			<size>1.6 0</size>
+			<rotationOrigin>0.5 0.5</rotationOrigin>
+			<rotation>39</rotation>
+			<color>${accent2}</color>
+			<opacity>0.55</opacity>
+			<zIndex>2</zIndex>
+			<storyboard repeat="forever">
+				<animation property="pos" from="0.548 0.564" to="0.428 0.564" begin="0" duration="93500" mode="easeInOut" />
+				<animation property="pos" from="0.428 0.564" to="0.548 0.564" begin="93500" duration="93500" mode="easeInOut" />
+			</storyboard>
+		</image>
 		<helpsystem name="help">
 			<pos>0.012 0.95</pos>
 			<textColor>${textDim}</textColor>
