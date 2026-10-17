@@ -241,8 +241,8 @@ windows:
   platform: pc
   extensions: [.exe, .bat, .lnk, .msi]
   emulators:
-    wine: { _priority: 1 }
-    umu: {}
+    umu: { _priority: 1 }
+    wine: {}
 ports:
   name: Ports
   manufacturer: Divers

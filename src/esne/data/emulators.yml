@@ -78,6 +78,7 @@ wine:
   cwd: rom_dir
   package: wine
 umu:
+  # umu-launcher + Proton (GE-Proton, la dernière version, téléchargée par umu); le générateur umu ajoute préfixe par jeu, GAMEID et réglages ES
   binary: [umu-run]
   args: ["{rom}"]
   env: {GAMEID: umu-0, PROTONPATH: GE-Proton}

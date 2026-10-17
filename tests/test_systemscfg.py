@@ -62,7 +62,7 @@ def test_standalone_systems_have_emulator_without_cores(esne_env):
     assert [e.get("name") for e in emulators] == ["dolphin"] and not list(emulators[0])
     assert catalog.default_choice("wii") == ("dolphin", None)
     assert catalog.default_choice("switch") == ("eden", None)
-    assert catalog.default_choice("windows") == ("wine", None)
+    assert catalog.default_choice("windows") == ("umu", None)
 
 
 def test_seed_ports_creates_script_only_for_installed_games(tmp_path):

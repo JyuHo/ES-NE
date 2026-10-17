@@ -418,6 +418,33 @@ STEAM_FEATURES = (
 )
 
 
+UMU_FEATURES = (
+    '<feature name="PROTON VERSION" value="umu_proton" description="Proton used by umu. GE-Proton is downloaded and kept up to date by umu; UMU-Proton is the stable build.">'
+    '<choice name="GE-PROTON (LATEST)" value="GE-Proton" /><choice name="UMU-PROTON (STABLE)" value="UMU-Latest" /></feature>'
+    '<feature name="WINE PREFIX" value="umu_prefix" description="One prefix per game is the safest (saves, DLLs and libraries are not mixed). A shared prefix saves disk space.">'
+    '<choice name="ONE PER GAME" value="game" /><choice name="SHARED" value="shared" /></feature>'
+    '<feature name="DIRECTX TRANSLATION" value="umu_d3d" description="Default: DXVK (DirectX 9-11) and VKD3D-Proton (DirectX 12) on Vulkan. WineD3D (OpenGL) is a fallback for games that fail on Vulkan.">'
+    '<choice name="DXVK + VKD3D-PROTON" value="default" /><choice name="WINED3D (OPENGL)" value="wined3d" /></feature>'
+    '<feature name="SYNCHRONIZATION" value="umu_sync" description="Wine synchronization method. Automatic uses FSYNC when the kernel supports it, otherwise ESYNC.">'
+    '<choice name="AUTO" value="auto" /><choice name="ESYNC ONLY" value="esync" /><choice name="FSYNC ONLY" value="fsync" /><choice name="NONE" value="none" /></feature>'
+    '<feature name="FSR UPSCALING" value="umu_fsr" description="AMD FSR 1 in full screen: set the game to a lower resolution than your screen and it is upscaled.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="FSR SHARPNESS" value="umu_fsr_strength" description="0 is the sharpest, 5 the softest. Used when FSR is on.">'
+    '<choice name="0 (SHARPEST)" value="0" /><choice name="1" value="1" /><choice name="2 (DEFAULT)" value="2" />'
+    '<choice name="3" value="3" /><choice name="4" value="4" /><choice name="5 (SOFTEST)" value="5" /></feature>'
+    '<feature name="VIRTUAL DESKTOP" value="umu_vdesktop" description="Run the game in a Wine virtual desktop of this size (for games that break window or resolution changes).">'
+    '<choice name="OFF" value="" /><choice name="1280X720" value="1280x720" /><choice name="1920X1080" value="1920x1080" />'
+    '<choice name="2560X1440" value="2560x1440" /><choice name="3840X2160" value="3840x2160" /></feature>'
+    '<feature name="MANGOHUD" value="umu_mangohud" description="Show the frame rate and system load on screen. Needs the mangohud package.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="GAMEMODE" value="umu_gamemode" description="Ask the system to favour the game (CPU governor...). Needs the gamemode package.">'
+    '<choice name="OFF" value="0" /><choice name="ON" value="1" /></feature>'
+    '<feature name="FRAME RATE LIMIT" value="umu_fps" description="Limit the frames per second (DXVK_FRAME_RATE, Direct3D 9-11).">'
+    '<choice name="NO LIMIT" value="" /><choice name="30" value="30" /><choice name="60" value="60" /><choice name="90" value="90" />'
+    '<choice name="120" value="120" /><choice name="144" value="144" /></feature>'
+)
+
+
 def render() -> str:
     return (
         '<?xml version="1.0"?>\n'
@@ -439,6 +466,7 @@ def render() -> str:
         f'  <emulator name="duckstation" features="">{DUCKSTATION_FEATURES}</emulator>\n'
         f'  <emulator name="snes9x" features="">{SNES9X_FEATURES}</emulator>\n'
         f'  <emulator name="steam" features="">{STEAM_FEATURES}</emulator>\n'
+        f'  <emulator name="umu" features="">{UMU_FEATURES}</emulator>\n'
         "</features>\n"
     )
 
