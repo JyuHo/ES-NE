@@ -92,6 +92,9 @@ Hashes de la branche `esne` du fork.
 | `643df40` | i18n | 17 chaînes (redémarrage d'ES, installation d'un core, AUR, Wi-Fi, HDR, indexation, volume au stick droit, MSAA, limite d'images) traduites dans les 32 autres langues; seules les chaînes vides sont remplies; `eu_ES`: deux `%S` corrigés en `%s` |
 | `af40479` | ES-NE | thème `es-ne` choisi par défaut (`ThemeSet`, sous `#if ESNE`), pour pouvoir retirer Carbon du paquet |
 | `cfa9c58` | ES-NE | vue système: l'aide affiche le bouton select (menu d'accès rapide, déjà actif mais non indiqué) |
+| `6e2d1fe` | ES-NE | menus `GuiSettings`: le bouton de validation (SELECT) est toujours dans l'aide (sous `#if ESNE`) |
+| `5c94828` | ES-NE | vue système: l'aide « barre de navigation » utilise `BUTTON_BACK` (le bouton « b » littéral doublait l'icône de validation et la faisait disparaître) |
+| `475da46` | ES-NE | `StoryboardAnimator`: une animation `repeat="forever"` seule est calée sur l'horloge globale (`SDL_GetTicks`), pour que le fond animé du thème reste continu d'une vue à l'autre (sous `#if ESNE`) |
 
 ## Ce qui reste de Batocera dans le frontend (état actuel)
 - `updates.batocera.org`: sert seulement à la liste des thèmes téléchargeables (`themes.json`); surchargeable par `global.updates.url`.
