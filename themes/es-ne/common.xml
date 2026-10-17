@@ -61,8 +61,7 @@
 			<opacity>1.0</opacity>
 			<zIndex>1</zIndex>
 			<storyboard repeat="forever">
-				<animation property="pos" from="0.485 0.59" to="0.565 0.59" begin="0" duration="65450" mode="easeInOut" />
-				<animation property="pos" from="0.565 0.59" to="0.485 0.59" begin="65450" duration="65450" mode="easeInOut" />
+				<animation property="pos" from="0.485 0.59" to="0.645 0.59" begin="0" duration="45000" mode="easeInOut" autoReverse="true" repeat="forever" />
 			</storyboard>
 		</image>
 		<image name="bars1" extra="true">
@@ -76,8 +75,7 @@
 			<opacity>0.55</opacity>
 			<zIndex>2</zIndex>
 			<storyboard repeat="forever">
-				<animation property="pos" from="0.548 0.564" to="0.428 0.564" begin="0" duration="93500" mode="easeInOut" />
-				<animation property="pos" from="0.428 0.564" to="0.548 0.564" begin="93500" duration="93500" mode="easeInOut" />
+				<animation property="pos" from="0.548 0.564" to="0.328 0.564" begin="0" duration="65000" mode="easeInOut" autoReverse="true" repeat="forever" />
 			</storyboard>
 		</image>
 		<helpsystem name="help">
@@ -92,8 +90,8 @@
 			<size>1 0.30</size>
 			<pos>0 0.36</pos>
 			<color>00000000</color>
-			<logoSize>0.22 0.12</logoSize>
-			<logoScale>1.35</logoScale>
+			<logoSize>0.19 0.10</logoSize>
+			<logoScale>1.7</logoScale>
 			<maxLogoCount>3</maxLogoCount>
 			<zIndex>40</zIndex>
 		</carousel>
@@ -128,8 +126,7 @@
 			<opacity>1.0</opacity>
 			<zIndex>1</zIndex>
 			<storyboard repeat="forever">
-				<animation property="pos" from="0.485 0.59" to="0.565 0.59" begin="0" duration="65450" mode="easeInOut" />
-				<animation property="pos" from="0.565 0.59" to="0.485 0.59" begin="65450" duration="65450" mode="easeInOut" />
+				<animation property="pos" from="0.485 0.59" to="0.645 0.59" begin="0" duration="45000" mode="easeInOut" autoReverse="true" repeat="forever" />
 			</storyboard>
 		</image>
 		<image name="bars1" extra="true">
@@ -143,8 +140,7 @@
 			<opacity>0.55</opacity>
 			<zIndex>2</zIndex>
 			<storyboard repeat="forever">
-				<animation property="pos" from="0.548 0.564" to="0.428 0.564" begin="0" duration="93500" mode="easeInOut" />
-				<animation property="pos" from="0.428 0.564" to="0.548 0.564" begin="93500" duration="93500" mode="easeInOut" />
+				<animation property="pos" from="0.548 0.564" to="0.328 0.564" begin="0" duration="65000" mode="easeInOut" autoReverse="true" repeat="forever" />
 			</storyboard>
 		</image>
 		<helpsystem name="help">
