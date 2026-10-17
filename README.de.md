@@ -82,6 +82,18 @@ Standardmäßig wird nichts einkompiliert oder mitgeliefert. `es-genconfig` erze
 **Release-Paket** (Maintainer): `tools/build-release.sh /pfad/zu/keys.conf` baut das Arch-Paket, das in `dist/release/` (von git ignoriert) entsteht und dem GitHub-Release beizufügen ist; es wird mit `sudo pacman -U` installiert. Die Schlüsseldatei wird nie committet. Die `keys.conf` des Benutzers hat weiterhin Vorrang. Auf CachyOS mit Release 1.0.0 validiert: Die Scraper funktionieren ohne `keys.conf` und ohne persönliche Zugangsdaten.
 
 ## Theme und kostenlose Spiele
+
+<table>
+  <tr>
+    <td><img src="docs/screenshots/theme-nuit-system.jpg" alt="Nuit: Systeme"></td>
+    <td><img src="docs/screenshots/theme-nuit-gamelist.jpg" alt="Nuit: Spieleliste"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/theme-braise-system.jpg" alt="Braise: Systeme"></td>
+    <td><img src="docs/screenshots/theme-braise-gamelist.jpg" alt="Braise: Spieleliste"></td>
+  </tr>
+</table>
+
 Das Paket fügt **ES-NE** dem Anwendungsmenü hinzu (Kategorie Spiele, ES-Icon), zusätzlich zum Eintrag der Login-Sitzung.
 Das Paket liefert das Theme **ES-NE** (für dieses Projekt entwickelt) in `/usr/share/esne/themes`: Es ist das Standard-Theme für alle 27 Systeme, mit zwei Stimmungen (Nuit, Braise) und drei Tastensymbol-Sätzen (ES, Xbox, PlayStation), wählbar unter Benutzeroberfläche → Theme. Die Konsolenlogos stammen aus [Monochrome Gaming Logos](https://github.com/HVR88/Monochrome-Gaming-Logos) (nicht kommerzielle Nutzung; siehe `docs/THIRD_PARTY.md`). Eigene Themes kommen nach `~/esne/themes`.
 Das System **Ports** startet `.sh`-Skripte (`~/esne/roms/ports/`). Es wird kein Spiel mitgeliefert: `es-genconfig --install-port digger` lädt **Digger** (0,5 MB, GPL-2.0, x86_64 und aarch64) aus dem [PortMaster](https://github.com/PortsMaster/PortMaster-New)-Katalog herunter und erstellt den Starter (`--list-ports` listet die angebotenen Spiele auf). Nur der Spielordner wird übernommen, ohne PortMaster. Spiele, die nur eine Tastatur akzeptieren, lassen sich dank `esne-padkeys`, dem Äquivalent zu `gptokeyb`, mit dem Controller spielen: Es liest die `.gptk`-Datei des Spiels (`a = enter`, `left_analog_up = up`, `mouse_movement_*`, `mouse_left`...), liest die Controller (evdev) und erzeugt eine virtuelle Tastatur/Maus (uinput). Das Paket lädt das Modul `uinput` und gewährt Zugriff auf `/dev/uinput` der Sitzung (udev-Regel). Ist uinput nicht nutzbar, startet das Spiel trotzdem, ohne Übersetzung. Direkter Aufruf: `esne-padkeys spiel.gptk -- ./spiel` (`--grab` für exklusiven Zugriff auf die Controller, auf Kosten des ES-NE-Beenden-Kürzels). `es-genconfig` überschreibt nie einen vorhandenen Starter; die Liste steht in `src/esne/data/ports.yml` (ergänzbar durch `~/.config/esne/ports.yml`, Formen `command:` für ein installiertes Programm oder `portmaster:`).

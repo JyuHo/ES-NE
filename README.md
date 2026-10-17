@@ -82,6 +82,18 @@ Par défaut, rien n'est compilé ni empaqueté. `es-genconfig` crée `~/.config/
 **Paquet de release** (mainteneur): `tools/build-release.sh /chemin/vers/keys.conf` construit le paquet Arch, produit dans `dist/release/` (ignoré par git) et à joindre à la release GitHub; il s'installe avec `sudo pacman -U`. Le fichier de clés n'est jamais commité. Le `keys.conf` de l'utilisateur reste prioritaire. Validé sur CachyOS avec la release 1.0.0: les scrapers fonctionnent sans `keys.conf` ni identifiant personnel.
 
 ## Thème et jeu libre
+
+<table>
+  <tr>
+    <td><img src="docs/screenshots/theme-nuit-system.jpg" alt="Nuit: systèmes"></td>
+    <td><img src="docs/screenshots/theme-nuit-gamelist.jpg" alt="Nuit: liste"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/theme-braise-system.jpg" alt="Braise: systèmes"></td>
+    <td><img src="docs/screenshots/theme-braise-gamelist.jpg" alt="Braise: liste"></td>
+  </tr>
+</table>
+
 Le paquet ajoute **ES-NE** au menu des applications (catégorie Jeux, icône ES), en plus de l'entrée de session de connexion.
 Le paquet livre le thème **ES-NE** (créé pour le projet) dans `/usr/share/esne/themes`: c'est le thème par défaut, pour les 27 systèmes, avec deux ambiances (Nuit, Braise) et trois jeux d'icônes de touches (ES, Xbox, PlayStation) à choisir dans Interface utilisateur → Thème. Les logos de consoles viennent de [Monochrome Gaming Logos](https://github.com/HVR88/Monochrome-Gaming-Logos) (usage non commercial; voir `docs/THIRD_PARTY.md`). Tes propres thèmes vont dans `~/esne/themes`.
 Le système **Ports** lance des scripts `.sh` (`~/esne/roms/ports/`). Aucun jeu n'est livré: `es-genconfig --install-port digger` télécharge **Digger** (0,5 Mo, GPL-2.0, x86_64 et aarch64) depuis le catalogue [PortMaster](https://github.com/PortsMaster/PortMaster-New) et crée son lanceur (`--list-ports` liste les jeux proposés). Seul le dossier du jeu est repris, sans PortMaster. Les jeux qui n'acceptent que le clavier se jouent à la manette grâce à `esne-padkeys`, équivalent de `gptokeyb`: il lit le fichier `.gptk` du jeu (`a = enter`, `left_analog_up = up`, `mouse_movement_*`, `mouse_left`...), lit les manettes (evdev) et émet un clavier/souris virtuel (uinput). Le paquet charge le module `uinput` et donne l'accès au `/dev/uinput` de la session (règle udev). Si uinput est inutilisable, le jeu se lance quand même, sans traduction. Usage direct: `esne-padkeys jeu.gptk -- ./jeu` (`--grab` pour un accès exclusif aux manettes, au prix du raccourci de sortie d'ES-NE). `es-genconfig` n'écrase jamais un lanceur existant; la liste est dans `src/esne/data/ports.yml` (complétable par `~/.config/esne/ports.yml`, formes `command:` pour un programme installé ou `portmaster:`).

@@ -82,6 +82,18 @@ By default, nothing is compiled in or packaged. `es-genconfig` creates `~/.confi
 **Release package** (maintainer): `tools/build-release.sh /path/to/keys.conf` builds the Arch package, produced in `dist/release/` (ignored by git) and to be attached to the GitHub release; it installs with `sudo pacman -U`. The keys file is never committed. The user's `keys.conf` still takes precedence. Validated on CachyOS with release 1.0.0: the scrapers work without `keys.conf` or personal credentials.
 
 ## Theme and free-to-play
+
+<table>
+  <tr>
+    <td><img src="docs/screenshots/theme-nuit-system.jpg" alt="Nuit: systems"></td>
+    <td><img src="docs/screenshots/theme-nuit-gamelist.jpg" alt="Nuit: game list"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/theme-braise-system.jpg" alt="Braise: systems"></td>
+    <td><img src="docs/screenshots/theme-braise-gamelist.jpg" alt="Braise: game list"></td>
+  </tr>
+</table>
+
 The package adds **ES-NE** to the applications menu (Games category, ES icon), in addition to the login session entry.
 The package ships the **ES-NE** theme (made for this project) in `/usr/share/esne/themes`: it is the default theme, covers all 27 systems, with two moods (Nuit, Braise) and three button icon sets (ES, Xbox, PlayStation) selectable in User interface → Theme. Console logos come from [Monochrome Gaming Logos](https://github.com/HVR88/Monochrome-Gaming-Logos) (non-commercial use; see `docs/THIRD_PARTY.md`). Your own themes go in `~/esne/themes`.
 The **Ports** system runs `.sh` scripts (`~/esne/roms/ports/`). No game is shipped: `es-genconfig --install-port digger` downloads **Digger** (0.5 MB, GPL-2.0, x86_64 and aarch64) from the [PortMaster](https://github.com/PortsMaster/PortMaster-New) catalog and creates its launcher (`--list-ports` lists the available games). Only the game folder is taken, without PortMaster. Games that only accept a keyboard can be played with a pad thanks to `esne-padkeys`, the equivalent of `gptokeyb`: it reads the game's `.gptk` file (`a = enter`, `left_analog_up = up`, `mouse_movement_*`, `mouse_left`...), reads the pads (evdev) and emits a virtual keyboard/mouse (uinput). The package loads the `uinput` module and grants access to the session's `/dev/uinput` (udev rule). If uinput is unusable, the game still starts, without translation. Direct usage: `esne-padkeys game.gptk -- ./game` (`--grab` for exclusive access to the pads, at the cost of ES-NE's exit shortcut). `es-genconfig` never overwrites an existing launcher; the list is in `src/esne/data/ports.yml` (extendable via `~/.config/esne/ports.yml`, with `command:` forms for an installed program or `portmaster:`).
