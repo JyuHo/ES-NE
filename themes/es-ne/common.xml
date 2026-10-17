@@ -32,7 +32,7 @@
 			<color>${textDim}</color>
 		</text>
 		<controllerActivity name="controllerActivity">
-			<pos>0.771 0.016</pos>
+			<pos>0.747 0.016</pos>
 			<size>0.158 0.034</size>
 			<horizontalAlignment>right</horizontalAlignment>
 			<itemSpacing>0.004</itemSpacing>
