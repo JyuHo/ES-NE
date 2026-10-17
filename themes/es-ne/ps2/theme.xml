@@ -22,6 +22,10 @@
 			<color>${accent}</color>
 			<opacity>1.0</opacity>
 			<zIndex>1</zIndex>
+			<storyboard repeat="forever">
+				<animation property="pos" from="0.602 0.549" to="0.652 0.549" begin="0" duration="45000" mode="easeInOut" />
+				<animation property="pos" from="0.652 0.549" to="0.602 0.549" begin="45000" duration="45000" mode="easeInOut" />
+			</storyboard>
 		</image>
 		<image name="bars1" extra="true">
 			<path>./../art/bg/bars.png</path>
@@ -34,6 +38,10 @@
 			<color>${accent2}</color>
 			<opacity>0.55</opacity>
 			<zIndex>2</zIndex>
+			<storyboard repeat="forever">
+				<animation property="pos" from="0.438 0.461" to="0.368 0.461" begin="0" duration="60000" mode="easeInOut" />
+				<animation property="pos" from="0.368 0.461" to="0.438 0.461" begin="60000" duration="60000" mode="easeInOut" />
+			</storyboard>
 		</image>
 	</view>
 	<view name="basic, detailed">
@@ -51,6 +59,10 @@
 			<color>${accent}</color>
 			<opacity>1.0</opacity>
 			<zIndex>1</zIndex>
+			<storyboard repeat="forever">
+				<animation property="pos" from="0.602 0.549" to="0.652 0.549" begin="0" duration="45000" mode="easeInOut" />
+				<animation property="pos" from="0.652 0.549" to="0.602 0.549" begin="45000" duration="45000" mode="easeInOut" />
+			</storyboard>
 		</image>
 		<image name="bars1" extra="true">
 			<path>./../art/bg/bars.png</path>
@@ -63,6 +75,10 @@
 			<color>${accent2}</color>
 			<opacity>0.55</opacity>
 			<zIndex>2</zIndex>
+			<storyboard repeat="forever">
+				<animation property="pos" from="0.438 0.461" to="0.368 0.461" begin="0" duration="60000" mode="easeInOut" />
+				<animation property="pos" from="0.368 0.461" to="0.438 0.461" begin="60000" duration="60000" mode="easeInOut" />
+			</storyboard>
 		</image>
 		<image name="logo">
 			<path>./../art/logo/ps2.png</path>

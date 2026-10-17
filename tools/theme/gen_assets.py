@@ -90,6 +90,10 @@ LAYER = """		<image name="bars{n}" extra="true">
 			<color>{color}</color>
 			<opacity>{op}</opacity>
 			<zIndex>{z}</zIndex>
+			<storyboard repeat="forever">
+				<animation property="pos" from="{px} {py}" to="{px2} {py2}" begin="0" duration="{dur}" mode="easeInOut" />
+				<animation property="pos" from="{px2} {py2}" to="{px} {py}" begin="{dur}" duration="{dur}" mode="easeInOut" />
+			</storyboard>
 		</image>"""
 
 
@@ -98,8 +102,11 @@ def layers_xml(sid, ang):
     import random
     r = random.Random(sid)
     out = []
-    for n, (color, op, dang) in enumerate((("${accent}", 1.0, 0), ("${accent2}", 0.55, r.choice([-9, -6, 6, 9])))):
-        out.append(LAYER.format(n=n, px=round(0.5 + r.uniform(-0.12, 0.12), 3), py=round(0.5 + r.uniform(-0.1, 0.1), 3),
+    for n, (color, op, dang, dur, amp) in enumerate((("${accent}", 1.0, 0, 45000, 0.05),
+                                                     ("${accent2}", 0.55, r.choice([-9, -6, 6, 9]), 60000, -0.07))):
+        px = round(0.5 + r.uniform(-0.12, 0.12), 3)
+        py = round(0.5 + r.uniform(-0.1, 0.1), 3)
+        out.append(LAYER.format(n=n, px=px, py=py, px2=round(px + amp, 3), py2=py, dur=dur,
                                 rot=-(ang + dang), flip=str(bool(n and r.random() < 0.5)).lower(),
                                 color=color, op=op, z=1 + n))
     return "\n".join(out)

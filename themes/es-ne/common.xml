@@ -386,7 +386,6 @@
 			<fontPath>${font}</fontPath>
 			<fontSize>0.026</fontSize>
 			<color>${textDim}</color>
-			<selectorColor>${menuSel}</selectorColor>
 		</menuTextSmall>
 		<menuText name="menufooter">
 			<fontPath>${font}</fontPath>
